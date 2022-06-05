@@ -25,6 +25,7 @@ export default {
      async mounted(){
          const users = await HTTP.get('/users');
          this.users = users.data.users
+         console.log(this.users)
      }
 
 }

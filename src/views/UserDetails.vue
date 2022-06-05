@@ -181,7 +181,7 @@
                     >حذف </vsud-badge
                     >
                     <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
-                                @click="$router.push(`/orders/details${u.id}`)">جزئیات</vsud-badge>
+                                @click="$router.push(`/orders/details${u.card_id}`)">جزئیات</vsud-badge>
                   </td>
                   <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
@@ -232,6 +232,7 @@ export default {
  const orders = await HTTP.get(`/orders/${this.id}`)
  const user = await HTTP.get(`/show_acc/${this.id}`)
     this.orders = orders.data
+    console.log(this.orders)
     this.user = user.data
   },
   methods:{

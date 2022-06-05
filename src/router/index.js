@@ -15,6 +15,8 @@ import OrderDetails from "../views/OrderDetails";
 import ProductDetails from "../views/ProductDetails";
 import AddProduct from "../views/AddProduct";
 import Sliders from "../views/Sliders";
+import Comments from "../views/Comments";
+import FAQs from "../views/FAQs";
 
 const routes = [
   {
@@ -61,6 +63,16 @@ const routes = [
     path: "/orders/details:order",
     name: "جزئیات سفارش کاربر",
     component: OrderDetails,
+  },
+  {
+    path: "/products/comments",
+    name: "دیدگاه های محصولات",
+    component: Comments,
+  },
+  {
+    path: "/faqs",
+    name: "پرسش های متداول",
+    component: FAQs,
   },
   {
     path: "/orders",

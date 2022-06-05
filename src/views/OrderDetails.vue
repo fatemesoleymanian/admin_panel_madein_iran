@@ -35,7 +35,7 @@
               <div class="d-flex ">
                 <div>
                   <img
-                      :src="u.product.image"
+                      :src="'http://localhost:8000'+u.product.image"
                       class="avatar avatar-sm rounded-circle mx-2"
                       :alt="u.product.name"
                   />
