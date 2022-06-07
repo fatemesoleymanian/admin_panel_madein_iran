@@ -17,6 +17,8 @@ import AddProduct from "../views/AddProduct";
 import Sliders from "../views/Sliders";
 import Comments from "../views/Comments";
 import FAQs from "../views/FAQs";
+import Testimonial from "../views/Testimonial";
+import Forms from "../views/Forms";
 
 const routes = [
   {
@@ -73,6 +75,16 @@ const routes = [
     path: "/faqs",
     name: "پرسش های متداول",
     component: FAQs,
+  },
+  {
+    path: "/opinions",
+    name: "نظرات مشتریان",
+    component: Testimonial,
+  },
+  {
+    path: "/forms",
+    name: "فرم ها",
+    component: Forms,
   },
   {
     path: "/orders",

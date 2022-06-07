@@ -115,16 +115,12 @@
               نام
             </th>
             <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">
               اطلاعات مشتری
             </th>
             <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
               نظر
-            </th>
-            <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              متن
             </th>
             <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -157,13 +153,12 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="opToDel=u;index=i;">حذف </vsud-badge>
+                          @click="opToDel=u;index=i;" class="mx-3">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                           @click="id=u.id;name=u.name;desc=u.desc;position=u.position;"
                           data-bs-toggle="modal" data-bs-target="#editSlide">
                 ویرایش</vsud-badge>
             </td>
-
           </tr>
           </tbody>
         </table>
@@ -229,7 +224,11 @@ export default {
           type: 'error',
         });
       });
+      document.getElementById("noAdd").click()
       this.opinions.unshift(add.data.testimonial);
+      this.name='';
+      this.desc='';
+      this.position='';
       return this.$notify({
         title: " عملیات موفق!",
         text:add.data.msg,
@@ -238,11 +237,63 @@ export default {
     },
     async editOP()
     {
+      if (this.name.trim() === '') return this.$notify({
+        title: "خطا!",
+        text: "نام مشتری الزامیست.",
+        type: 'error',
+      });
+      if (this.desc.trim() === '') return this.$notify({
+        title: "خطا!",
+        text: "متن نظر الزامیست.",
+        type: 'error',
+      });
+      if (this.position.trim() === '') return this.$notify({
+        title: "خطا!",
+        text: "اطلاعات مشتری الزامیست.",
+        type: 'error',
+      });
 
+      const data = {
+        name : this.name,
+        desc : this.desc,
+        position : this.position,
+      }
+      const add = await  HTTP.put(`/testimonial${this.id}`,data)
+          .catch(()=>{
+            return this.$notify({
+              title: " عملیات ناموفق!",
+              text:add.data.msg,
+              type: 'error',
+            });
+          });
+      document.getElementById("noEdit").click()
+       this.$notify({
+        title: " عملیات موفق!",
+        text:add.data.msg,
+        type: 'success',
+      });
+      window.location = '/opinions'
     },
     async deleteOP()
     {
 
+      document.getElementById('no').click();
+      const data = { id : this.opToDel.id}
+      const delet = await HTTP.delete('/testimonial',{data})
+          .catch(()=>{
+            return this.$notify({
+              title: "عملیات ناموفق!",
+              text: "خطا در حذف نظر",
+              type: 'error',
+            });
+          });
+      console.log((delet))
+      this.$notify({
+        title: "عملیات موفق!",
+        text: "نظر با موفقیت حذف گردید!",
+        type: 'success',
+      });
+      this.opinions.splice(this.index,1);
     }
   }
 }

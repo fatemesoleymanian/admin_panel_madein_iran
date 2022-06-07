@@ -46,6 +46,20 @@
           </template>
         </sidenav-collapse>
       </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="نظرات مشتریان" :to="{ name: 'نظرات مشتریان' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="فرم ها" :to="{ name: 'فرم ها' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
         <li class="nav-item">
         <sidenav-collapse navText="سفارشات" :to="{ name: 'Orders' }">
           <template #icon>
