@@ -60,6 +60,20 @@
           </template>
         </sidenav-collapse>
       </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="دپارتمان ها" :to="{ name: 'دپارتمان ها' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="تگ ها" :to="{ name: 'تگ ها' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
         <li class="nav-item">
         <sidenav-collapse navText="سفارشات" :to="{ name: 'Orders' }">
           <template #icon>

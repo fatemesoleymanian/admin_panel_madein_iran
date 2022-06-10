@@ -32,6 +32,7 @@
           <tbody>
           <tr  v-for="(u, i) in items" :key="i">
             <td>
+              <router-link :to="`/product/details${u.product.id}`">
               <div class="d-flex ">
                 <div>
                   <img
@@ -47,6 +48,7 @@
                   </p>
                 </div>
               </div>
+              </router-link>
             </td>
             <td>
               <p class="text-sm font-weight-bold mb-0">{{ u.state.type}}</p>

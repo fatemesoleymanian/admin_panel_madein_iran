@@ -347,7 +347,7 @@ export default {
   async created() {
     const [cat, tag] = await Promise.all([
       HTTP.get(`/categories`),
-      HTTP.get(`/tags`)
+      HTTP.get(`/tags_only_pro`)
     ]);
     this.categories = cat.data
     this.tags = tag.data

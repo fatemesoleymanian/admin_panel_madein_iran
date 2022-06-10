@@ -19,6 +19,8 @@ import Comments from "../views/Comments";
 import FAQs from "../views/FAQs";
 import Testimonial from "../views/Testimonial";
 import Forms from "../views/Forms";
+import Departments from "../views/Departments";
+import Tags from "../views/Tags";
 
 const routes = [
   {
@@ -35,6 +37,16 @@ const routes = [
     path: "/products",
     name: "محصولات",
     component: Products,
+  },
+  {
+    path: "/departments",
+    name: "دپارتمان ها",
+    component: Departments,
+  },
+  {
+    path: "/tags",
+    name: "تگ ها",
+    component: Tags,
   },
   {
     path: "/product/new",
