@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-auto h-auto collapse navbar-collapse max-height-vh-100 h-100"
+    class="w-auto h-auto collapse navbar-collapse  h-100"
     id="sidenav-collapse-main"
   >
     <ul class="navbar-nav">
@@ -20,6 +20,13 @@
       </li>
        <li class="nav-item">
         <sidenav-collapse navText="محصولات" :to="{ name: 'محصولات' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+       <li class="nav-item">
+        <sidenav-collapse navText="وبلاگ" :to="{ name: 'پست ها' }">
           <template #icon>
             <office />
           </template>
@@ -68,6 +75,13 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
+        <sidenav-collapse navText="دسته بندی ها" :to="{ name: 'دسته بندی ها' }">
+          <template #icon>
+            <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
         <sidenav-collapse navText="تگ ها" :to="{ name: 'تگ ها' }">
           <template #icon>
             <office />
@@ -78,6 +92,27 @@
         <sidenav-collapse navText="سفارشات" :to="{ name: 'Orders' }">
           <template #icon>
             <office />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="اعضا پنل کنترل" :to="{ name: 'ادمین ها' }">
+          <template #icon>
+            <credit-card />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText=" نقش ها" :to="{ name: 'نقش ها' }">
+          <template #icon>
+            <credit-card />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li class="nav-item">
+        <sidenav-collapse navText="تراکنش ها" :to="{ name: 'تراکنش ها' }">
+          <template #icon>
+            <credit-card />
           </template>
         </sidenav-collapse>
       </li>

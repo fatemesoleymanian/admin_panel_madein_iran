@@ -165,7 +165,7 @@
       <h6>دپارتمان ها</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن آیکون</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن دپارتمان</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -213,9 +213,11 @@
               <p class="text-xs font-weight-bold mb-0">{{u.name}}</p>
             </td>
             <td>
+              <router-link to="/categories">
               <p class="text-xs font-weight-bold mb-0" v-for="(c,i) in u.category" :key="i">
                 {{c.name}},
               </p>
+              </router-link>
             </td>
             <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"

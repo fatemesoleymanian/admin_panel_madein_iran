@@ -8,11 +8,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">اقدام به حذف عکس محصول</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">اقدام به حذف عکس پست</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            آیا از حذف عکس محصول اطمینان دارید؟
+            آیا از حذف عکس پست اطمینان دارید؟
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no" >خیر</button>
@@ -22,45 +22,6 @@
       </div>
     </div>
     <!--    modal-->
-    <!--    modal for add state-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">افزودن ظرفیت محصول</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">نام ظرفیت :</h6>
-                </div>
-                <input type="text" class="form-control"  placeholder="نام ظرفیت" v-model="newStateName">
-              </div>
-              <div class="mb-3">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">قیمت ظرفیت :</h6>
-                </div>
-                <input type="number" class="form-control"  placeholder="قیمت ظرفیت" v-model="newStateCost" @change="doNewOff">
-              </div>
-              <div class="mb-3" v-if="product.discount !== 0">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">قیمت تخفیفی ظرفیت :</h6>
-                </div>
-                <input type="text" class="form-control"  placeholder="قیمت تخفیفی ظرفیت" v-model="newStateOff"
-                       readonly>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="saveNewState">انصراف</button>
-            <button type="button" class="btn btn-primary"  @click="addState" >ثبت</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--    modal for add state-->
     <div class="row">
       <div class="col-12 mb-lg-0 mb-4">
         <div class="card">
@@ -68,11 +29,12 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="d-flex flex-row">
-                  <h5 class="font-weight-bolder">عکس محصول :</h5>
+                  <h5 class="font-weight-bolder">عکس پست :</h5>
                 </div>
                 <div class="d-flex flex-row  w-50 mt-5 me-5">
                   <vsud-button size="lg" color="success" variant="outline"
-                               data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-if="!upload">تغییر عکس محصول</vsud-button>
+                               data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-if="!upload">تغییر عکس پست
+                  </vsud-button>
                 </div>
               </div>
               <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
@@ -83,15 +45,15 @@
                     <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                       <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                       <place-holder-card
-                          :title="{ text: 'بارگذاری عکس محصول', variant: 'h5' }"
+                          :title="{ text: 'بارگذاری عکس پست', variant: 'h5' }"
                       />
                     </div>
                     <img v-else
                          width="500"
                          height="300"
                          class="w-100 position-relative z-index-2"
-                         :src="'http://localhost:8000'+product.image"
-                         :alt="product.name"
+                         :src="'http://localhost:8000'+product.featuredImage"
+                         :alt="product.slug"
                     />
                   </div>
                 </div>
@@ -104,15 +66,15 @@
     <div class="row py-5">
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">نام محصول :</h6>
+          <h6 class="mb-0 p-2"> تیتر  :</h6>
         </div>
-        <input type="text" class="form-control " placeholder="نام محصول" v-model="product.name"
-               title="نام محصول"/>
+        <input type="text" class="form-control " placeholder="تیتر " v-model="product.title"
+               title="تیتر"/>
 
       </div>
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">دسته بندی محصول :</h6>
+          <h6 class="mb-0 p-2">دسته بندی  :</h6>
         </div>
         <select class="form-select text-start " aria-label="Default select example" v-model="category">
           <option v-for="(c,i) in categories" :key="i" :value="c.id">{{c.name}}</option>
@@ -120,7 +82,7 @@
       </div>
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">تگ های محصول :</h6>
+          <h6 class="mb-0 p-2">تگ ها :</h6>
         </div>
         <select class="form-select mb-3 text-start" aria-label="Default select example" v-model="tmp"
                 @change="addTag">
@@ -135,83 +97,27 @@
 
       </div>
     </div>
-    <div class="row py-5 " id="states">
-      <div class="d-flex flex-row">
-        <h5 class="font-weight-bolder">ظرفیت های محصول :</h5>
-        <div class="me-auto d-flex justify-content-between">
-          <label for="discount" class="form-label">درصد تخفیف محصول :</label>
-          <input type="number" class="form-control form-control-sm" id="discount" placeholder="درصد تخفیف محصول"
-                 v-model="product.discount" @change="doOff" style="height:40px" title="پس از وارد کردن درصد تخفیف کلید Enter یا Done را فشار دهید.">
-        </div>
-      </div>
-      <hr class="bg-dark text-dark " style="width: 100%;height: 2px">
-      <div class=" d-flex justify-content-end my-4">
-        <vsud-button color="dark" size="lg" variant="outline"
-                     data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
-          افزودن ظرفیت
-          <i class="ni ni-fat-add"></i>
-        </vsud-button>
-      </div>
-      <div class="row"  v-for="(s,i) in product.state"  :key="i" >
-        <i class="ni ni-fat-remove d-flex justify-content-end" style="cursor: pointer;margin-bottom: -10px;font-size: 23px"
-           @click="removeState(s)"></i>
-        <div class="col-md-4 col-12  ">
-          <div class="d-flex align-items-center">
-            <h6 class="mb-0 p-2">نام ظرفیت :</h6>
-          </div>
-          <input type="text" class="form-control" id="state_type" placeholder="نام ظرفیت" v-model="s.type">
-        </div>
-        <div class="col-md-4 col-12">
-          <div class="d-flex align-items-center">
-            <h6 class="mb-0 p-2">قیمت به تومان :</h6>
-          </div>
-          <input type="text" class="form-control" id="state_price" placeholder="قیمت :" v-model="s.price">
-
-        </div>
-        <div class="col-md-4 col-12 " v-if="product.discount !== 0">
-          <div class="d-flex align-items-center">
-            <h6 class="mb-0 p-2">قیمت تخفیفی :</h6>
-          </div>
-          <input type="text" class="form-control" id="state_discounted_price" placeholder=" قیمت تخفیفی"
-                 :value="s.discounted_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-          >
-
-        </div>
-      </div>
-
-    </div>
     <div class="row py-2">
       <div class="col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">مشخصات فنی محصول :</h6>
+          <h6 class="mb-0 p-2">پست :</h6>
         </div>
         <tinymce
-            id="product_create"
-            ref="product_create"
-            :initialValue="product.description"
-            :init="{
-                          height: 10000,
-                          menubar: true,
-                          plugins: [
-                            'advlist autolink lists link image charmap',
-                            'searchreplace visualblocks code fullscreen',
-                            'print preview anchor insertdatetime media',
-                            'paste code help wordcount table'
-                          ],
-                          toolbar:
-                            'undo redo | formatselect | bold italic | \
-                            alignleft aligncenter alignright | \
-                            bullist numlist outdent indent '
-                        }"
-            v-model="product.description"
+            id="post_create"
+            ref="post_create"
+            :initialValue="product.post"
+            :plugins="myPlugins"
+            :toolbar ="myToolbar1"
+            :init="myInit"
+            v-model="product.post"
         />
       </div>
       <div class="col-12 my-3 py-4 px-2">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">توضیحات محصول :</h6>
+          <h6 class="mb-0 p-2"> چکیده پست :</h6>
         </div>
         <textarea class="form-control" id="exampleFormControlTextarea1" rows="5"
-                  v-model="product.description_excerpt"></textarea>
+                  v-model="product.post_excerpt"></textarea>
       </div>
     </div>
     <div class="row py-3 my-2 px-1">
@@ -255,11 +161,11 @@
         <div class="font-weight-bold">
           <vsud-button
               style="border: none;font-size: 16px"
-              @click="$router.push('/products')"
+              @click="$router.push('/posts')"
               size="lg"
               variant="outline"
               color="dark"> <i class="ni ni-bold-right"></i>
-            بازگشت به محصولات
+            بازگشت به وبلاگ
 
           </vsud-button>
 
@@ -281,36 +187,77 @@
   </div>
 </template>
 
-
 <script>
 import {HTTP} from "../http-common";
-import tinymce from 'vue-tinymce-editor'
-import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
+import VsudBadge from "../components/VsudBadge";
 
 export default {
-  name: "AddProduct",
-  components: {
-    PlaceHolderCard,
-    VsudButton,
-    VsudBadge,
-    'tinymce': tinymce
-  },
+  name: "AddPost",
+  components: {VsudBadge, PlaceHolderCard, VsudButton},
   data()
   {
     return{
+      myToolbar1: 'undo upload redo | bold italic underline preview | alignleft aligncenter alignright alignjustify ' +
+          '| bullist numlist outdent indent | link image',
+      myPlugins: "link upload image code preview imagetools table",
+
+      myInit: {
+        images_dataimg_filter: function (img) {
+
+          return img.hasAttribute('internal-blob');
+        },
+        convert_urls: false,
+        height: 500,
+        automatic_uploads: false,
+        images_upload_base_path: 'img/blogs/post',
+        relative_urls: false,
+
+        // override default upload handler to simulate successful upload
+        images_upload_handler: function (blobInfo, success, failure, folderName) {
+          console.log(folderName)
+          var xhr, formData;
+          xhr = new XMLHttpRequest();
+          xhr.withCredentials = false;
+
+          xhr.open('POST', '/upload');
+          var token = document.head.querySelector("[name=csrf-token]").content;
+          xhr.setRequestHeader("X-CSRF-Token", token);
+
+          xhr.onload = function () {
+            var json;
+
+            if (xhr.status != 200) {
+              failure('HTTP Error: ' + xhr.status);
+              return;
+            }
+            json = JSON.parse(xhr.responseText);
+
+            if (!json || typeof json.location != 'string') {
+              failure('Invalid JSON: ' + xhr.responseText);
+              return;
+            }
+            success(json.location);
+
+          };
+
+          formData = new FormData();
+          formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+          xhr.send(formData);
+
+        },
+      },
       isCreating:false,
       id:this.$route.params.id,
       product:{
-        name:'',
+        title:'',
         category_id:'',
         tag:[],
-        image:'',
-        state:[],
-        discount:0,
-        description:'',
-        description_excerpt:'',
+        featuredImage:'',
+        post:'',
+        post_excerpt:'',
         slug:'',
         metaKeyword:'',
         metaDescription:'',
@@ -320,57 +267,43 @@ export default {
       tags:[],
       category:'',
       tag:[],
-      costs:[],
-      states:[],
-      off:[],
       upload:true,
       tmp:'',
-      newStateName:'',
-      newStateCost:'',
-      newStateOff:''
     }
   },
   async created() {
     const [cat, tag] = await Promise.all([
-      HTTP.get(`/categories`),
-      HTTP.get(`/tags_only_pro`)
+      HTTP.get(`/blog_categories_list`),
+      HTTP.get(`/tags_only_blog`)
     ]);
     this.categories = cat.data
     this.tags = tag.data
   },
   methods:{
     async update(){
+      window.tinymce.activeEditor.uploadImages(function(success) {
+        // document.forms[0].submit();
+        console.log('here');
+        console.log(success)
+      });
       this.isCreating = true
 
-      this.states = [];
-      this.costs = [];
-      this.off = [];
-      for (let i in this.product.state){
-        this.states.push(this.product.state[i].type)
-        this.costs.push(this.product.state[i].price)
-        if (this.product.discount !== 0) {
-          this.off.push(this.product.state[i].discounted_price)
-        }
-        else {
-          this.off.push((this.product.state[i].price))
-        }
-      }
-      this.product.description= window.tinymce.get("product_create").getContent();
+      this.product.post= window.tinymce.get("post_create").getContent();
 
-      if(this.product.name.trim() === '') {
+      if(this.product.title.trim() === '') {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "نام محصول الزامیست!",
+          text: " تیتر الزامیست!",
           type: 'error',
         });
 
       }
-      if(this.product.image.trim() === '') {
+      if(this.product.featuredImage.trim() === '') {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "عکس محصول الزامیست!",
+          text: "عکس الزامیست!",
           type: 'error',
         });
 
@@ -379,7 +312,7 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "دسته بندی محصول الزامیست!",
+          text: "دسته بندی الزامیست!",
           type: 'error',
         });
 
@@ -388,44 +321,25 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "حداقل یک تگ برای محصول الزامیست!",
+          text: "حداقل یک تگ برای پست الزامیست!",
           type: 'error',
         });
 
       }
-      if (this.product.discount === '') this.product.discount = 0
-      if(this.states.length === 0 || this.costs.length === 0   ) {
+      if (this.product.post.trim() === '') {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "حداقل یک ظرفیت برای محصول الزامیست!",
+          text: "متن پست الزامیست!",
           type: 'error',
         });
 
       }
-      if(this.states.length !== this.costs.length  ) {
+      if (this.product.post_excerpt.trim() === '') {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: " ظرفیت محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if (this.product.description.trim() === '') {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: "مشخصات فنی محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if (this.product.description_excerpt.trim() === '') {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: "توضیحات محصول الزامیست!",
+          text: " چکیده پست الزامیست!",
           type: 'error',
         });
 
@@ -434,7 +348,7 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "حداقل یک کلیدواژه برای محصول الزامیست!",
+          text: "حداقل یک کلیدواژه برای پست الزامیست!",
           type: 'error',
         });
 
@@ -443,7 +357,7 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "عنوان صفحه محصول الزامیست!",
+          text: "عنوان صفحه پست الزامیست!",
           type: 'error',
         });
 
@@ -452,7 +366,7 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "توضیحات متای محصول الزامیست!",
+          text: "توضیحات متای پست الزامیست!",
           type: 'error',
         });
 
@@ -461,7 +375,7 @@ export default {
         this.isCreating = false
         return  this.$notify({
           title: "خطا",
-          text: "نشانک محصول الزامیست!",
+          text: "نشانک پست الزامیست!",
           type: 'error',
         });
 
@@ -469,24 +383,26 @@ export default {
 
 
       const data = {
-        discount:this.product.discount,
-        name:this.product.name,
-        image:this.product.image,
+        title:this.product.title,
+        featuredImage:this.product.featuredImage,
         category_id : this.category,
-        tags : this.tag,
-        states:this.states,
-        off:this.off,
-        costs:this.costs,
-        description:this.product.description,
-        description_excerpt:this.product.description_excerpt,
+        tag_id : this.tag,
+        post:this.product.post,
+        post_excerpt:this.product.post_excerpt,
         metaKeyword:this.product.metaKeyword,
         pageTitle:this.product.pageTitle,
         metaDescription:this.product.metaDescription,
         slug:this.product.slug
-
       }
 
-      const res = await HTTP.post( '/products', data);
+      const res = await HTTP.post( '/blogs', data).catch(()=>{
+        this.isCreating = false
+        return this.$notify({
+          title: "عملیات ناموفق!",
+          text:"خطا در ایجاد محصول",
+          type: 'error',
+        });
+      });
       if(res.status===200){
         this.$notify({
           title: "عملیات موفق!",
@@ -506,9 +422,16 @@ export default {
     async deleteImage()
     {
       const data = {
-        imageName : this.product.image
+        imageName : this.product.featuredImage
       }
-      const deleteUploaded = await HTTP.post('/remove_upload',data);
+      const deleteUploaded = await HTTP.post('/remove_upload',data)
+      .catch(()=>{
+        this.$notify({
+          title: "عملیات ناموفق!",
+          text: deleteUploaded.data.msg,
+          type: 'error',
+        });
+      });
       if (deleteUploaded.data.success === 1) {
         document.getElementById('no').click();
         this.$notify({
@@ -534,12 +457,19 @@ export default {
     {
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
-      formData.append("location", 'img/products');
-      const upload =  await HTTP.post('/upload',formData);
+      formData.append("location", 'img/blogs/post');
+      const upload =  await HTTP.post('/upload',formData)
+      .catch(()=>{
+        this.$notify({
+          title: "عملیات ناموفق!",
+          text: upload.data.errors.message,
+          type: 'error',
+        });
+      });
 
       if (upload.data.success === 1)
       {
-        this.product.image = upload.data.file.url
+        this.product.featuredImage = upload.data.file.url
         this.$notify({
           title: "عملیات موفق!",
           text: "لطفا برای ثبت عکس روی ثبت تغییرات کلیک کنید. ",
@@ -584,58 +514,10 @@ export default {
         });
       }
     },
-    doOff()
-    {
-      const dis = this.product.discount
-
-      for (let i in this.product.state)
-      {
-        this.product.state[i].discounted_price = this.product.state[i].price-((this.product.state[i].price*dis)/100)
-      }
-    },
-    doNewOff()
-    {
-      if (this.product.discount === 0) return this.newStateOff = this.newStateCost
-      return this.newStateOff = this.newStateCost - ((this.newStateCost*this.product.discount)/100)
-    },
-    addState()
-    {
-      if (this.newStateName.trim() === '') return this.$notify({
-        title: "عملیات ناموفق!",
-        text: "نام ظرفیت الزامیست.",
-        type: 'error',
-      });
-      if (this.newStateCost === '') return this.$notify({
-        title: "عملیات ناموفق!",
-        text: "قیمت ظرفیت الزامیست.",
-        type: 'error',
-      });
-
-      if (this.product.discount === 0)  this.newStateOff = this.newStateCost;
-      document.getElementById('saveNewState').click();
-
-      const arr = {
-        'type': this.newStateName,
-        'price': this.newStateCost.toString(),
-        'discounted_price': this.newStateOff.toString()
-      }
-      this.product.state.push(arr)
-      this.newStateName = '';
-      this.newStateCost = '';
-      this.newStateOff = ''
-
-
-    },
-    removeState(state)
-    {
-      this.product.state = this.product.state.filter(function (e){
-        return e.type !== state.type
-      })
-
-    }
   },
 }
 </script>
+
 <style scoped>
 
 </style>

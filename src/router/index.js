@@ -21,6 +21,13 @@ import Testimonial from "../views/Testimonial";
 import Forms from "../views/Forms";
 import Departments from "../views/Departments";
 import Tags from "../views/Tags";
+import Categories from "../views/Categories";
+import Blogs from "../views/Blogs";
+import AddPost from "../views/AddPost";
+import PostDetails from "../views/PostDetails";
+import Admins from "../views/Admins";
+import Roles from "../views/Roles";
+import Transactions from "../views/Transactions";
 
 const routes = [
   {
@@ -39,9 +46,19 @@ const routes = [
     component: Products,
   },
   {
+    path: "/posts",
+    name: "پست ها",
+    component: Blogs,
+  },
+  {
     path: "/departments",
     name: "دپارتمان ها",
     component: Departments,
+  },
+  {
+    path: "/categories",
+    name: "دسته بندی ها",
+    component: Categories,
   },
   {
     path: "/tags",
@@ -57,6 +74,16 @@ const routes = [
     path: "/product/details:id",
     name: "مشخصات محصول",
     component: ProductDetails,
+  },
+  {
+    path: "/post/new",
+    name: "افزودن پست جدید",
+    component: AddPost,
+  },
+  {
+    path: "/post/details:id",
+    name: "جزئیات پست",
+    component: PostDetails,
   },
   {
     path: "/users",
@@ -127,6 +154,21 @@ const routes = [
     path: "/rtl-page",
     name: "Rtl",
     component: Rtl,
+  },
+  {
+    path: "/admins",
+    name: "ادمین ها",
+    component: Admins,
+  },
+  {
+    path: "/roles",
+    name: "نقش ها",
+    component: Roles,
+  },
+  {
+    path: "/transactions",
+    name: "تراکنش ها",
+    component: Transactions,
   },
   {
     path: "/sign-in",

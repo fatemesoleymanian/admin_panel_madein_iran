@@ -148,7 +148,10 @@
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline;min-height: 100px;" v-for="(b,k) in u.blog" :key="k">
-                {{b.title}} ,</p>
+                <router-link :to="`/post/details${b.id}`">
+                  {{b.title}} ,
+                </router-link>
+              </p>
             </td>
             <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"

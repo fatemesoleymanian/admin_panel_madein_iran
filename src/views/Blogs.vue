@@ -7,15 +7,15 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">اقدام به حذف کاربر</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">اقدام به حذف پست</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            آیا از حذف این محصول اطمینان دارید؟
+            آیا از حذف این پست اطمینان دارید؟
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no" >خیر</button>
-            <button type="button" class="btn btn-primary" @click="deleteProduct">بله</button>
+            <button type="button" class="btn btn-primary" @click="deletePost">بله</button>
           </div>
         </div>
       </div>
@@ -25,16 +25,17 @@
       <h6>جدول محصولات فروشگاه</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="md" @click="$router.push('/product/new')">افزودن محصول</vsud-button>
+      <vsud-button color="dark" size="md" @click="$router.push('/post/new')">افزودن پست</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
+        paginate mikhad
         <table class="table align-items-center mb-0">
           <thead>
           <tr>
             <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              نام محصول
+             تیتر
             </th>
             <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -42,7 +43,7 @@
             </th>
             <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              ظرفیت ها
+              تگ ها
             </th>
             <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -50,39 +51,38 @@
             </th>
             <th
                 class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-             اقدامات
+              اقدامات
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in products" :key="i" >
+          <tr  v-for="(u, i) in posts" :key="i" >
             <td>
               <div class="d-flex  py-1">
                 <div >
                   <vsud-avatar
-                      :img="'http://localhost:8000'+u.image"
+                      :img="'http://localhost:8000'+u.featuredImage"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
-                      :alt="u.name"
+                      :alt="u.slug"
                   />
                 </div>
                 <div class="d-flex flex-column justify-content-center">
-                  <h6 class="mb-0 text-sm">{{u.name}}</h6>
-                  <p class="text-xs text-secondary mb-0">
-                    {{u.discount}}%
-                  </p>
+                  <h6 class="mb-0 text-sm">{{u.title}}</h6>
                 </div>
               </div>
             </td>
             <td>
               <router-link to="/categories">
-              <p class="text-xs font-weight-bold mb-0">{{u.category.name}}</p>
+                <p class="text-xs font-weight-bold mb-0">{{u.category.name}}</p>
               </router-link>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
-              <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="s in u.state" :key="s">
-                {{s.type}} - </p>
+              <router-link to="/tags">
+              <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="s in u.tag" :key="s">
+                {{s.name}} - </p>
+              </router-link>
             </td>
             <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
@@ -92,9 +92,9 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="productToDel=u;index=i;">حذف </vsud-badge>
+                          @click="postToDel=u;index=i;">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
-                          @click="$router.push(`/product/details${u.id}`)">
+                          @click="$router.push(`/post/details${u.id}`)">
                 جزئیات</vsud-badge>
             </td>
 
@@ -106,50 +106,54 @@
 
   </div>
 </template>
+
 <script>
 import {HTTP} from "../http-common";
-import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
 import VsudAvatar from "../components/VsudAvatar";
+import VsudBadge from "../components/VsudBadge";
 
 export default {
-  components: {VsudAvatar, VsudButton, VsudBadge},
+  name: "Blogs",
+  components: {VsudBadge, VsudAvatar, VsudButton},
   data()
   {
     return{
-      products:[],
-      productToDel:'',
+      posts:[],
+      postToDel:'',
       index:0
     }
   },
   async mounted(){
-    const users = await HTTP.get('/products');
-    this.products = users.data
+    const post = await HTTP.get('/blogs');
+    this.posts = post.data.data
   },
   methods:{
-    async deleteProduct()
+    async deletePost()
     {
 
-      const delet = await HTTP.delete(`/products/${this.productToDel.id}`)
-      if (delet.status === 200)
-      {
+       await HTTP.delete(`/blogs/${this.postToDel.id}`)
+     .catch(()=>{
+       document.getElementById('no').click();
+       return this.$notify({
+         title: "عملیات ناموفق!",
+         text: "خطا در حذف پست",
+         type: 'error',
+       });
+     });
         document.getElementById('no').click();
         this.$notify({
           title: "عملیات موفق!",
-          text: "محصول با موفقیت حذف گردید!",
+          text: "پست با موفقیت حذف گردید!",
           type: 'success',
         });
-    this.products.splice(this.index,1)
-      }
-      else {
-        document.getElementById('no').click();
-        this.$notify({
-          title: "عملیات ناموفق!",
-          text: "خطا در حذف محصول",
-          type: 'error',
-        });
-      }
+        this.posts.splice(this.index,1)
+
     }
   }
 }
 </script>
+
+<style scoped>
+
+</style>
