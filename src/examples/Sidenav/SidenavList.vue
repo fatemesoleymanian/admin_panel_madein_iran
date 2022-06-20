@@ -7,112 +7,17 @@
       <li class="nav-item">
         <sidenav-collapse navText="داشبورد" :to="{ name: 'Dashboard' }">
           <template #icon>
-            <shop />
+            <i class="bi bi-house-fill" style="color: #3A416F;font-size: 17px;"></i>
           </template>
         </sidenav-collapse>
       </li>
-       <li class="nav-item">
-        <sidenav-collapse navText="کاربران" :to="{ name: 'کاربران' }">
+      <li class="nav-item" v-for="(item,i) in items" :key="i">
+        <sidenav-collapse
+            :navText="item.title"
+            :to="{ name: item.route }"
+        >
           <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-       <li class="nav-item">
-        <sidenav-collapse navText="محصولات" :to="{ name: 'محصولات' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-       <li class="nav-item">
-        <sidenav-collapse navText="وبلاگ" :to="{ name: 'پست ها' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="اسلایدر" :to="{ name: 'اسلایدر' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="دیدگاه ها" :to="{ name: 'دیدگاه های محصولات' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="پرسش های متداول" :to="{ name: 'پرسش های متداول' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="نظرات مشتریان" :to="{ name: 'نظرات مشتریان' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="فرم ها" :to="{ name: 'فرم ها' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="دپارتمان ها" :to="{ name: 'دپارتمان ها' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="دسته بندی ها" :to="{ name: 'دسته بندی ها' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="تگ ها" :to="{ name: 'تگ ها' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-        <li class="nav-item">
-        <sidenav-collapse navText="سفارشات" :to="{ name: 'Orders' }">
-          <template #icon>
-            <office />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="اعضا پنل کنترل" :to="{ name: 'ادمین ها' }">
-          <template #icon>
-            <credit-card />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText=" نقش ها" :to="{ name: 'نقش ها' }">
-          <template #icon>
-            <credit-card />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="تراکنش ها" :to="{ name: 'تراکنش ها' }">
-          <template #icon>
-            <credit-card />
+          <i :class="item.icon" style="color: #3A416F;font-size: 17px;"></i>
           </template>
         </sidenav-collapse>
       </li>
@@ -120,17 +25,18 @@
       <li class="nav-item">
         <sidenav-collapse navText="Tables" :to="{ name: 'Tables' }">
           <template #icon>
-            <office />
+            <i class="bi bi-house" style="color: #3A416F"></i>
           </template>
         </sidenav-collapse>
       </li>
       <li class="nav-item">
         <sidenav-collapse navText="Billing" :to="{ name: 'Billing' }">
           <template #icon>
-            <credit-card />
+            <i class="bi bi-house" style="color: #3A416F"></i>
           </template>
         </sidenav-collapse>
       </li>
+
 
       <li class="nav-item">
         <sidenav-collapse
@@ -142,13 +48,13 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="RTL" :to="{ name: 'Rtl' }">
-          <template #icon>
-            <settings />
-          </template>
-        </sidenav-collapse>
-      </li>
+<!--      <li class="nav-item">-->
+<!--        <sidenav-collapse navText="RTL" :to="{ name: 'Rtl' }">-->
+<!--          <template #icon>-->
+<!--            <settings />-->
+<!--          </template>-->
+<!--        </sidenav-collapse>-->
+<!--      </li>-->
       <li class="mt-3 nav-item">
         <h6
           class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6"
@@ -157,41 +63,28 @@
           PAGES
         </h6>
       </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="Profile" :to="{ name: 'Profile' }">
-          <template #icon>
-            <customer-support />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="Sign In" :to="{ name: 'Sign In' }">
-          <template #icon>
-            <document />
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="Sign Up" :to="{ name: 'Sign Up' }">
-          <template #icon>
-            <spaceship />
-          </template>
-        </sidenav-collapse>
-      </li>
+
+<!--      <li class="nav-item">-->
+<!--        <sidenav-collapse navText="Sign In" :to="{ name: 'Sign In' }">-->
+<!--          <template #icon>-->
+<!--            <document />-->
+<!--          </template>-->
+<!--        </sidenav-collapse>-->
+<!--      </li>-->
+<!--      <li class="nav-item">-->
+<!--        <sidenav-collapse navText="Sign Up" :to="{ name: 'Sign Up' }">-->
+<!--          <template #icon>-->
+<!--            <spaceship />-->
+<!--          </template>-->
+<!--        </sidenav-collapse>-->
+<!--      </li>-->
     </ul>
   </div>
 
 </template>
 <script>
 import SidenavCollapse from "./SidenavCollapse.vue";
-import Shop from "../../components/Icon/Shop.vue";
-import Office from "../../components/Icon/Office.vue";
-import CreditCard from "../../components/Icon/CreditCard.vue";
 import Box3d from "../../components/Icon/Box3d.vue";
-import CustomerSupport from "../../components/Icon/CustomerSupport.vue";
-import Document from "../../components/Icon/Document.vue";
-import Spaceship from "../../components/Icon/Spaceship.vue";
-import Settings from "../../components/Icon/Settings.vue";
 
 export default {
   name: "SidenavList",
@@ -200,21 +93,97 @@ export default {
   },
   data() {
     return {
-      title: "Soft UI Dashboard PRO",
-      controls: "dashboardsExamples",
-      isActive: "active",
+      title: "کنترل پنل ساخت ایران",
+      controls: "داشبورد",
+      isActive: "فعال",
+      permission:[],
+      items:[
+        {
+          title:'کاربران',
+          route:'کاربران',
+          icon:'bi bi-people-fill',
+        },
+        {
+          title:'محصولات',
+          route:'محصولات',
+          icon:'bi bi-basket-fill',
+        },
+        {
+          title:'وبلاگ',
+          route:'پست ها',
+          icon:'bi bi-file-richtext-fill',
+        },
+        {
+          title:'اسلایدر',
+          route:'اسلایدر',
+          icon:'bi bi-file-easel-fill',
+        },
+        {
+          title:'دیدگاه ها',
+          route:'دیدگاه های محصولات',
+          icon:'bi bi-chat-text-fill',
+        },
+        {
+          title:'پرسش های متداول',
+          route:'پرسش های متداول',
+          icon:'bi bi-patch-question-fill',
+        },
+        {
+          title:'نظرات مشتریان',
+          route:'نظرات مشتریان',
+          icon:'bi bi-chat-right-quote-fill',
+        },
+        {
+          title:'فرم ها',
+          route:'فرم ها',
+          icon:'bi bi-file-text-fill',
+        },
+        {
+          title:'دپارتمان ها',
+          route:'دپارتمان ها',
+          icon:'bi bi-diagram-3-fill',
+        },
+        {
+          title:'دسته بندی ها',
+          route:'دسته بندی ها',
+          icon:'bi bi-inboxes-fill',
+        },
+        {
+          title:'تگ ها',
+          route:'تگ ها',
+          icon:'bi bi-tags-fill',
+        },
+        {
+          title:'سفارشات',
+          route:'Orders',
+          icon:'bi bi-receipt-cutoff',
+        },
+        {
+          title:'اعضا پنل کنترل',
+          route:'ادمین ها',
+          icon:'bi bi-person-circle',
+        },
+        {
+          title:'نقش ها',
+          route:'نقش ها',
+          icon:'bi bi-signpost-split-fill',
+        },
+        {
+          title:'تراکنش ها',
+          route:'تراکنش ها',
+          icon:'bi bi-credit-card-fill',
+        },
+        {
+          title:'پروفایل',
+          route:'پروفایل',
+          icon:'bi bi-person-bounding-box',
+        },
+      ]
     };
   },
   components: {
     SidenavCollapse,
-    Shop,
-    Office,
-    CreditCard,
     Box3d,
-    CustomerSupport,
-    Document,
-    Spaceship,
-    Settings,
   },
   methods: {
     getRoute() {
@@ -222,5 +191,26 @@ export default {
       return routeArr[1];
     },
   },
+  mounted() {
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].read === 1) this.permission.push(permissions[i].module.name)
+    }
+    const items = this.items
+    let list = [];
+   for (let i in items)
+   {
+   this.permission.map(function (e){
+     if ( e === items[i].title) list.push(items[i])
+   });
+   }
+   this.items = list;
+  }
 };
 </script>
+<style scoped>
+i{
+  font-size: 20px;
+}
+</style>

@@ -193,6 +193,7 @@
         </div>
         <div class="font-weight-bold">
           <vsud-button
+              v-if="updatee"
               @click="update"
               style="font-size: 18px"
               size="lg"
@@ -220,6 +221,7 @@ export default {
   data()
   {
     return{
+      updatee:1,
       isCreating:false,
       id:this.$route.params.id,
       post:'',
@@ -233,15 +235,35 @@ export default {
       }
   },
   async mounted(){
-    const product = await HTTP.get(`/blogs/${this.id}`);
-    this.post = product.data
-    this.category = product.data.category.id
-
-    for (let i in product.data.tag)
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
     {
-      this.tag.push(product.data.tag[i].id)
+      if (permissions[i].module.name === 'وبلاگ'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].update === 0) this.updatee=0;
+      }
     }
-    window.tinymce.get("post_update").setContent(product.data.post);
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+      await HTTP.get(`/blogs/${this.id}`)
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((product)=> {
+            this.post = product.data
+            this.category = product.data.category.id
+
+      for (let i in product.data.tag) {
+        this.tag.push(product.data.tag[i].id)
+      }
+      window.tinymce.get("post_update").setContent(product.data.post);
+          });
+    }
   },
   async created() {
     const [cat, tag] = await Promise.all([

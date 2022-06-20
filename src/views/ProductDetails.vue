@@ -277,6 +277,7 @@
         </div>
         <div class="font-weight-bold">
           <vsud-button
+              v-if="updatee"
               @click="update"
               style="font-size: 18px"
               size="lg"
@@ -325,24 +326,44 @@ export default {
       tmp:'',
       newStateName:'',
       newStateCost:'',
-      newStateOff:''
+      newStateOff:'',
+      updatee:1
     }
   },
   async mounted(){
-    const product = await HTTP.get(`/products/${this.id}`);
-    this.product = product.data
-  this.category = product.data.category.id
-
-    for (let i in product.data.tag)
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
     {
-      this.tag.push(product.data.tag[i].id)
+      if (permissions[i].module.name === 'محصولات'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].update === 0) this.updatee=0;
+      }
     }
-    for (let i in product.data.state)
-    {
-      this.ids.push(product.data.state[i].id)
-    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+       await HTTP.get(`/products/${this.id}`)
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((product)=> {
+            this.product = product.data
+            this.category = product.data.category.id
 
-    window.tinymce.get("product_update").setContent(product.data.description);
+      for (let i in product.data.tag) {
+        this.tag.push(product.data.tag[i].id)
+      }
+      for (let i in product.data.state) {
+        this.ids.push(product.data.state[i].id)
+      }
+
+      window.tinymce.get("product_update").setContent(product.data.description);
+          });
+    }
   },
   async created() {
     const [cat, tag] = await Promise.all([

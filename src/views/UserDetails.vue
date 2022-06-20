@@ -177,7 +177,7 @@
                   <td class="align-middle text-center text-sm ">
                     <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="orderToDel=u;index=i;"
+                                @click="orderToDel=u;index=i;" v-if="remove"
                     >حذف </vsud-badge
                     >
                     <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
@@ -225,15 +225,38 @@ export default {
         user:'',
         orders:[],
         orderToDel:'',
-        index:0
+        index:0,
+        remove:1
       }
   },
   async mounted() {
- const orders = await HTTP.get(`/orders/${this.id}`)
- const user = await HTTP.get(`/show_acc/${this.id}`)
-    this.orders = orders.data
-    console.log(this.orders)
-    this.user = user.data
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'کاربران'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+      await Promise.all([
+        HTTP.get(`/orders/${this.id}`),
+        HTTP.get(`/show_acc/${this.id}`)
+      ])
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((res)=> {
+            this.orders = res[0].data
+            this.user = res[1].data
+          });
+    }
   },
   methods:{
     async deleteOrder()

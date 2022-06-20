@@ -44,8 +44,9 @@
               </table>
 
             </div>
-            <vsud-pagination class="my-3 float-start  mx-4" v-if="emptyIdeas.length" color="success" size="sm">
+            <vsud-pagination class="my-3 float-start  mx-5" v-if="emptyIdeas.length" color="success" size="sm">
               <vsud-pagination-item v-for="(e,i) in empties.data.users.links" :key="i"
+                                    v-show="hide"
                                     :label="checkLabel(e.label)" :active="e.active" @click="updateEmpties(e.label)"
               />
             </vsud-pagination>
@@ -110,8 +111,9 @@
                     </tbody>
                   </table>
                 </div>
-                <vsud-pagination class="my-3 float-start  mx-4" v-if="newIdeas.length" color="success" size="sm">
+                <vsud-pagination class="my-3 float-start  mx-5" v-if="newIdeas.length" color="success" size="sm">
                   <vsud-pagination-item v-for="(e,i) in ideas.data.users.links" :key="i"
+                                        v-show="hide"
                                         :label="checkLabel(e.label)" :active="e.active" @click="updateIdeas(e.label)"/>
                 </vsud-pagination>
               </div>
@@ -139,6 +141,7 @@ export default {
       ideas: {},
       flag1: true,
       flag2: true,
+      hide:1
     }
   },
   methods: {
@@ -189,10 +192,28 @@ export default {
       this.newIdeas = this.ideas.data.users.data;
     },
     checkLabel(label) {
-      if (label === 'Next &raquo;') return '>'
-      else if (label === '&laquo; Previous') return '<'
-      else return label
+      if (label === 'Next &raquo;') {
+        return this.hide = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide= 0
+      }
+      else {
+        this.hide = 1
+        return label
+      }
     }
+  },
+  mounted()
+  {
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'فرم ها'){
+        if (permissions[i].read === 0) return window.location = '/'
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
   }
 }
 </script>

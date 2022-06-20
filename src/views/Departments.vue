@@ -165,7 +165,8 @@
       <h6>دپارتمان ها</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن دپارتمان</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide"
+      v-if="create">افزودن دپارتمان</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -227,11 +228,12 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="depToDel=u;index=i;">حذف </vsud-badge>
+                          @click="depToDel=u;index=i;"
+              v-if="remove">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                           @click="id=u.id;name=u.name;iconImage=u.iconImage;metaDescription=u.metaDescription;metaKeyword=u.metaKeyword;
                           pageTitle=u.pageTitle"
-                          data-bs-toggle="modal" data-bs-target="#editSlide">
+                          data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                 ویرایش</vsud-badge>
             </td>
 
@@ -256,6 +258,9 @@ export default {
   data()
   {
     return{
+      remove:1,
+      update:1,
+      create:1,
       departments:[],
       depToDel:'',
       index:0,
@@ -270,8 +275,31 @@ export default {
     }
   },
   async mounted(){
-    const deps = await HTTP.get('/departments_with_category');
-    this.departments = deps.data
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'دپارتمان ها'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+        if (permissions[i].create === 0) this.create=0;
+        if (permissions[i].update === 0) this.update=0;
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+     await HTTP.get('/departments_with_category')
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((deps)=> {
+            this.departments = deps.data
+          });
+    }
   },
   methods:{
     async deleteDepa()

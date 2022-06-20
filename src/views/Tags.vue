@@ -97,7 +97,7 @@
       <h6>تگ ها</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن تگ</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" v-if="create" >افزودن تگ</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -131,7 +131,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in tags" :key="i" >
+          <tr  v-for="(u, i) in tags.data" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.name}}</p>
             </td>
@@ -161,10 +161,10 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="tagToDel=u;index=i;">حذف </vsud-badge>
+                          @click="tagToDel=u;index=i;" v-if="remove">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                           @click="id=u.id;name=u.name;type=u.type;"
-                          data-bs-toggle="modal" data-bs-target="#editSlide">
+                          data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                 ویرایش</vsud-badge>
             </td>
 
@@ -172,6 +172,10 @@
           </tbody>
         </table>
       </div>
+      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+        <vsud-pagination-item v-for="(e,i) in tags.links" :key="i" v-show="hide"
+                              :label="checkLabel(e.label)" :active="e.active" @click="updateTag(e.label)"/>
+      </vsud-pagination>
     </div>
 
   </div>
@@ -181,10 +185,12 @@
 import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudBadge from "../components/VsudBadge";
+import VsudPagination from "../components/VsudPagination";
+import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Tags",
-  components: {VsudBadge, VsudButton},
+  components: {VsudPaginationItem, VsudPagination, VsudBadge, VsudButton},
   data()
   {
     return{
@@ -194,11 +200,38 @@ export default {
       id:'',
       name:'',
       type:'',
+      remove:1,
+      update:1,
+      create:1,
+      hide:1,
     }
   },
   async mounted(){
-    const tag = await HTTP.get('/tags');
-    this.tags = tag.data
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'تگ ها'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+        if (permissions[i].create === 0) this.create=0;
+        if (permissions[i].update === 0) this.update=0;
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+       await HTTP.get('/tags_pagi')
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((tag)=> {
+            this.tags = tag.data
+          });
+    }
   },
   methods:{
     async deleteSlide()
@@ -295,6 +328,29 @@ export default {
         });
         this.tags.unshift(update.data.tag)
       window.location = '/tags'
+    },
+    async updateTag(page) {
+      this.tags = await HTTP.get(`/tags_pagi?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.tags = this.tags.data;
+    },
+    checkLabel(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide= 0
+      }
+      else {
+        this.hide = 1
+        return label
+      }
     }
   }
 }

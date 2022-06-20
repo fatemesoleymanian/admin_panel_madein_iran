@@ -103,7 +103,7 @@
       <h6>نظرات کاربران فروشگاه</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن نظر</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" v-if="create">افزودن نظر</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -153,10 +153,10 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="opToDel=u;index=i;" class="mx-3">حذف </vsud-badge>
+                          @click="opToDel=u;index=i;" class="mx-3" v-if="remove">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                           @click="id=u.id;name=u.name;desc=u.desc;position=u.position;"
-                          data-bs-toggle="modal" data-bs-target="#editSlide">
+                          data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                 ویرایش</vsud-badge>
             </td>
           </tr>
@@ -184,13 +184,39 @@ export default {
       desc:'',
       position:'',
       id:'',
-      opToDel:''
+      opToDel:'',
+      update:1,
+      create:1,
+      remove:1,
     }
   },
   async mounted()
   {
-    const testimonial = await HTTP.get('/testimonial');
-    this.opinions = testimonial.data
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'نظرات مشتریان'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+        if (permissions[i].create === 0) this.create=0;
+        if (permissions[i].update === 0) this.update=0;
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+       await HTTP.get('/testimonial')
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((testimonial)=> {
+            this.opinions = testimonial.data
+          });
+    }
   },
   methods:{
     async addOp()

@@ -33,7 +33,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in orders" :key="i" >
+          <tr  v-for="(u, i) in orders.data" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">
               <router-link :to="`/users/details${u.card.user_id}`">
@@ -64,35 +64,80 @@
           </tbody>
         </table>
       </div>
+      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+        <vsud-pagination-item v-for="(e,i) in orders.links" :key="i" v-show="hide"
+                              :label="checkLabel(e.label)" :active="e.active" @click="updateOrder(e.label)"/>
+      </vsud-pagination>
     </div>
   </div>
 </template>
 <script>
 import {HTTP} from "../http-common";
 import VsudBadge from "../components/VsudBadge";
+import VsudPagination from "../components/VsudPagination";
+import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
-  components: {VsudBadge},
+  components: {VsudPaginationItem, VsudPagination, VsudBadge},
   data()
   {
     return {
        orders:[],
       index:'',
-      orderToDel:''
+      orderToDel:'',
+      hide:1
     }
   },
   async mounted()
   {
-    const order = await HTTP.get('orders')
-    .catch(()=>{
-      this.$notify({
-        title: "خطا!",
-        text: "مشکلی در ارتباط با سرور پیش آند",
-        type: 'error',
-      });
-    });
-    this.orders = order.data;
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'سفارشات'){
+        if (permissions[i].read === 0) return window.location = '/';
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+     await HTTP.get('orders')
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((order)=> {
+            this.orders = order.data;
+          });
+    }
   },
+  methods:{
+    async updateOrder(page) {
+      this.orders = await HTTP.get(`orders?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.orders = this.orders.data;
+    },
+    checkLabel(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide= 0
+      }
+      else {
+        this.hide = 1
+        return label
+      }
+    }
+  }
 
 }
 </script>

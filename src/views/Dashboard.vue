@@ -350,5 +350,8 @@ export default {
     TimelineList,
     TimelineItem,
   },
+  mounted() {
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+  }
 };
 </script>

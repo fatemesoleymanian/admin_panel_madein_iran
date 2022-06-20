@@ -33,3 +33,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+i{
+  font-size: 20px;
+}
+</style>

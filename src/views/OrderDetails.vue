@@ -90,9 +90,29 @@ export default {
     }
   },
   async mounted() {
-    const orders = await HTTP.get(`/order/items${this.order_id}`);
-    this.items = orders.data.products
-    this.total = orders.data.total_price
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'سفارشات'){
+        if (permissions[i].read === 0) return window.location = '/'
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+      const orders = await HTTP.get(`/order/items${this.order_id}`)
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then(()=> {
+            this.items = orders.data.products
+            this.total = orders.data.total_price
+          });
+    }
   }
 }
 </script>

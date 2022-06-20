@@ -235,7 +235,7 @@
           <div class="card-header pb-0">
             <div class="col-6 text-start px-5 py-3 me-auto">
               <vsud-button color="dark" size="md" data-bs-toggle="modal" data-bs-target="#addSlide"
-              @click="flag=true">افزودن دسته بندی</vsud-button>
+              @click="flag=true" v-if="create">افزودن دسته بندی</vsud-button>
             </div>
             <h6>دسته بندی های محصولات</h6>
           </div>
@@ -267,7 +267,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in product_cat" :key="i">
+                <tr v-for="(u, i) in product_cat.data" :key="i">
                   <td>
                     <div class="d-flex  py-1">
                       <div >
@@ -302,12 +302,12 @@
                   <td class="align-middle text-center text-sm">
                     <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="pcatToDel=u;proIndex=i;flag=true">حذف </vsud-badge>
+                                @click="pcatToDel=u;proIndex=i;flag=true" v-if="remove">حذف </vsud-badge>
                     <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                                 @click="product.id=u.id;product.iconImage=u.iconImage;product.name=u.name;flag=true;
                                    product.department_id=u.department_id;product.metaKeyword=u.metaKeyword;product.metaDescription=u.metaDescription;
                                       product.pageTitle=u.pageTitle"
-                                data-bs-toggle="modal" data-bs-target="#editSlide">
+                                data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                       ویرایش</vsud-badge>
                   </td>
                 </tr>
@@ -315,11 +315,10 @@
               </table>
 
             </div>
-<!--            <vsud-pagination class="my-3 float-start  mx-4" v-if="emptyIdeas.length" color="success" size="sm">-->
-<!--              <vsud-pagination-item v-for="(e,i) in empties.data.users.links" :key="i"-->
-<!--                                    :label="checkLabel(e.label)" :active="e.active" @click="updateEmpties(e.label)"-->
-<!--              />-->
-<!--            </vsud-pagination>-->
+            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+              <vsud-pagination-item v-for="(e,i) in product_cat.links" :key="i" v-show="hide2"
+                                    :label="checkLabel2(e.label)" :active="e.active" @click="updateCategory(e.label)"/>
+            </vsud-pagination>
           </div>
 
         </div>
@@ -332,7 +331,7 @@
           <div class="card-header pb-0">
             <div class="col-6 text-start px-5 py-3 me-auto">
               <vsud-button color="dark" size="md" data-bs-toggle="modal" data-bs-target="#addSlide"
-              @click="flag=false">افزودن دسته بندی</vsud-button>
+              @click="flag=false" v-if="create">افزودن دسته بندی</vsud-button>
             </div>
             <h6>دسته بندیهای وبلاگ</h6>
           </div>
@@ -360,7 +359,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(idea,i) in blog_cat" :key="i" >
+                <tr v-for="(idea,i) in blog_cat.data" :key="i" >
                   <td>
                     <p class="text-sm font-weight-bold mb-0">{{idea.name}}</p>
                   </td>
@@ -377,21 +376,23 @@
                   <td class="align-middle text-center text-sm">
                     <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="bcatToDel=idea;blogIndex=i;flag=false;">حذف </vsud-badge>
+                                @click="bcatToDel=idea;blogIndex=i;flag=false;" v-if="remove">
+                      حذف
+                    </vsud-badge>
                     <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                                 @click="blog.id=idea.id;blog.name=idea.name;blog.metaDescription=idea.metaDescription;
                                 blog.metaKeyword=idea.metaKeyword;blog.pageTitle=idea.pageTitle;flag=false;"
-                                data-bs-toggle="modal" data-bs-target="#editSlide">
+                                data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                       ویرایش</vsud-badge>
                   </td>
                 </tr>
                 </tbody>
               </table>
             </div>
-<!--            <vsud-pagination class="my-3 float-start  mx-4" v-if="newIdeas.length" color="success" size="sm">-->
-<!--              <vsud-pagination-item v-for="(e,i) in ideas.data.users.links" :key="i"-->
-<!--                                    :label="checkLabel(e.label)" :active="e.active" @click="updateIdeas(e.label)"/>-->
-<!--            </vsud-pagination>-->
+            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+              <vsud-pagination-item v-for="(e,i) in blog_cat.links" :key="i" v-show="hide1"
+                                    :label="checkLabel1(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>
+            </vsud-pagination>
           </div>
         </div>
       </div>
@@ -405,13 +406,18 @@ import VsudAvatar from "../components/VsudAvatar";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
 import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
+import VsudPagination from "../components/VsudPagination";
+import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Categories",
-  components: {VsudButton, VsudBadge, PlaceHolderCard, VsudAvatar},
+  components: {VsudPaginationItem, VsudPagination, VsudButton, VsudBadge, PlaceHolderCard, VsudAvatar},
   data()
   {
     return{
+      create:1,
+      update:1,
+      remove:1,
       proIndex:'',
       blogIndex:'',
       pcatToDel:'',
@@ -437,17 +443,41 @@ export default {
       },
       product_cat:[],
       blog_cat:[],
-      departments:[]
+      departments:[],
+      hide1:1,
+      hide2:1,
     }
   },
    async mounted()
    {
-     const [product,blog] = await Promise.all([
-         HTTP.get('/categories'),
-         HTTP.get('/blog_categories'),
-     ]);
-     this.product_cat = product.data;
-     this.blog_cat = blog.data;
+     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+     for (let i in permissions)
+     {
+       if (permissions[i].module.name === 'دسته بندی ها'){
+         if (permissions[i].read === 0) return window.location = '/';
+         if (permissions[i].delete === 0) this.remove=0;
+         if (permissions[i].create === 0) this.create=0;
+         if (permissions[i].update === 0) this.update=0;
+       }
+     }
+     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+     else {
+       await Promise.all([
+         HTTP.get('/categories_pagi'),
+         HTTP.get('/blog_categories_pagi'),
+       ]).catch((e)=>{
+             if(e.response.status ===500){
+               localStorage.removeItem('wugt');
+               localStorage.removeItem('vqmgp');
+               localStorage.removeItem('rgtokuukqp');
+               window.location = '/sign-in'
+             }
+           })
+           .then((res)=> {
+             this.product_cat = res[0].data;
+             this.blog_cat = res[1].data;
+           });
+     }
    },
   async created()
   {
@@ -740,6 +770,52 @@ export default {
       });
       this.uploadNew = false
     },
+    async updateBlogs(page) {
+      this.blog_cat = await HTTP.get(`/blog_categories_pagi?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.blog_cat = this.blog_cat.data;
+    },
+    checkLabel1(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide1 = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide1= 0
+      }
+      else {
+        this.hide1 = 1
+        return label
+      }
+    },
+    async updateCategory(page) {
+      this.product_cat = await HTTP.get(`/categories_pagi?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.product_cat = this.product_cat.data;
+    },
+    checkLabel2(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide2 = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide2= 0
+      }
+      else {
+        this.hide2 = 1
+        return label
+      }
+    }
   },
 }
 </script>

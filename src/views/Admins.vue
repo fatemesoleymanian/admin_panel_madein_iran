@@ -15,7 +15,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no" >خیر</button>
-            <button type="button" class="btn btn-primary" @click="deleteMember">بله</button>
+            <button type="button" class="btn btn-primary" @click="deleteMember" v-if="remove">بله</button>
           </div>
         </div>
       </div>
@@ -73,6 +73,24 @@
             </div>
             <div class="mb-3">
               <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2"> نام کاربری :</h6>
+              </div>
+              <input type="email" class="form-control"  placeholder="  نام  کاربری" v-model="username">
+            </div>
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2"> شماره تماس :</h6>
+              </div>
+              <input type="email" class="form-control"  placeholder=" شماره تماس" v-model="phone_number">
+            </div>
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2"> نشانی :</h6>
+              </div>
+              <input type="email" class="form-control"  placeholder=" نشانی" v-model="address">
+            </div>
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
                 <h6 class="mb-0 p-2">گذرواژه:</h6>
               </div>
               <input type="text" class="form-control"  placeholder=" گذرواژه" v-model="password">
@@ -99,7 +117,8 @@
       <h6>اعضا</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن عضو</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide"
+      v-if="create">افزودن عضو</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -147,7 +166,8 @@
                 </span>
             </td>
             <td class="align-middle text-center text-sm">
-              <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
+              <vsud-badge v-if="check !== u.email "
+                  color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                           @click="memToDel=u;index=i;">
                 حذف
@@ -184,14 +204,45 @@ export default {
       index:0,
       id:'',
       email:'',
+      username:'',
       password:'',
+      phone_number:'',
+      address:'',
       role_id:'',
-      roles:[]
+      roles:[],
+      check:'',
+      create:1,
+      remove:1
       }
   },
   async mounted(){
-    const member = await HTTP.get('admins/show');
-    this.members = member.data.admins
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'اعضا پنل کنترل'){
+
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+        if (permissions[i].create === 0) this.create=0;
+      }
+    }
+    const user = JSON.parse(localStorage.getItem('wugt'));
+    this.check = user.email;
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+
+    else {
+       await HTTP.get('admins/show')
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((res)=>{
+      this.members = res.data.admins});
+    }
   },
   async created()
   {
@@ -306,6 +357,9 @@ export default {
         email : this.email,
         password : this.password,
         role : this.role_id,
+        phone_number:this.phone_number,
+        username:this.username,
+        address:this.address,
       }
        await  HTTP.post('/admin/auth/register',data)
           .then(()=>{

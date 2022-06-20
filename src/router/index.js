@@ -147,7 +147,7 @@ const routes = [
   },
   {
     path: "/profile",
-    name: "Profile",
+    name: "پروفایل",
     component: Profile,
   },
   {

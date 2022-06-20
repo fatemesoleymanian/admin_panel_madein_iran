@@ -515,6 +515,17 @@ export default {
       }
     },
   },
+  mounted()
+  {
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'وبلاگ'){
+        if (permissions[i].create === 0) return window.location = '/'
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+  }
 }
 </script>
 

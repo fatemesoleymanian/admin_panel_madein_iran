@@ -634,6 +634,17 @@ export default {
 
     }
   },
+  mounted()
+  {
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'محصولات'){
+        if (permissions[i].create === 0) return window.location = '/'
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+  }
 }
 </script>
 <style scoped>

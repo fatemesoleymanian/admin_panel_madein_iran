@@ -117,7 +117,7 @@
       <h6>پرسش های متدوال و پاسخ ها</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
-      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" >افزودن پرسش</vsud-button>
+      <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" v-if="addFlag">افزودن پرسش</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2 mb-5">
       <div class="table-responsive p-0">
@@ -147,7 +147,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in faqs" :key="i" :id="u.id" >
+          <tr  v-for="(u, i) in faqs.data" :key="i" :id="u.id" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.question}}</p>
             </td>
@@ -171,10 +171,10 @@
             <td class="align-middle text-center text-sm">
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="faqToDel=u;index=i;">حذف </vsud-badge>
+                          @click="faqToDel=u;index=i;" v-if="remove">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                           @click="question=u.question;answer=u.answer;update.old=u.product;id=u.id;"
-                          data-bs-toggle="modal" data-bs-target="#editSlide">
+                          data-bs-toggle="modal" data-bs-target="#editSlide" v-if="editFlag">
                 ویرایش</vsud-badge>
             </td>
 
@@ -182,6 +182,10 @@
           </tbody>
         </table>
       </div>
+      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+        <vsud-pagination-item v-for="(e,i) in faqs.links" :key="i" v-show="hide1"
+                              :label="checkLabel1(e.label)" :active="e.active" @click="updateFaq(e.label)"/>
+      </vsud-pagination>
     </div>
 
     <div class="card mb-4 my-5 mx-4 bg-light">
@@ -217,7 +221,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(f,i) in forms" :key="i">
+            <tr v-for="(f,i) in forms.data" :key="i">
               <td>
                 <div class="d-flex px-2">
                   <div class="my-auto">
@@ -248,6 +252,10 @@
             </tbody>
           </table>
         </div>
+        <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
+          <vsud-pagination-item v-for="(e,i) in forms.links" :key="i" v-show="hide2"
+                                :label="checkLabel2(e.label)" :active="e.active" @click="updateForm(e.label)"/>
+        </vsud-pagination>
       </div>
     </div>
   </div>
@@ -257,13 +265,18 @@
 import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudBadge from "../components/VsudBadge";
+import VsudPaginationItem from "../components/VsudPaginationItem";
+import VsudPagination from "../components/VsudPagination";
 
 export default {
   name: "FAQs",
-  components: {VsudBadge, VsudButton},
+  components: {VsudPagination, VsudPaginationItem, VsudBadge, VsudButton},
   data()
   {
     return{
+      addFlag:1,
+      remove:1,
+      editFlag:1,
       forms:[],
       faqs:[],
       faqToDel:'',
@@ -280,20 +293,46 @@ export default {
         new:[],
         send:[]
       },
-      tmp:''
+      tmp:'',
+      hide1:1,
+      hide2:1,
     }
   },
   async mounted()
   {
-    const faq = await HTTP.get('/faq');
-    this.faqs = faq.data;
-
-    const product = await HTTP.get('/products_totaly');
-    this.products = product.data;
-
-    const form = await HTTP.get('/faq_form');
-    this.forms = form.data;
-
+    const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
+    for (let i in permissions)
+    {
+      if (permissions[i].module.name === 'پرسش های متداول'){
+        if (permissions[i].read === 0) return window.location = '/';
+        if (permissions[i].delete === 0) this.remove=0;
+        if (permissions[i].create === 0) this.addFlag=0;
+        if (permissions[i].update === 0) this.editFlag=0;
+      }
+    }
+    if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
+    else {
+      await Promise.all([
+        HTTP.get('/faq'),
+        HTTP.get('/products_totaly'),
+        HTTP.get('/faq_form')
+      ])
+          .catch((e)=>{
+            if(e.response.status ===500){
+              localStorage.removeItem('wugt');
+              localStorage.removeItem('vqmgp');
+              localStorage.removeItem('rgtokuukqp');
+              window.location = '/sign-in'
+            }
+          })
+          .then((res)=> {
+            this.faqs = res[0].data;
+            this.products = res[1].data;
+            this.forms = res[2].data;
+            console.log(this.faqs)
+            console.log(this.forms)
+          });
+    }
   },
   methods:{
     async add()
@@ -442,6 +481,52 @@ export default {
       if (!flag)  this.create.new.push(this.tmp);
       console.log(this.create.new)
     },
+    async updateFaq(page) {
+      this.faqs = await HTTP.get(`/faq?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.faqs = this.faqs.data;
+    },
+    checkLabel1(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide1 = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide1= 0
+      }
+      else {
+        this.hide1 = 1
+        return label
+      }
+    },
+    async updateForm(page) {
+      this.forms = await HTTP.get(`/faq_form?page=${page}`)
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.forms = this.forms.data;
+    },
+    checkLabel2(label) {
+      if (label === 'Next &raquo;') {
+        return this.hide2 = 0
+      }
+      else if (label === '&laquo; Previous') {
+        return this.hide2= 0
+      }
+      else {
+        this.hide2 = 1
+        return label
+      }
+    }
   }
 }
 </script>
