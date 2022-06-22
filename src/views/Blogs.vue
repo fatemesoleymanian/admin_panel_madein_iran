@@ -146,7 +146,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
-      await HTTP.get('/blogs_page')
+      await HTTP.get('/blogs')
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
@@ -183,7 +183,7 @@ export default {
 
     },
     async updateBlogs(page) {
-      this.posts = await HTTP.get(`/blogs_page?page=${page}`)
+      this.posts = await HTTP.get(`/blogs?page=${page}`)
           .catch(() => {
             return this.$notify({
               title: "خطا!",

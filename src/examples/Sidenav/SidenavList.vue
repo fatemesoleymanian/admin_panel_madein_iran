@@ -21,70 +21,19 @@
           </template>
         </sidenav-collapse>
       </li>
-
       <li class="nav-item">
-        <sidenav-collapse navText="Tables" :to="{ name: 'Tables' }">
+        <sidenav-collapse navText="پروفایل" :to="{ name: 'پروفایل' }">
           <template #icon>
-            <i class="bi bi-house" style="color: #3A416F"></i>
+            <i class="bi bi-person-bounding-box" style="color: #3A416F;font-size: 17px;"></i>
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
-        <sidenav-collapse navText="Billing" :to="{ name: 'Billing' }">
-          <template #icon>
-            <i class="bi bi-house" style="color: #3A416F"></i>
-          </template>
-        </sidenav-collapse>
-      </li>
-
-
-      <li class="nav-item">
-        <sidenav-collapse
-          navText="Virtual Reality"
-          :to="{ name: 'Virtual Reality' }"
-        >
-          <template #icon>
-            <box3d />
-          </template>
-        </sidenav-collapse>
-      </li>
-<!--      <li class="nav-item">-->
-<!--        <sidenav-collapse navText="RTL" :to="{ name: 'Rtl' }">-->
-<!--          <template #icon>-->
-<!--            <settings />-->
-<!--          </template>-->
-<!--        </sidenav-collapse>-->
-<!--      </li>-->
-      <li class="mt-3 nav-item">
-        <h6
-          class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6"
-          :class="this.$store.state.isRTL ? 'me-4' : 'ms-2'"
-        >
-          PAGES
-        </h6>
-      </li>
-
-<!--      <li class="nav-item">-->
-<!--        <sidenav-collapse navText="Sign In" :to="{ name: 'Sign In' }">-->
-<!--          <template #icon>-->
-<!--            <document />-->
-<!--          </template>-->
-<!--        </sidenav-collapse>-->
-<!--      </li>-->
-<!--      <li class="nav-item">-->
-<!--        <sidenav-collapse navText="Sign Up" :to="{ name: 'Sign Up' }">-->
-<!--          <template #icon>-->
-<!--            <spaceship />-->
-<!--          </template>-->
-<!--        </sidenav-collapse>-->
-<!--      </li>-->
     </ul>
   </div>
 
 </template>
 <script>
 import SidenavCollapse from "./SidenavCollapse.vue";
-import Box3d from "../../components/Icon/Box3d.vue";
 
 export default {
   name: "SidenavList",
@@ -173,17 +122,12 @@ export default {
           route:'تراکنش ها',
           icon:'bi bi-credit-card-fill',
         },
-        {
-          title:'پروفایل',
-          route:'پروفایل',
-          icon:'bi bi-person-bounding-box',
-        },
+
       ]
     };
   },
   components: {
     SidenavCollapse,
-    Box3d,
   },
   methods: {
     getRoute() {

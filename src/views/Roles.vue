@@ -145,7 +145,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="changePermission" >ثبت</button>
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="changePermission"
+            v-if="check !== roleTmp">ثبت</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noShow" >بستن</button>
           </div>
         </div>
@@ -194,15 +195,15 @@
                   <td class="align-middle text-center text-sm">
                     <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                @click="roleToDel=u;index=i;" v-if="remove">حذف
+                                @click="roleToDel=u;index=i;" v-if="remove && u.id !== check">حذف
                     </vsud-badge>
                     <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
                                 @click="name=u.name;id=u.id;"
-                                data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
+                                data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update && u.id !== check">
                       ویرایش
                     </vsud-badge>
                     <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
-                                @click="setTable(u.permission)" v-if="update">
+                                @click="setTable(u)" v-if="update">
                       دسترسی
                     </vsud-badge>
                   </td>
@@ -245,6 +246,8 @@ export default {
       create:1,
       update:1,
       remove:1,
+      check:'',
+      roleTmp:''
     }
   },
   async mounted()
@@ -277,6 +280,8 @@ export default {
             this.roles = res[0].data.roles;
             this.modules = res[1].data;
           });
+      const user = JSON.parse(localStorage.getItem('wugt'));
+      this.check = user.role_id;
     }
   },
   methods:{
@@ -365,15 +370,16 @@ export default {
     },
     setTable(p)
     {
+      this.roleTmp = p.id
       this.permissions = ''
-      for (let i in p)
+      for (let i in p.permission)
       {
         for (let j in this.modules)
         {
-          if (p[i].module_id === this.modules[j].id) p[i].created_at=this.modules[j].name;
+          if (p.permission[i].module_id === this.modules[j].id) p.permission[i].created_at=this.modules[j].name;
         }
       }
-      this.permissions = p
+      this.permissions = p.permission
       document.getElementById("hiddeibBtn").click();
     }
   },

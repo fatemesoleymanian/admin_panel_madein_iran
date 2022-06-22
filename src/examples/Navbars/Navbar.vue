@@ -174,7 +174,9 @@ export default {
   },
 };
 </script>
+
 <style scoped>
+
 .suggestions {
   background: #fff;
   position: fixed;

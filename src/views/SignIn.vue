@@ -39,7 +39,7 @@
                     <div class="d-flex align-items-center">
                       <h6 class="mb-0 p-2">گذرواژه:</h6>
                     </div>
-                    <input type="password" class="form-control"  placeholder=" گذرواژه" v-model="password">
+                    <input type="password" class="form-control text-md-end"  placeholder=" گذرواژه" v-model="password">
                     </div>
                     <div class="mb-4" v-if="show">
                     <div class="d-flex align-items-center">

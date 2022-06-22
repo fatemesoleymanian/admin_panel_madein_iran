@@ -74,3 +74,9 @@ export default {
 
 };
 </script>
+<style>
+@import '~typeface-yekan';
+*{
+  font-family: 'Yekan';
+}
+</style>
