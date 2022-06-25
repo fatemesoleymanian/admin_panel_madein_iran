@@ -157,5 +157,9 @@ const router = createRouter({
   routes,
   linkActiveClass: "active",
 });
-
+// router.beforeEach((to, from, next) => {
+//   if ( !localStorage.getItem('vqmgp')) {
+//     next({ name : 'Sign In'});
+//   }
+// });
 export default router;

@@ -98,21 +98,23 @@
       </div>
     </div>
     <div class="row py-2">
-      <div class="col-12">
+      <div class="col-12 ">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">پست :</h6>
         </div>
-        <tinymce
-            id="post_create"
-            ref="post_create"
-            :initialValue="product.post"
-            :plugins="myPlugins"
-            :toolbar ="myToolbar1"
-            :init="myInit"
-            v-model="product.post"
-        />
+        <div class="example">
+        <QuillEditor  id="post_create"
+            :options="editorOption"
+                      @blur="onEditorBlur($event)"
+                      @focus="onEditorFocus($event)"
+                      @ready="onEditorReady($event)"
+                      @change="onEditorChange($event)"
+                      :modules="modules"
+                      ref="myQuillEditor"
+            placeholder="متن پست" class="editor" theme="snow" v-model="product.post"/>
+        </div>
       </div>
-      <div class="col-12 my-3 py-4 px-2">
+      <div class="col-12 my-3 py-4 px-2 ">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2"> چکیده پست :</h6>
         </div>
@@ -164,7 +166,7 @@
               @click="$router.push('/posts')"
               size="lg"
               variant="outline"
-              color="dark"> <i class="ni ni-bold-right"></i>
+              color="dark"> <i class="bi bi-arrow-return-right"></i>
             بازگشت به وبلاگ
 
           </vsud-button>
@@ -192,63 +194,37 @@ import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
 import VsudBadge from "../components/VsudBadge";
-
+import BlotFormatter from 'quill-blot-formatter'
 export default {
   name: "AddPost",
-  components: {VsudBadge, PlaceHolderCard, VsudButton},
+  components: {VsudBadge, PlaceHolderCard, VsudButton },
   data()
   {
     return{
-      myToolbar1: 'undo upload redo | bold italic underline preview | alignleft aligncenter alignright alignjustify ' +
-          '| bullist numlist outdent indent | link image',
-      myPlugins: "link upload image code preview imagetools table",
-
-      myInit: {
-        images_dataimg_filter: function (img) {
-
-          return img.hasAttribute('internal-blob');
-        },
-        convert_urls: false,
-        height: 500,
-        automatic_uploads: false,
-        images_upload_base_path: 'img/blogs/post',
-        relative_urls: false,
-
-        // override default upload handler to simulate successful upload
-        images_upload_handler: function (blobInfo, success, failure, folderName) {
-          console.log(folderName)
-          var xhr, formData;
-          xhr = new XMLHttpRequest();
-          xhr.withCredentials = false;
-
-          xhr.open('POST', '/upload');
-          var token = document.head.querySelector("[name=csrf-token]").content;
-          xhr.setRequestHeader("X-CSRF-Token", token);
-
-          xhr.onload = function () {
-            var json;
-
-            if (xhr.status != 200) {
-              failure('HTTP Error: ' + xhr.status);
-              return;
-            }
-            json = JSON.parse(xhr.responseText);
-
-            if (!json || typeof json.location != 'string') {
-              failure('Invalid JSON: ' + xhr.responseText);
-              return;
-            }
-            success(json.location);
-
-          };
-
-          formData = new FormData();
-          formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-          xhr.send(formData);
-
+      editorOption: {
+        // debug: 'info',
+        readOnly: false,
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+            ['clean'],
+            ['table', 'column-left', 'column-right', 'row-above', 'row-below', 'row-remove', 'column-remove'],
+            ['link', 'image', 'video']
+          ],
         },
       },
+      module: BlotFormatter,
       isCreating:false,
       id:this.$route.params.id,
       product:{
@@ -271,6 +247,7 @@ export default {
       tmp:'',
     }
   },
+
   async created() {
     const [cat, tag] = await Promise.all([
       HTTP.get(`/blog_categories_list`),
@@ -280,16 +257,27 @@ export default {
     this.tags = tag.data
   },
   methods:{
+    onEditorBlur(quill) {
+      console.log('editor blur!', quill)
+      this.product.post = quill.value.innerHTML
+      console.log(this.product.post)
+    },
+    onEditorFocus(quill) {
+      console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      console.log('editor ready!', quill)
+    },
+    onEditorChange({ quill, html, text }) {
+      console.log('editor change!', quill, html, text)
+      this.product.post = html
+    },
     async update(){
-      window.tinymce.activeEditor.uploadImages(function(success) {
-        // document.forms[0].submit();
-        console.log('here');
-        console.log(success)
-      });
       this.isCreating = true
-
-      this.product.post= window.tinymce.get("post_create").getContent();
-
+      this.product.post= this.$refs.myQuillEditor.getHTML()
+//
+// console.log(this.$refs.myQuillEditor.getQuill().container.outerHTML)
+// console.log(this.$refs.myQuillEditor.getHTML())
       if(this.product.title.trim() === '') {
         this.isCreating = false
         return  this.$notify({
@@ -517,6 +505,8 @@ export default {
   },
   mounted()
   {
+    console.log('this is current quill instance object', this.editor)
+
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
     for (let i in permissions)
     {
@@ -525,10 +515,44 @@ export default {
       }
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
-  }
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
 }
 </script>
+<style lang="scss" scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  background: white;
 
-<style scoped>
+  .editor {
+    height: 80rem;
+    text-align: right;
+    float: right;
+    overflow: hidden;
+  }
 
+  .output {
+    width: 100%;
+    height: 20rem;
+    margin: 0;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    resize: vertical;
+
+    &.code {
+      padding: 1rem;
+      height: 16rem;
+    }
+
+    &.ql-snow {
+      border-top: none;
+      height: 24rem;
+    }
+  }
+}
 </style>

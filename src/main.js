@@ -20,12 +20,13 @@ import router from "./router";
 import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import SoftUIDashboard from "./soft-ui-dashboard";
-import Notifications from '@kyvg/vue3-notification'
-import tinymce from 'vue-tinymce-editor'
+import Notifications from '@kyvg/vue3-notification';
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const appInstance = createApp(App);
+appInstance.component('QuillEditor', QuillEditor);
 appInstance.use(store);
-appInstance.component('tinymce',tinymce)
 appInstance.use(router);
 appInstance.use(Notifications);
 appInstance.use(SoftUIDashboard);

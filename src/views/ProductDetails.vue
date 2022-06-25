@@ -147,11 +147,11 @@
         <vsud-button color="dark" size="lg" variant="outline"
                      data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
           افزودن ظرفیت
-          <i class="ni ni-fat-add"></i>
+          <i class="bi bi-plus-lg"></i>
         </vsud-button>
       </div>
       <div class="row"  v-for="(s,i) in product.state"  :key="i" >
-        <i class="ni ni-fat-remove d-flex justify-content-end" style="cursor: pointer;margin-bottom: -10px;font-size: 23px"
+        <i class="bi bi-x-circle-fill d-flex justify-content-end" style="cursor: pointer;margin-bottom: -10px;font-size: 23px"
         @click="removeState(s)"></i>
       <div class="col-md-4 col-12  ">
         <div class="d-flex align-items-center">
@@ -183,26 +183,17 @@
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">مشخصات فنی محصول :</h6>
         </div>
-      <tinymce
-      id="product_update"
-      ref="product_update"
-      :initialValue="product.description"
-      :init="{
-                          height: 10000,
-                          menubar: true,
-                          plugins: [
-                            'advlist autolink lists link image charmap',
-                            'searchreplace visualblocks code fullscreen',
-                            'print preview anchor insertdatetime media',
-                            'paste code help wordcount table'
-                          ],
-                          toolbar:
-                            'undo redo | formatselect | bold italic | \
-                            alignleft aligncenter alignright | \
-                            bullist numlist outdent indent | help'
-                        }"
-      v-model="product.description"
-  />
+        <div class="example">
+          <QuillEditor  id="post_create"
+                        :options="editorOption"
+                        @blur="onEditorBlur($event)"
+                        @focus="onEditorFocus($event)"
+                        @ready="onEditorReady($event)"
+                        @change="onEditorChange($event)"
+                        :modules="modules"
+                        ref="myQuillEditor"
+                        placeholder="مشخصات فنی محصول" class="editor" theme="snow" v-model:content="product.description"/>
+        </div>
       </div>
       <div class="col-12 my-3 py-4 px-2">
         <div class="d-flex align-items-center">
@@ -217,21 +208,21 @@
         <h4 class="mb-0 p-2 font-weight-bolder">سئو</h4>
       </div>
       <hr class="bg-dark text-dark " style="width: 100%;height: 2px">
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">عنوان صفحه (page title):</h6>
         </div>
         <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="product.pageTitle"
         maxlength="70" title="حداکثر تعداد کاراکتر 70"/>
       </div>
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">نشانک:</h6>
         </div>
         <input type="text" class="form-control " placeholder="عنوان صفحه به انگلیسی" v-model="product.slug"
                maxlength="80" title="حداکثر تعداد کاراکتر 80"/>
       </div>
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">توضیحات متا (meta description):</h6>
         </div>
@@ -239,7 +230,7 @@
                maxlength="160" title="حداکثر تعداد کاراکتر 160" rows="3"/>
       </div>
 
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">کلید واژه های متا (meta keywords):</h6>
         </div>
@@ -269,7 +260,7 @@
               @click="$router.push('/products')"
               size="lg"
               variant="outline"
-              color="dark"> <i class="ni ni-bold-right"></i>
+              color="dark"> <i class="bi bi-arrow-return-right"></i>
             بازگشت به محصولات
 
           </vsud-button>
@@ -295,10 +286,10 @@
 
 <script>
 import {HTTP} from "../http-common";
-import tinymce from 'vue-tinymce-editor'
 import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
+import BlotFormatter from "quill-blot-formatter";
 
 export default {
   name: "ProductDetails",
@@ -306,11 +297,34 @@ export default {
     PlaceHolderCard,
     VsudButton,
     VsudBadge,
-    'tinymce': tinymce
   },
   data()
   {
     return{
+      editorOption: {
+        // debug: 'info',
+        readOnly: false,
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+            ['clean'],
+            ['table', 'column-left', 'column-right', 'row-above', 'row-below', 'row-remove', 'column-remove'],
+            ['link', 'image', 'video']
+          ],
+        },
+      },
+      module: BlotFormatter,
       isCreating:false,
       id:this.$route.params.id,
       product:'',
@@ -360,8 +374,7 @@ export default {
       for (let i in product.data.state) {
         this.ids.push(product.data.state[i].id)
       }
-
-      window.tinymce.get("product_update").setContent(product.data.description);
+            this.$refs.myQuillEditor.setHTML(this.product.description)
           });
     }
   },
@@ -374,6 +387,21 @@ export default {
     this.tags = tag.data
   },
   methods:{
+    onEditorBlur(quill) {
+      console.log('editor blur!', quill)
+      this.product.description = quill.value.innerHTML
+      console.log(this.product.description)
+    },
+    onEditorFocus(quill) {
+      console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      console.log('editor ready!', quill)
+    },
+    onEditorChange({ quill, html, text }) {
+      console.log('editor change!', quill, html, text)
+      this.product.description = html
+    },
     async update(){
       this.isCreating = true
 
@@ -390,7 +418,7 @@ export default {
           this.off.push((this.product.state[i].price))
         }
       }
-      this.product.description= window.tinymce.get("product_update").getContent();
+      this.product.description=this.$refs.myQuillEditor.getHTML()
 
       if(this.product.name.trim() === '') {
          this.isCreating = false
@@ -676,9 +704,38 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  background: white;
 
-<style scoped>
+  .editor {
+    height: 80rem;
+    text-align: right;
+    float: right;
+    overflow: hidden;
+  }
 
+  .output {
+    width: 100%;
+    height: 20rem;
+    margin: 0;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    resize: vertical;
+
+    &.code {
+      padding: 1rem;
+      height: 16rem;
+    }
+
+    &.ql-snow {
+      border-top: none;
+      height: 24rem;
+    }
+  }
+}
 </style>
 
 

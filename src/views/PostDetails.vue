@@ -99,26 +99,17 @@
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">متن پست :</h6>
         </div>
-        <tinymce
-            id="post_update"
-            ref="post_update"
-            :initialValue="post.post"
-            :init="{
-                          height: 10000,
-                          menubar: true,
-                          plugins: [
-                            'advlist autolink lists link image charmap',
-                            'searchreplace visualblocks code fullscreen',
-                            'print preview anchor insertdatetime media',
-                            'paste code help wordcount table'
-                          ],
-                          toolbar:
-                            'undo redo | formatselect | bold italic | \
-                            alignleft aligncenter alignright | \
-                            bullist numlist outdent indent | help'
-                        }"
-            v-model="post.post"
-        />
+        <div class="example">
+          <QuillEditor  id="post_create"
+                        :options="editorOption"
+                        @blur="onEditorBlur($event)"
+                        @focus="onEditorFocus($event)"
+                        @ready="onEditorReady($event)"
+                        @change="onEditorChange($event)"
+                        :modules="modules"
+                        ref="myQuillEditor"
+                        placeholder="متن پست" class="editor" theme="snow" v-model:content="post.post"/>
+        </div>
       </div>
       <div class="col-12 my-3 py-4 px-2">
         <div class="d-flex align-items-center">
@@ -133,21 +124,21 @@
         <h4 class="mb-0 p-2 font-weight-bolder">سئو</h4>
       </div>
       <hr class="bg-dark text-dark " style="width: 100%;height: 2px">
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">عنوان صفحه (page title):</h6>
         </div>
         <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="post.pageTitle"
                maxlength="70" title="حداکثر تعداد کاراکتر 70"/>
       </div>
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">نشانک:</h6>
         </div>
         <input type="text" class="form-control " placeholder="عنوان صفحه به انگلیسی" v-model="post.slug"
                maxlength="80" title="حداکثر تعداد کاراکتر 80"/>
       </div>
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">توضیحات متا (meta description):</h6>
         </div>
@@ -155,7 +146,7 @@
                   maxlength="160" title="حداکثر تعداد کاراکتر 160" rows="3"/>
       </div>
 
-      <div class="col-md-6 col-12">
+      <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">کلید واژه های متا (meta keywords):</h6>
         </div>
@@ -185,7 +176,7 @@
               @click="$router.push('/posts')"
               size="lg"
               variant="outline"
-              color="dark"> <i class="ni ni-bold-right"></i>
+              color="dark"> <i class="bi bi-arrow-return-right"></i>
             بازگشت به وبلاگ
 
           </vsud-button>
@@ -214,6 +205,7 @@ import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
 import VsudBadge from "../components/VsudBadge";
+import BlotFormatter from "quill-blot-formatter";
 
 export default {
   name: "PostDetails",
@@ -221,6 +213,30 @@ export default {
   data()
   {
     return{
+      editorOption: {
+        // debug: 'info',
+        readOnly: false,
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+            ['clean'],
+            ['table', 'column-left', 'column-right', 'row-above', 'row-below', 'row-remove', 'column-remove'],
+            ['link', 'image', 'video']
+          ],
+        },
+      },
+      module: BlotFormatter,
       updatee:1,
       isCreating:false,
       id:this.$route.params.id,
@@ -261,7 +277,7 @@ export default {
       for (let i in product.data.tag) {
         this.tag.push(product.data.tag[i].id)
       }
-      window.tinymce.get("post_update").setContent(product.data.post);
+            this.$refs.myQuillEditor.setHTML(this.post.post)
           });
     }
   },
@@ -274,10 +290,24 @@ export default {
     this.tags = tag.data
   },
   methods:{
+    onEditorBlur(quill) {
+      console.log('editor blur!', quill)
+      this.post.post = quill.value.innerHTML
+      console.log(this.post.post)
+    },
+    onEditorFocus(quill) {
+      console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      console.log('editor ready!', quill)
+    },
+    onEditorChange({ quill, html, text }) {
+      console.log('editor change!', quill, html, text)
+      this.post.post = html
+    },
     async update(){
       this.isCreating = true
-      this.post.post= window.tinymce.get("post_update").getContent();
-
+      this.post.post=this.$refs.myQuillEditor.getHTML()
 
       if(this.post.title.trim() === '') {
         this.isCreating = false
@@ -485,9 +515,43 @@ export default {
       });
     },
   },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    }
+  }
 }
 </script>
+<style lang="scss" scoped>
+.example {
+  display: flex;
+  flex-direction: column;
+  background: white;
 
-<style scoped>
+  .editor {
+    height: 80rem;
+    text-align: right;
+    float: right;
+    overflow: hidden;
+  }
 
+  .output {
+    width: 100%;
+    height: 20rem;
+    margin: 0;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    resize: vertical;
+
+    &.code {
+      padding: 1rem;
+      height: 16rem;
+    }
+
+    &.ql-snow {
+      border-top: none;
+      height: 24rem;
+    }
+  }
+}
 </style>
