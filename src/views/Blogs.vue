@@ -22,7 +22,7 @@
     </div>
     <!--    modal-->
     <div class="card-header pb-0">
-      <h6>جدول محصولات فروشگاه</h6>
+      <h6>جدول پست های وبلاگ</h6>
     </div>
     <div class="col-6 text-start px-5 py-3 me-auto">
       <vsud-button color="dark" size="md" @click="$router.push('/post/new')" v-if="create">افزودن پست</vsud-button>
@@ -55,12 +55,12 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in posts.data" :key="i" >
+          <tr  v-for="(u, i) in posts" :key="i" >
             <td>
               <div class="d-flex  py-1">
                 <div >
                   <vsud-avatar
-                      :img="'http://localhost:8000'+u.featuredImage"
+                      :img="'https://apidemo.madein-iran.com/public'+u.featuredImage"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
@@ -102,10 +102,10 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in posts.links" :key="i" v-show="hide"
-                              :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in posts.links" :key="i" v-show="hide"-->
+<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
+<!--      </vsud-pagination>-->
 
     </div>
 
@@ -117,12 +117,12 @@ import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudAvatar from "../components/VsudAvatar";
 import VsudBadge from "../components/VsudBadge";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
+// import VsudPagination from "../components/VsudPagination";
+// import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Blogs",
-  components: {VsudPaginationItem, VsudPagination, VsudBadge, VsudAvatar, VsudButton},
+  components: { VsudBadge, VsudAvatar, VsudButton},
   data()
   {
     return{
@@ -148,6 +148,7 @@ export default {
     else {
       await HTTP.get('/blogs')
           .catch((e)=>{
+            console.log(e)
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
               localStorage.removeItem('vqmgp');

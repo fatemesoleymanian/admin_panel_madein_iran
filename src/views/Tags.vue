@@ -131,7 +131,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in tags.data" :key="i" >
+          <tr  v-for="(u, i) in tags" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.name}}</p>
             </td>
@@ -172,10 +172,10 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in tags.links" :key="i" v-show="hide"
-                              :label="checkLabel(e.label)" :active="e.active" @click="updateTag(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in tags.links" :key="i" v-show="hide"-->
+<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateTag(e.label)"/>-->
+<!--      </vsud-pagination>-->
     </div>
 
   </div>
@@ -185,12 +185,10 @@
 import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudBadge from "../components/VsudBadge";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Tags",
-  components: {VsudPaginationItem, VsudPagination, VsudBadge, VsudButton},
+  components: { VsudBadge, VsudButton},
   data()
   {
     return{

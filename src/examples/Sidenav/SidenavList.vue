@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-auto h-auto collapse navbar-collapse  h-100"
-    id="sidenav-collapse-main"
+    id="sidenav-collapse-main" style="z-index: 99"
   >
     <ul class="navbar-nav">
       <li class="nav-item">

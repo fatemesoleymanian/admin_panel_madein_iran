@@ -45,7 +45,7 @@
 
             </div>
             <vsud-pagination class="my-3 float-start  mx-5" v-if="emptyIdeas.length" color="success" size="sm">
-              <vsud-pagination-item v-for="(e,i) in empties.data.users.links" :key="i"
+              <vsud-pagination-item v-for="(e,i) in empties.data.links" :key="i"
                                     v-show="hide"
                                     :label="checkLabel(e.label)" :active="e.active" @click="updateEmpties(e.label)"
               />
@@ -154,7 +154,7 @@ export default {
               type: 'error',
             });
           });
-      this.emptyIdeas = this.empties.data.users.data;
+      this.emptyIdeas = this.empties.data.data;
       this.flag1 = false
     },
     async showIdeas() {
@@ -166,7 +166,7 @@ export default {
               type: 'error',
             });
           });
-      this.newIdeas = this.ideas.data.users.data;
+      this.newIdeas = this.ideas.data.data;
       this.flag2 = false
     },
     async updateEmpties(page) {

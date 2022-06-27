@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="shadow-none navbar navbar-main navbar-expand-lg border-radius-xl"
+    class="shadow-none navbar navbar-main navbar-expand-lg border-radius-xl" style="z-index: 5"
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
@@ -28,7 +28,7 @@
             />
             <ul :class="active ? ' suggestions clearfix active' : 'suggestions clearfix' " v-if="results.length"
             style=" margin: 50px 20px 0 0;">
-              <li v-for="(r,i) in results" :key="i" >
+              <li class="border" v-for="(r,i) in results" :key="i" >
                 <span v-if="r.created_at === 'pro' " @click="$router.push(`/product/details${r.id}`);results=[];active=true">
                   {{r.name}}
                 </span>
@@ -39,7 +39,7 @@
                   {{r.name}}
                 </span>
               </li>
-            </ul>
+             </ul>
             <div v-if="!active && !results.length"
                  :class="active ? ' suggestions clearfix active' : 'suggestions clearfix' "
             style="margin: 50px 20px ;text-align:center;padding:20px;font-weight: 500;font-size: 19px">
@@ -48,9 +48,23 @@
           </div>
         </div>
         <ul class="navbar-nav justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a
+                href="#"
+                @click="toggleSidebar"
+                class="p-0 nav-link text-body"
+                id="iconNavbarSidenav"
+            >
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
           <li class="nav-item d-flex align-items-center">
-
               <i
+                  @click="logout"
                 class="fa fa-user"
                 :class="this.$store.state.isRTL ? 'ms-sm-2' : 'me-sm-1'"
               ></i>
@@ -96,7 +110,6 @@ export default {
     {
       await HTTP.post('admin/logout')
       .then((res)=>{
-        console.log(res.data)
         localStorage.removeItem('wugt');
         localStorage.removeItem('vqmgp');
         localStorage.removeItem('rgtokuukqp');

@@ -49,7 +49,7 @@
                          width="500"
                          height="300"
                          class="w-100 position-relative z-index-2"
-                         :src="'http://localhost:8000'+image"
+                         :src="'https://apidemo.madein-iran.com/public'+image"
                          :alt="title"
                     />
                   </div>
@@ -120,7 +120,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'http://localhost:8000'+image"
+                       :src="'https://apidemo.madein-iran.com/public'+image"
                        :alt="title"
                   />
                 </div>
@@ -208,7 +208,7 @@
               <div class="d-flex  py-1">
                 <div >
                   <vsud-avatar
-                      :img="'http://localhost:8000'+u.image"
+                      :img="'https://apidemo.madein-iran.com/public'+u.image"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
@@ -379,7 +379,6 @@ export default {
     },
     uploadFake()
     {
-      console.log('upload fake')
       document.getElementById('img').click()
     },
     async loadFile(event)
@@ -407,7 +406,6 @@ export default {
     },
     async deleteOLD()
     {
-      console.log('here')
       const data = {
         imageName : this.image
       }

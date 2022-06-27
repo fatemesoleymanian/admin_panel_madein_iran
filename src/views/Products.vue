@@ -55,12 +55,12 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in products.data" :key="i" >
+          <tr  v-for="(u, i) in products" :key="i" >
             <td>
               <div class="d-flex  py-1">
                 <div >
                   <vsud-avatar
-                      :img="'http://localhost:8000'+u.image"
+                      :img="'https://apidemo.madein-iran.com/public'+u.image"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
@@ -102,10 +102,10 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in products.links" :key="i" v-show="hide"
-                              :label="checkLabel(e.label)" :active="e.active" @click="updateProducts(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in products.links" :key="i" v-show="hide"-->
+<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateProducts(e.label)"/>-->
+<!--      </vsud-pagination>-->
     </div>
 
   </div>
@@ -115,11 +115,11 @@ import {HTTP} from "../http-common";
 import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
 import VsudAvatar from "../components/VsudAvatar";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
+// import VsudPagination from "../components/VsudPagination";
+// import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
-  components: {VsudPaginationItem, VsudPagination, VsudAvatar, VsudButton, VsudBadge},
+  components: { VsudAvatar, VsudButton, VsudBadge},
   data()
   {
     return{

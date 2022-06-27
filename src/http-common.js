@@ -5,7 +5,6 @@ axios.interceptors.response.use( (res) => {
  },
  async (err) => {
      if (err.response.status === 500) {
-         console.log('hh')
          await HTTP.post('admin/logout')
              .then((res) => {
                  localStorage.removeItem('wugt');
@@ -32,7 +31,6 @@ axios.interceptors.response.use( (res) => {
 axios.defaults.headers.common[ 'Content-Type' ] = 'application/json';
 if (localStorage.getItem('vqmgp')) axios.defaults.headers.common = {'Authorization': `Bearer ${localStorage.getItem('vqmgp')}`}
 export const HTTP = axios.create({
-    // baseURL : `https://api.madein-iran.com/public/api`
-    baseURL : 'http://localhost:8000/api'
+    baseURL : `https://apidemo.madein-iran.com/public/api`
 
   });

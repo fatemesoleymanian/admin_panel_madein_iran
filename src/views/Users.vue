@@ -56,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in users.data" :key="i">
+                <tr v-for="(u, i) in users" :key="i">
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div>
@@ -102,10 +102,10 @@
                 </tbody>
               </table>
             </div>
-            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-              <vsud-pagination-item v-for="(e,i) in users.links" :key="i" v-show="hide"
-                                    :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>
-            </vsud-pagination>
+<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--              <vsud-pagination-item v-for="(e,i) in users.links" :key="i" v-show="hide"-->
+<!--                                    :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
+<!--            </vsud-pagination>-->
           </div>
 
         </div>
@@ -117,8 +117,8 @@
 import {HTTP} from '../http-common'
 
 import img1 from "../assets/img/team-2.jpg";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
+// import VsudPagination from "../components/VsudPagination";
+// import VsudPaginationItem from "../components/VsudPaginationItem";
 import VsudAvatar from "../components/VsudAvatar";
 import VsudBadge from "../components/VsudBadge";
 
@@ -137,8 +137,8 @@ export default {
   components: {
     VsudBadge,
     VsudAvatar,
-    VsudPaginationItem,
-    VsudPagination
+    // VsudPaginationItem,
+    // VsudPagination
 
   },
   async mounted() {
@@ -161,7 +161,8 @@ export default {
             }
           })
           .then((users) => {
-            this.users = users.data.users
+            console.log(users.data)
+            this.users = users.data
           });
     }
   },
@@ -214,3 +215,4 @@ export default {
 
 }
 </script>
+

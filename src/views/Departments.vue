@@ -49,7 +49,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'http://localhost:8000'+iconImage"
+                       :src="'https://apidemo.madein-iran.com/public'+iconImage"
                        :alt="name"
                   />
                 </div>
@@ -120,7 +120,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'http://localhost:8000'+iconImage"
+                       :src="'https://apidemo.madein-iran.com/public'+iconImage"
                        :alt="name"
                   />
                 </div>
@@ -201,7 +201,7 @@
               <div class="d-flex  py-1">
                 <div v-if="u.iconImage">
                   <vsud-avatar
-                      :img="'http://localhost:8000'+u.iconImage"
+                      :img="'https://apidemo.madein-iran.com/public'+u.iconImage"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
@@ -305,7 +305,7 @@ export default {
     async deleteDepa()
     {
       const data = { id : this.depToDel.id}
-      const delet = await HTTP.delete('/departments',{data})
+       await HTTP.delete('/departments',{data})
      .catch(()=>
      {
        document.getElementById('no').click();
@@ -315,7 +315,6 @@ export default {
          type: 'error',
        });
      });
-      console.log(delet);
         document.getElementById('no').click();
         this.$notify({
           title: "عملیات موفق!",
@@ -354,7 +353,7 @@ export default {
         metaDescription : this.metaDescription,
         pageTitle : this.pageTitle,
       }
-      const update = await  HTTP.put(`/departments/${this.id}`,data)
+      await  HTTP.put(`/departments/${this.id}`,data)
       .catch(()=>{
         document.getElementById("noEdit").click()
         return this.$notify({
@@ -363,7 +362,6 @@ export default {
           type: 'success',
         });
       });
-      console.log(update)
 
         document.getElementById("noEdit").click()
         this.$notify({
@@ -377,7 +375,6 @@ export default {
     },
     uploadFake()
     {
-      console.log('upload fake')
       document.getElementById('img').click()
     },
     async loadFile(event)
@@ -405,7 +402,6 @@ export default {
     },
     async deleteOLD()
     {
-      console.log('here')
       if (this.iconImage) {
         const data = {
           imageName: this.iconImage

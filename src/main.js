@@ -25,6 +25,11 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const appInstance = createApp(App);
+appInstance.config.productionTip = false;
+appInstance.config.warnHandler = function () {
+
+    return null
+};
 appInstance.component('QuillEditor', QuillEditor);
 appInstance.use(store);
 appInstance.use(router);

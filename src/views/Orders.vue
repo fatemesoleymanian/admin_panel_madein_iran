@@ -33,7 +33,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in orders.data" :key="i" >
+          <tr  v-for="(u, i) in orders" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">
               <router-link :to="`/users/details${u.card.user_id}`">
@@ -64,21 +64,19 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in orders.links" :key="i" v-show="hide"
-                              :label="checkLabel(e.label)" :active="e.active" @click="updateOrder(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in orders.links" :key="i" v-show="hide"-->
+<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateOrder(e.label)"/>-->
+<!--      </vsud-pagination>-->
     </div>
   </div>
 </template>
 <script>
 import {HTTP} from "../http-common";
 import VsudBadge from "../components/VsudBadge";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
-  components: {VsudPaginationItem, VsudPagination, VsudBadge},
+  components: { VsudBadge},
   data()
   {
     return {

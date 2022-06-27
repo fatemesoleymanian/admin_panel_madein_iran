@@ -147,7 +147,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in faqs.data" :key="i" :id="u.id" >
+          <tr  v-for="(u, i) in faqs" :key="i" :id="u.id" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.question}}</p>
             </td>
@@ -182,10 +182,10 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in faqs.links" :key="i" v-show="hide1"
-                              :label="checkLabel1(e.label)" :active="e.active" @click="updateFaq(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in faqs.links" :key="i" v-show="hide1"-->
+<!--                              :label="checkLabel1(e.label)" :active="e.active" @click="updateFaq(e.label)"/>-->
+<!--      </vsud-pagination>-->
     </div>
 
     <div class="card mb-4 my-5 mx-4 bg-light">
@@ -221,7 +221,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(f,i) in forms.data" :key="i">
+            <tr v-for="(f,i) in forms" :key="i">
               <td>
                 <div class="d-flex px-2">
                   <div class="my-auto">
@@ -252,10 +252,10 @@
             </tbody>
           </table>
         </div>
-        <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-          <vsud-pagination-item v-for="(e,i) in forms.links" :key="i" v-show="hide2"
-                                :label="checkLabel2(e.label)" :active="e.active" @click="updateForm(e.label)"/>
-        </vsud-pagination>
+<!--        <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--          <vsud-pagination-item v-for="(e,i) in forms.links" :key="i" v-show="hide2"-->
+<!--                                :label="checkLabel2(e.label)" :active="e.active" @click="updateForm(e.label)"/>-->
+<!--        </vsud-pagination>-->
       </div>
     </div>
   </div>
@@ -265,12 +265,10 @@
 import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudBadge from "../components/VsudBadge";
-import VsudPaginationItem from "../components/VsudPaginationItem";
-import VsudPagination from "../components/VsudPagination";
 
 export default {
   name: "FAQs",
-  components: {VsudPagination, VsudPaginationItem, VsudBadge, VsudButton},
+  components: { VsudBadge, VsudButton},
   data()
   {
     return{
@@ -329,8 +327,6 @@ export default {
             this.faqs = res[0].data;
             this.products = res[1].data;
             this.forms = res[2].data;
-            console.log(this.faqs)
-            console.log(this.forms)
           });
     }
   },
@@ -446,7 +442,6 @@ export default {
       this.update.old = this.update.old.filter(function(ele){
         return ele.id !== product.id
       });
-      console.log(this.update.old)
     },
     addProduct()
     {
@@ -459,14 +454,12 @@ export default {
         }
       }
       if (!flag)  this.update.old.push(this.tmp);
-      console.log(this.update.old)
     },
     dropProductNew(product)
     {
       this.create.new = this.create.new.filter(function(ele){
         return ele.id !== product.id
       });
-      console.log(this.create.new)
     },
     addProductNew()
     {
@@ -479,7 +472,6 @@ export default {
         }
       }
       if (!flag)  this.create.new.push(this.tmp);
-      console.log(this.create.new)
     },
     async updateFaq(page) {
       this.faqs = await HTTP.get(`/faq?page=${page}`)

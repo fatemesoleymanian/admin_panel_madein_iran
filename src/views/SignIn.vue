@@ -156,7 +156,6 @@ export default {
       }
        await HTTP.post('admin/auth/login',data)
           .then((res)=>{
-            console.log(res.data)
             localStorage.setItem('wugt',JSON.stringify(res.data.user));
             localStorage.setItem('vqmgp',res.data.token);
             localStorage.setItem('rgtokuukqp',JSON.stringify(res.data.permission));
@@ -188,7 +187,6 @@ export default {
       const data = {email : this.email}
       await HTTP.post('admin/forget_password',data)
           .then((res)=>{
-            console.log(res.data)
             localStorage.setItem('liame',this.email)
             this.$notify({
               title: "عملیات موفق!",
@@ -222,7 +220,6 @@ export default {
           }
       await HTTP.post('admin/reset_password',data)
           .then((res)=>{
-            console.log(res.data)
             localStorage.removeItem('liame')
             localStorage.setItem('wugt',res.data.admin);
             localStorage.setItem('vqmgp',res.data.token);

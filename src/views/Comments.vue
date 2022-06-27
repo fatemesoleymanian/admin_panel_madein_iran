@@ -1,26 +1,5 @@
 <template>
   <div class="card mb-4 mt-5 mx-2">
-    <!-- Modal to delete -->
-    <div class="modal fade"
-
-         id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">اقدام به حذف اسلاید</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            آیا از حذف این اسلاید اطمینان دارید؟
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no" >خیر</button>
-            <button type="button" class="btn btn-primary" @click="deleteSlide">بله</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--    modal-->
 
     <div class="card-header pb-0">
       <h6>دیدگاه کاربران درباره محصولات</h6>
@@ -54,7 +33,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in comments.data" :key="i" >
+          <tr  v-for="(u, i) in comments" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.comment}}</p>
             </td>
@@ -86,10 +65,10 @@
           </tbody>
         </table>
       </div>
-      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-        <vsud-pagination-item v-for="(e,i) in comments.links" :key="i" v-show="hide"
-                              :label="checkLabel(e.label)" :active="e.active" @click="updateComment(e.label)"/>
-      </vsud-pagination>
+<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--        <vsud-pagination-item v-for="(e,i) in comments.links" :key="i" v-show="hide"-->
+<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateComment(e.label)"/>-->
+<!--      </vsud-pagination>-->
     </div>
 
   </div>
@@ -97,11 +76,8 @@
 
 <script>
 import {HTTP} from "../http-common";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
 export default {
   name: "Comments",
-  components: {VsudPaginationItem, VsudPagination},
   data()
   {
     return{

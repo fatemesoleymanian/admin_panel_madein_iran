@@ -305,7 +305,7 @@ export default {
 
       document.getElementById('no').click();
       const data = { id : this.opToDel.id}
-      const delet = await HTTP.delete('/testimonial',{data})
+      await HTTP.delete('/testimonial',{data})
           .catch(()=>{
             return this.$notify({
               title: "عملیات ناموفق!",
@@ -313,7 +313,6 @@ export default {
               type: 'error',
             });
           });
-      console.log((delet))
       this.$notify({
         title: "عملیات موفق!",
         text: "نظر با موفقیت حذف گردید!",

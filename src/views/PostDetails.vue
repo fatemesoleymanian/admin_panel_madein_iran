@@ -51,7 +51,7 @@
                          width="500"
                          height="300"
                          class="w-100 position-relative z-index-2"
-                         :src="'http://localhost:8000'+post.featuredImage"
+                         :src="'https://apidemo.madein-iran.com/public'+post.featuredImage"
                          :alt="post.slug"
                     />
                   </div>
@@ -103,9 +103,6 @@
           <QuillEditor  id="post_create"
                         :options="editorOption"
                         @blur="onEditorBlur($event)"
-                        @focus="onEditorFocus($event)"
-                        @ready="onEditorReady($event)"
-                        @change="onEditorChange($event)"
                         :modules="modules"
                         ref="myQuillEditor"
                         placeholder="متن پست" class="editor" theme="snow" v-model:content="post.post"/>
@@ -291,20 +288,9 @@ export default {
   },
   methods:{
     onEditorBlur(quill) {
-      console.log('editor blur!', quill)
       this.post.post = quill.value.innerHTML
-      console.log(this.post.post)
     },
-    onEditorFocus(quill) {
-      console.log('editor focus!', quill)
-    },
-    onEditorReady(quill) {
-      console.log('editor ready!', quill)
-    },
-    onEditorChange({ quill, html, text }) {
-      console.log('editor change!', quill, html, text)
-      this.post.post = html
-    },
+   
     async update(){
       this.isCreating = true
       this.post.post=this.$refs.myQuillEditor.getHTML()

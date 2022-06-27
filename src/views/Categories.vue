@@ -49,7 +49,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'http://localhost:8000'+product.iconImage"
+                       :src="'https://apidemo.madein-iran.com/public'+product.iconImage"
                        :alt="product.name"
                   />
                 </div>
@@ -153,7 +153,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'http://localhost:8000'+product.iconImage"
+                       :src="'https://apidemo.madein-iran.com/public'+product.iconImage"
                        :alt="product.name"
                   />
                 </div>
@@ -267,12 +267,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in product_cat.data" :key="i">
+                <tr v-for="(u, i) in product_cat" :key="i">
                   <td>
                     <div class="d-flex  py-1">
                       <div >
                         <vsud-avatar
-                            :img="'http://localhost:8000'+u.iconImage"
+                            :img="'https://apidemo.madein-iran.com/public'+u.iconImage"
                             size="sm"
                             border-radius="md"
                             class="mx-2"
@@ -315,10 +315,10 @@
               </table>
 
             </div>
-            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-              <vsud-pagination-item v-for="(e,i) in product_cat.links" :key="i" v-show="hide2"
-                                    :label="checkLabel2(e.label)" :active="e.active" @click="updateCategory(e.label)"/>
-            </vsud-pagination>
+<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--              <vsud-pagination-item v-for="(e,i) in product_cat.links" :key="i" v-show="hide2"-->
+<!--                                    :label="checkLabel2(e.label)" :active="e.active" @click="updateCategory(e.label)"/>-->
+<!--            </vsud-pagination>-->
           </div>
 
         </div>
@@ -359,7 +359,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(idea,i) in blog_cat.data" :key="i" >
+                <tr v-for="(idea,i) in blog_cat" :key="i" >
                   <td>
                     <p class="text-sm font-weight-bold mb-0">{{idea.name}}</p>
                   </td>
@@ -389,10 +389,10 @@
                 </tbody>
               </table>
             </div>
-            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">
-              <vsud-pagination-item v-for="(e,i) in blog_cat.links" :key="i" v-show="hide1"
-                                    :label="checkLabel1(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>
-            </vsud-pagination>
+<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
+<!--              <vsud-pagination-item v-for="(e,i) in blog_cat.links" :key="i" v-show="hide1"-->
+<!--                                    :label="checkLabel1(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
+<!--            </vsud-pagination>-->
           </div>
         </div>
       </div>
@@ -406,12 +406,10 @@ import VsudAvatar from "../components/VsudAvatar";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
 import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Categories",
-  components: {VsudPaginationItem, VsudPagination, VsudButton, VsudBadge, PlaceHolderCard, VsudAvatar},
+  components: { VsudButton, VsudBadge, PlaceHolderCard, VsudAvatar},
   data()
   {
     return{
@@ -695,7 +693,6 @@ export default {
   },
     uploadFake()
     {
-      console.log('upload fake')
       document.getElementById('img').click()
     },
     async loadFile(event)
@@ -723,7 +720,6 @@ export default {
     },
     async deleteOLD()
     {
-      console.log('here')
       if (this.product.iconImage) {
         const data = {
           imageName: this.product.iconImage

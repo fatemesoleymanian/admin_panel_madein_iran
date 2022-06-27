@@ -260,7 +260,7 @@ export default {
     async deleteMember()
     {
       const data = { id : this.memToDel.id}
-      const delet = await HTTP.delete('admin/delete',{data})
+       await HTTP.delete('admin/delete',{data})
           .catch(()=>
           {
             document.getElementById('no').click();
@@ -270,7 +270,6 @@ export default {
               type: 'error',
             });
           });
-      console.log(delet);
       document.getElementById('no').click();
       this.$notify({
         title: "عملیات موفق!",
@@ -318,7 +317,6 @@ export default {
     //           type: 'success',
     //         });
     //       });
-    //   console.log(update)
     //
     //   document.getElementById("noEdit").click()
     //   this.$notify({

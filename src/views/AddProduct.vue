@@ -90,7 +90,7 @@
                          width="500"
                          height="300"
                          class="w-100 position-relative z-index-2"
-                         :src="'http://localhost:8000'+product.image"
+                         :src="'https://apidemo.madein-iran.com/public'+product.image"
                          :alt="product.name"
                     />
                   </div>
@@ -189,9 +189,6 @@
           <QuillEditor  id="product_create"
                         :options="editorOption"
                         @blur="onEditorBlur($event)"
-                        @focus="onEditorFocus($event)"
-                        @ready="onEditorReady($event)"
-                        @change="onEditorChange($event)"
                         :modules="modules"
                         ref="myQuillEditor"
                         placeholder="مشخصات فنی محصول" class="editor" theme="snow" v-model="product.description"/>
@@ -354,18 +351,7 @@ export default {
   },
   methods:{
     onEditorBlur(quill) {
-      console.log('editor blur!', quill)
       this.product.description = quill.value.innerHTML
-    },
-    onEditorFocus(quill) {
-      console.log('editor focus!', quill)
-    },
-    onEditorReady(quill) {
-      console.log('editor ready!', quill)
-    },
-    onEditorChange({ quill, html, text }) {
-      this.product.description = html
-      console.log('editor change!', quill, html, text)
     },
     async update(){
       this.isCreating = true
