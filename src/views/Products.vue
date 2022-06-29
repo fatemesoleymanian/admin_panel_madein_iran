@@ -55,7 +55,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in products" :key="i" >
+          <tr  v-for="(u, i) in getItems" :key="i" >
             <td>
               <div class="d-flex  py-1">
                 <div >
@@ -102,10 +102,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in products.links" :key="i" v-show="hide"-->
-<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateProducts(e.label)"/>-->
-<!--      </vsud-pagination>-->
+      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="product.currentPage" :per-page="product.perPage"
+                    :records="products.length" @paginate="paginateClickCallback"
+                    :page-count="getPaginateCount" />
+      </div>
     </div>
 
   </div>
@@ -115,8 +117,6 @@ import {HTTP} from "../http-common";
 import VsudBadge from "../components/VsudBadge";
 import VsudButton from "../components/VsudButton";
 import VsudAvatar from "../components/VsudAvatar";
-// import VsudPagination from "../components/VsudPagination";
-// import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   components: { VsudAvatar, VsudButton, VsudBadge},
@@ -127,7 +127,11 @@ export default {
       products:[],
       productToDel:'',
       index:0,
-      hide:1
+      hide:1,
+      product:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted(){
@@ -179,29 +183,19 @@ export default {
         });
       }
     },
-    async updateProducts(page) {
-      this.products = await HTTP.get(`/products_page?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.products = this.products.data;
+    paginateClickCallback(page) {
+      this.product.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.products.length / this.product.perPage);
+    },
+    getItems() {
+      let start = (this.product.currentPage - 1) * this.product.perPage;
+      let end = this.product.currentPage * this.product.perPage;
+      return this.products.slice(start, end);
+    },
+  },
 }
 </script>

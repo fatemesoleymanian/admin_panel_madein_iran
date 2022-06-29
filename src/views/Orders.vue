@@ -33,7 +33,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in orders" :key="i" >
+          <tr  v-for="(u, i) in getItems" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">
               <router-link :to="`/users/details${u.card.user_id}`">
@@ -64,10 +64,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in orders.links" :key="i" v-show="hide"-->
-<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateOrder(e.label)"/>-->
-<!--      </vsud-pagination>-->
+      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="order.currentPage" :per-page="order.perPage"
+                    :records="orders.length" @paginate="paginateClickCallback"
+                    :page-count="getPaginateCount" />
+      </div>
     </div>
   </div>
 </template>
@@ -83,7 +85,11 @@ export default {
        orders:[],
       index:'',
       orderToDel:'',
-      hide:1
+      hide:1,
+      order:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted()
@@ -112,30 +118,20 @@ export default {
     }
   },
   methods:{
-    async updateOrder(page) {
-      this.orders = await HTTP.get(`orders?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.orders = this.orders.data;
+    paginateClickCallback(page) {
+      this.order.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.orders.length / this.order.perPage);
+    },
+    getItems() {
+      let start = (this.order.currentPage - 1) * this.order.perPage;
+      let end = this.order.currentPage * this.order.perPage;
+      return this.orders.slice(start, end);
+    },
+  },
 
 }
 </script>

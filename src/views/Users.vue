@@ -56,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in users" :key="i">
+                <tr v-for="(u, i) in getItems" :key="i">
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div>
@@ -102,10 +102,12 @@
                 </tbody>
               </table>
             </div>
-<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--              <vsud-pagination-item v-for="(e,i) in users.links" :key="i" v-show="hide"-->
-<!--                                    :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
-<!--            </vsud-pagination>-->
+            <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="user.currentPage" :per-page="user.perPage"
+                          :records="users.length" @paginate="paginateClickCallback"
+                          :page-count="getPaginateCount" />
+            </div>
           </div>
 
         </div>
@@ -117,8 +119,6 @@
 import {HTTP} from '../http-common'
 
 import img1 from "../assets/img/team-2.jpg";
-// import VsudPagination from "../components/VsudPagination";
-// import VsudPaginationItem from "../components/VsudPaginationItem";
 import VsudAvatar from "../components/VsudAvatar";
 import VsudBadge from "../components/VsudBadge";
 
@@ -126,6 +126,10 @@ export default {
   name: "users",
   data() {
     return {
+      user:{
+        currentPage: 1,
+        perPage: 10
+      },
       users: [],
       paginate: {},
       remove: 1,
@@ -136,10 +140,7 @@ export default {
   },
   components: {
     VsudBadge,
-    VsudAvatar,
-    // VsudPaginationItem,
-    // VsudPagination
-
+    VsudAvatar
   },
   async mounted() {
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
@@ -161,7 +162,6 @@ export default {
             }
           })
           .then((users) => {
-            console.log(users.data)
             this.users = users.data
           });
     }
@@ -190,29 +190,20 @@ export default {
         });
       }
     },
-    async updateBlogs(page) {
-      const user = await HTTP.get(`/users?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.users = user.data.users;
+    paginateClickCallback(page) {
+      this.user.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      } else if (label === '&laquo; Previous') {
-        return this.hide = 0
-      } else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
-
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.users.length / this.user.perPage);
+    },
+    getItems() {
+      let start = (this.user.currentPage - 1) * this.user.perPage;
+      let end = this.user.currentPage * this.user.perPage;
+      return this.users.slice(start, end);
+    },
+  },
 }
 </script>
 

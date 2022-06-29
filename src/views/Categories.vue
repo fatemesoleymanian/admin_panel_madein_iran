@@ -42,7 +42,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                     <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                     <place-holder-card
-                        :title="{ text: 'بارگذاری آیکون', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری آیکون', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -267,7 +267,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in product_cat" :key="i">
+                <tr v-for="(u, i) in getItems1" :key="i">
                   <td>
                     <div class="d-flex  py-1">
                       <div >
@@ -315,10 +315,12 @@
               </table>
 
             </div>
-<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--              <vsud-pagination-item v-for="(e,i) in product_cat.links" :key="i" v-show="hide2"-->
-<!--                                    :label="checkLabel2(e.label)" :active="e.active" @click="updateCategory(e.label)"/>-->
-<!--            </vsud-pagination>-->
+            <div v-if="getPaginateCount1 > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="cat1.currentPage" :per-page="cat1.perPage"
+                          :records="product_cat.length" @paginate="paginateClickCallback1"
+                          :page-count="getPaginateCount1" />
+            </div>
           </div>
 
         </div>
@@ -359,7 +361,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(idea,i) in blog_cat" :key="i" >
+                <tr v-for="(idea,i) in getItems2" :key="i" >
                   <td>
                     <p class="text-sm font-weight-bold mb-0">{{idea.name}}</p>
                   </td>
@@ -389,10 +391,12 @@
                 </tbody>
               </table>
             </div>
-<!--            <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--              <vsud-pagination-item v-for="(e,i) in blog_cat.links" :key="i" v-show="hide1"-->
-<!--                                    :label="checkLabel1(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
-<!--            </vsud-pagination>-->
+            <div v-if="getPaginateCount2 > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="cat2.currentPage" :per-page="cat2.perPage"
+                          :records="blog_cat.length" @paginate="paginateClickCallback2"
+                          :page-count="getPaginateCount2" />
+            </div>
           </div>
         </div>
       </div>
@@ -413,6 +417,7 @@ export default {
   data()
   {
     return{
+      uploadImg:false,
       create:1,
       update:1,
       remove:1,
@@ -444,6 +449,14 @@ export default {
       departments:[],
       hide1:1,
       hide2:1,
+      cat1:{
+        currentPage: 1,
+        perPage: 10
+      },
+      cat2:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
    async mounted()
@@ -697,11 +710,13 @@ export default {
     },
     async loadFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/categories/product');
       const upload =  await HTTP.post('/upload',formData)
           .catch(()=>{
+            this.uploadImg = false
             return this.$notify({
               title: "عملیات ناموفق!",
               text: 'لطفا آیکون با فرمت مناسب آپلود کنید. ',
@@ -716,7 +731,7 @@ export default {
         type: 'success',
       });
       this.upload = false
-
+      this.uploadImg = false
     },
     async deleteOLD()
     {
@@ -766,52 +781,30 @@ export default {
       });
       this.uploadNew = false
     },
-    async updateBlogs(page) {
-      this.blog_cat = await HTTP.get(`/blog_categories_pagi?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.blog_cat = this.blog_cat.data;
+    paginateClickCallback1(page) {
+      this.cat1.currentPage = Number(page);
     },
-    checkLabel1(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide1 = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide1= 0
-      }
-      else {
-        this.hide1 = 1
-        return label
-      }
+    paginateClickCallback2(page) {
+      this.cat2.currentPage = Number(page);
     },
-    async updateCategory(page) {
-      this.product_cat = await HTTP.get(`/categories_pagi?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.product_cat = this.product_cat.data;
+  },
+  computed: {
+    getPaginateCount1() {
+      return Math.ceil(this.product_cat.length / this.cat1.perPage);
     },
-    checkLabel2(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide2 = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide2= 0
-      }
-      else {
-        this.hide2 = 1
-        return label
-      }
-    }
+    getPaginateCount2() {
+      return Math.ceil(this.blog_cat.length / this.cat2.perPage);
+    },
+    getItems1() {
+      let start = (this.cat1.currentPage - 1) * this.cat1.perPage;
+      let end = this.cat1.currentPage * this.cat1.perPage;
+      return this.product_cat.slice(start, end);
+    },
+    getItems2() {
+      let start = (this.cat2.currentPage - 1) * this.cat2.perPage;
+      let end = this.cat2.currentPage * this.cat2.perPage;
+      return this.blog_cat.slice(start, end);
+    },
   },
 }
 </script>

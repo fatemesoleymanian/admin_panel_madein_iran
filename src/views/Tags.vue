@@ -131,7 +131,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in tags" :key="i" >
+          <tr  v-for="(u, i) in getItems" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.name}}</p>
             </td>
@@ -172,10 +172,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in tags.links" :key="i" v-show="hide"-->
-<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateTag(e.label)"/>-->
-<!--      </vsud-pagination>-->
+      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="tag.currentPage" :per-page="tag.perPage"
+                    :records="tags.length" @paginate="paginateClickCallback"
+                    :page-count="getPaginateCount" />
+      </div>
     </div>
 
   </div>
@@ -202,6 +204,10 @@ export default {
       update:1,
       create:1,
       hide:1,
+      tag:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted(){
@@ -327,30 +333,20 @@ export default {
         this.tags.unshift(update.data.tag)
       window.location = '/tags'
     },
-    async updateTag(page) {
-      this.tags = await HTTP.get(`/tags_pagi?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.tags = this.tags.data;
+    paginateClickCallback(page) {
+      this.tag.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.tags.length / this.tag.perPage);
+    },
+    getItems() {
+      let start = (this.tag.currentPage - 1) * this.tag.perPage;
+      let end = this.tag.currentPage * this.tag.perPage;
+      return this.tags.slice(start, end);
+    },
+  },
 }
 </script>
 

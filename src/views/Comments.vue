@@ -33,7 +33,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in comments" :key="i" >
+          <tr  v-for="(u, i) in getItems" :key="i" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.comment}}</p>
             </td>
@@ -65,10 +65,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in comments.links" :key="i" v-show="hide"-->
-<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateComment(e.label)"/>-->
-<!--      </vsud-pagination>-->
+      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="comment.currentPage" :per-page="comment.perPage"
+                    :records="comments.length" @paginate="paginateClickCallback"
+                    :page-count="getPaginateCount" />
+      </div>
     </div>
 
   </div>
@@ -83,7 +85,11 @@ export default {
     return{
       comments:[],
       update:1,
-      hide:1
+      hide:1,
+      comment:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted() {
@@ -127,30 +133,20 @@ export default {
       return this.$notify({title: comment.data.msg})
 
     },
-    async updateComment(page) {
-      this.comments = await HTTP.get(`/pcomment/all?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.comments = this.comments.data;
+    paginateClickCallback(page) {
+      this.comment.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.comments.length / this.comment.perPage);
+    },
+    getItems() {
+      let start = (this.comment.currentPage - 1) * this.comment.perPage;
+      let end = this.comment.currentPage * this.comment.perPage;
+      return this.comments.slice(start, end);
+    },
+  },
 }
 </script>
 

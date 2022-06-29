@@ -42,7 +42,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                     <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                     <place-holder-card
-                        :title="{ text: 'بارگذاری آیکون', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشد.' : 'بارگذاری آیکون', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -113,7 +113,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="uploadNew" @click="uploadNewFake">
                     <input type="file" id="imgNew" name="img" accept="image/*" style="opacity: 0;" @change="loadNewFile">
                     <place-holder-card
-                        :title="{ text: 'بارگذاری آیکون', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری آیکون', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -258,6 +258,7 @@ export default {
   data()
   {
     return{
+      uploadImg:false,
       remove:1,
       update:1,
       create:1,
@@ -379,14 +380,16 @@ export default {
     },
     async loadFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/departments');
       const upload =  await HTTP.post('/upload',formData)
           .catch(()=>{
+            this.uploadImg = false
             return this.$notify({
               title: "عملیات ناموفق!",
-              text: 'لطفا آیکون با فرمت مناسب آپلود کنید. ',
+              text: 'خطایی رخ داد. ',
               type: 'error',
             });
           });
@@ -398,6 +401,7 @@ export default {
         type: 'success',
       });
       this.upload = false
+      this.uploadImg = false
 
     },
     async deleteOLD()
@@ -428,14 +432,16 @@ export default {
     },
     async loadNewFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/departments');
       const upload =  await HTTP.post('/upload',formData)
           .catch(()=>{
+            this.uploadImg =false
             return this.$notify({
               title: "عملیات ناموفق!",
-              text: 'لطفا آیکون با فرمت مناسب آپلود کنید. ',
+              text:'خطایی رخ داد. ',
               type: 'error',
             });
           });
@@ -447,6 +453,7 @@ export default {
         type: 'success',
       });
       this.uploadNew = false
+      this.uploadImg = false
     },
     async addDepa()
     {

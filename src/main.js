@@ -23,9 +23,11 @@ import SoftUIDashboard from "./soft-ui-dashboard";
 import Notifications from '@kyvg/vue3-notification';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import Pagination from 'v-pagination-3';
 
 const appInstance = createApp(App);
 appInstance.config.productionTip = false;
+appInstance.component('pagination', Pagination);
 appInstance.config.warnHandler = function () {
 
     return null

@@ -147,7 +147,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in faqs" :key="i" :id="u.id" >
+          <tr  v-for="(u, i) in getItemsFaq" :key="i" :id="u.id" >
             <td>
               <p class="text-xs font-weight-bold mb-0">{{u.question}}</p>
             </td>
@@ -182,10 +182,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in faqs.links" :key="i" v-show="hide1"-->
-<!--                              :label="checkLabel1(e.label)" :active="e.active" @click="updateFaq(e.label)"/>-->
-<!--      </vsud-pagination>-->
+      <div v-if="getPaginateCountFaq > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="faq.currentPage" :per-page="faq.perPage"
+                    :records="faqs.length" @paginate="paginateClickCallbackFaq"
+                    :page-count="getPaginateCountFaq" />
+      </div>
     </div>
 
     <div class="card mb-4 my-5 mx-4 bg-light">
@@ -221,7 +223,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(f,i) in forms" :key="i">
+            <tr v-for="(f,i) in getItemsForm" :key="i">
               <td>
                 <div class="d-flex px-2">
                   <div class="my-auto">
@@ -252,10 +254,13 @@
             </tbody>
           </table>
         </div>
-<!--        <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--          <vsud-pagination-item v-for="(e,i) in forms.links" :key="i" v-show="hide2"-->
-<!--                                :label="checkLabel2(e.label)" :active="e.active" @click="updateForm(e.label)"/>-->
-<!--        </vsud-pagination>-->
+
+        <div v-if="getPaginateCountForm > 1 " class="px-4 py-3 d-flex float-start">
+          <pagination class="pro-pagination-style shop-pagination mt-30 "
+                      v-model="form.currentPage" :per-page="form.perPage"
+                      :records="forms.length" @paginate="paginateClickCallbackForm"
+                      :page-count="getPaginateCountForm" />
+        </div>
       </div>
     </div>
   </div>
@@ -294,6 +299,14 @@ export default {
       tmp:'',
       hide1:1,
       hide2:1,
+      form:{
+        currentPage: 1,
+        perPage: 10
+      },
+      faq:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted()
@@ -473,53 +486,31 @@ export default {
       }
       if (!flag)  this.create.new.push(this.tmp);
     },
-    async updateFaq(page) {
-      this.faqs = await HTTP.get(`/faq?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.faqs = this.faqs.data;
+    paginateClickCallbackForm(page) {
+      this.form.currentPage = Number(page);
     },
-    checkLabel1(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide1 = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide1= 0
-      }
-      else {
-        this.hide1 = 1
-        return label
-      }
+    paginateClickCallbackFaq(page) {
+      this.faq.currentPage = Number(page);
     },
-    async updateForm(page) {
-      this.forms = await HTTP.get(`/faq_form?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.forms = this.forms.data;
+  },
+  computed: {
+    getPaginateCountForm() {
+      return Math.ceil(this.forms.length / this.form.perPage);
     },
-    checkLabel2(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide2 = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide2= 0
-      }
-      else {
-        this.hide2 = 1
-        return label
-      }
-    }
-  }
+    getPaginateCountFaq() {
+      return Math.ceil(this.faqs.length / this.faq.perPage);
+    },
+    getItemsForm() {
+      let start = (this.form.currentPage - 1) * this.form.perPage;
+      let end = this.form.currentPage * this.form.perPage;
+      return this.forms.slice(start, end);
+    },
+    getItemsFaq() {
+      let start = (this.faq.currentPage - 1) * this.faq.perPage;
+      let end = this.faq.currentPage * this.faq.perPage;
+      return this.faqs.slice(start, end);
+    },
+  },
 }
 </script>
 

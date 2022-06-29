@@ -83,7 +83,7 @@
                     <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                       <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                       <place-holder-card
-                          :title="{ text: 'بارگذاری عکس محصول', variant: 'h5' }"
+                          :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری عکس محصول', variant: 'h5' }"
                       />
                     </div>
                     <img v-else
@@ -300,6 +300,7 @@ export default {
     return{
       editorOption: {
         // debug: 'info',
+        uploadImg:false,
         readOnly: false,
         modules: {
           toolbar: [
@@ -585,6 +586,7 @@ export default {
     },
     async loadFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/products');
@@ -608,6 +610,7 @@ export default {
         });
 
       }
+      this.uploadImg = false
     },
     dropTag(id)
     {

@@ -83,7 +83,7 @@
                     <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                       <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                       <place-holder-card
-                          :title="{ text: 'بارگذاری عکس محصول', variant: 'h5' }"
+                          :title="{ text: uploadImg ? 'لطفا شکیبا باشید.' :'بارگذاری عکس محصول', variant: 'h5' }"
                       />
                     </div>
                     <img v-else
@@ -287,6 +287,7 @@ export default {
   data()
   {
     return{
+      uploadImg:false,
       editorOption: {
         // debug: 'info',
         readOnly: false,
@@ -546,10 +547,19 @@ export default {
     },
     async loadFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/products');
-      const upload =  await HTTP.post('/upload',formData);
+      const upload =  await HTTP.post('/upload',formData)
+          .catch(()=>{
+            this.$notify({
+              title: "عملیات ناموفق!",
+              text: 'خطایی رخ داد. ',
+              type: 'error',
+            });
+            this.uploadImg = false
+          });
 
       if (upload.data.success === 1)
       {
@@ -569,6 +579,7 @@ export default {
         });
 
       }
+      this.uploadImg = false
     },
     dropTag(id)
     {

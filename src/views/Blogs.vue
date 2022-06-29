@@ -55,7 +55,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr  v-for="(u, i) in posts" :key="i" >
+          <tr  v-for="(u, i) in getItems" :key="i" >
             <td>
               <div class="d-flex  py-1">
                 <div >
@@ -102,11 +102,12 @@
           </tbody>
         </table>
       </div>
-<!--      <vsud-pagination class="my-3 float-start  mx-5" color="success" size="sm">-->
-<!--        <vsud-pagination-item v-for="(e,i) in posts.links" :key="i" v-show="hide"-->
-<!--                              :label="checkLabel(e.label)" :active="e.active" @click="updateBlogs(e.label)"/>-->
-<!--      </vsud-pagination>-->
-
+      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+        <pagination class="pro-pagination-style shop-pagination mt-30 "
+                    v-model="post.currentPage" :per-page="post.perPage"
+                    :records="posts.length" @paginate="paginateClickCallback"
+                    :page-count="getPaginateCount" />
+      </div>
     </div>
 
   </div>
@@ -117,8 +118,6 @@ import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
 import VsudAvatar from "../components/VsudAvatar";
 import VsudBadge from "../components/VsudBadge";
-// import VsudPagination from "../components/VsudPagination";
-// import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Blogs",
@@ -131,7 +130,11 @@ export default {
       index:0,
       remove:1,
       create:1,
-      hide:1
+      hide:1,
+      post:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   async mounted(){
@@ -183,30 +186,20 @@ export default {
         this.posts.splice(this.index,1)
 
     },
-    async updateBlogs(page) {
-      this.posts = await HTTP.get(`/blogs?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.posts = this.posts.data;
+    paginateClickCallback(page) {
+      this.post.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-       return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
-  }
+  },
+  computed: {
+    getPaginateCount() {
+      return Math.ceil(this.posts.length / this.post.perPage);
+    },
+    getItems() {
+      let start = (this.post.currentPage - 1) * this.post.perPage;
+      let end = this.post.currentPage * this.post.perPage;
+      return this.posts.slice(start, end);
+    },
+  },
 }
 </script>
 

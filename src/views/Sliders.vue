@@ -42,7 +42,7 @@
                     <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                       <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                       <place-holder-card
-                          :title="{ text: 'بارگذاری عکس اسلاید', variant: 'h5' }"
+                          :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری عکس اسلاید', variant: 'h5' }"
                       />
                     </div>
                     <img v-else
@@ -113,7 +113,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="uploadNew" @click="uploadNewFake">
                     <input type="file" id="imgNew" name="img" accept="image/*" style="opacity: 0;" @change="loadNewFile">
                     <place-holder-card
-                        :title="{ text: 'بارگذاری عکس اسلاید', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' :'بارگذاری عکس اسلاید', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -269,6 +269,7 @@ export default {
   data()
   {
     return{
+      uploadImg:false,
       remove:1,
       update:1,
       create:1,
@@ -383,11 +384,13 @@ export default {
     },
     async loadFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/sliders/home');
       const upload =  await HTTP.post('/upload_slider',formData)
       .catch(()=>{
+        this.uploadImg = false
         return this.$notify({
           title: "عملیات ناموفق!",
           text: 'حداکثر ابعاد مورد قبول تصویر :800در 1920 ',
@@ -402,7 +405,7 @@ export default {
         type: 'success',
       });
       this.upload = false
-
+      this.uploadImg = false
     },
     async deleteOLD()
     {
@@ -435,11 +438,13 @@ export default {
     },
     async loadNewFile(event)
     {
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/sliders/home');
       const upload =  await HTTP.post('/upload_slider',formData)
           .catch(()=>{
+            this.uploadImg = false
             return this.$notify({
               title: "عملیات ناموفق!",
               text: 'حداکثر ابعاد مورد قبول تصویر :800در 1920 ',
@@ -454,6 +459,7 @@ export default {
         type: 'success',
       });
       this.uploadNew = false
+      this.uploadImg = false
     },
     async addSlide()
     {

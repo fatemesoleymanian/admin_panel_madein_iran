@@ -28,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(u, i) in emptyIdeas" :key="i">
+                <tr v-for="(u, i) in getItemsEmpty" :key="i">
                   <td>
                     <p class="text-xs font-weight-bold mb-0">{{ u.full_name }}</p>
                   </td>
@@ -42,16 +42,15 @@
                 </tr>
                 </tbody>
               </table>
-
             </div>
-            <vsud-pagination class="my-3 float-start  mx-5" v-if="emptyIdeas.length" color="success" size="sm">
-              <vsud-pagination-item v-for="(e,i) in empties.data.links" :key="i"
-                                    v-show="hide"
-                                    :label="checkLabel(e.label)" :active="e.active" @click="updateEmpties(e.label)"
-              />
-            </vsud-pagination>
-          </div>
 
+            <div v-if="getPaginateCountEmpty > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="empty.currentPage" :per-page="empty.perPage"
+                          :records="emptyIdeas.length" @paginate="paginateClickCallbackEmpty"
+                          :page-count="getPaginateCountEmpty" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,7 +92,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(idea,i) in newIdeas" :key="i" >
+                    <tr v-for="(idea,i) in getItemsIdea" :key="i" >
                       <td>
                         <p class="text-sm font-weight-bold mb-0">{{idea.full_name}}</p>
                       </td>
@@ -111,11 +110,12 @@
                     </tbody>
                   </table>
                 </div>
-                <vsud-pagination class="my-3 float-start  mx-5" v-if="newIdeas.length" color="success" size="sm">
-                  <vsud-pagination-item v-for="(e,i) in ideas.data.users.links" :key="i"
-                                        v-show="hide"
-                                        :label="checkLabel(e.label)" :active="e.active" @click="updateIdeas(e.label)"/>
-                </vsud-pagination>
+                <div v-if="getPaginateCountIdea > 1 " class="px-4 py-3 d-flex float-start">
+                  <pagination class="pro-pagination-style shop-pagination mt-30 "
+                              v-model="idea.currentPage" :per-page="idea.perPage"
+                              :records="newIdeas.length" @paginate="paginateClickCallbackIdea"
+                              :page-count="getPaginateCountIdea" />
+                </div>
               </div>
             </div>
           </div>
@@ -127,12 +127,10 @@
 <script>
 import {HTTP} from "../http-common";
 import VsudButton from "../components/VsudButton";
-import VsudPagination from "../components/VsudPagination";
-import VsudPaginationItem from "../components/VsudPaginationItem";
 
 export default {
   name: "Forms",
-  components: {VsudPaginationItem, VsudPagination, VsudButton},
+  components: { VsudButton},
   data() {
     return {
       emptyIdeas: [],
@@ -141,7 +139,15 @@ export default {
       ideas: {},
       flag1: true,
       flag2: true,
-      hide:1
+      hide:1,
+      empty:{
+        currentPage: 1,
+        perPage: 10
+      },
+      idea:{
+        currentPage: 1,
+        perPage: 10
+      },
     }
   },
   methods: {
@@ -154,7 +160,7 @@ export default {
               type: 'error',
             });
           });
-      this.emptyIdeas = this.empties.data.data;
+      this.emptyIdeas = this.empties.data;
       this.flag1 = false
     },
     async showIdeas() {
@@ -166,43 +172,15 @@ export default {
               type: 'error',
             });
           });
-      this.newIdeas = this.ideas.data.data;
+      this.newIdeas = this.ideas.data;
       this.flag2 = false
     },
-    async updateEmpties(page) {
-      this.empties = await HTTP.get(`/job_production_empty?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.emptyIdeas = this.empties.data.users.data;
+    paginateClickCallbackEmpty(page) {
+      this.empty.currentPage = Number(page);
     },
-    async updateIdeas(page) {
-      this.ideas = await HTTP.get(`/job_production_ideas?page=${page}`)
-          .catch(() => {
-            return this.$notify({
-              title: "خطا!",
-              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-              type: 'error',
-            });
-          });
-      this.newIdeas = this.ideas.data.users.data;
+    paginateClickCallbackIdea(page) {
+      this.idea.currentPage = Number(page);
     },
-    checkLabel(label) {
-      if (label === 'Next &raquo;') {
-        return this.hide = 0
-      }
-      else if (label === '&laquo; Previous') {
-        return this.hide= 0
-      }
-      else {
-        this.hide = 1
-        return label
-      }
-    }
   },
   mounted()
   {
@@ -214,7 +192,25 @@ export default {
       }
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
-  }
+  },
+  computed: {
+    getPaginateCountEmpty() {
+      return Math.ceil(this.emptyIdeas.length / this.empty.perPage);
+    },
+    getPaginateCountIdea() {
+      return Math.ceil(this.newIdeas.length / this.idea.perPage);
+    },
+    getItemsEmpty() {
+      let start = (this.empty.currentPage - 1) * this.empty.perPage;
+      let end = this.empty.currentPage * this.empty.perPage;
+      return this.emptyIdeas.slice(start, end);
+    },
+    getItemsIdea() {
+      let start = (this.idea.currentPage - 1) * this.idea.perPage;
+      let end = this.idea.currentPage * this.idea.perPage;
+      return this.newIdeas.slice(start, end);
+    },
+  },
 }
 </script>
 
