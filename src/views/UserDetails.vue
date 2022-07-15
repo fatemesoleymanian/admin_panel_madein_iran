@@ -1,6 +1,7 @@
 <template>
   <div class="py-4 container-fluid">
-    <div class="row bg-white p-3 mb-5" style="border-radius: 0 0 1rem 1rem">
+    <div id="loading" v-if="loader"></div>
+    <div class="row bg-white p-3 mb-5" v-if="!loader" style="border-radius: 0 0 1rem 1rem">
       <div class="card-header pb-0">
         <h6>اطلاعات و مشخصات کاربر</h6>
       </div>
@@ -110,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="orders.length">
+    <div class="row" v-if="orders.length && !loader"  >
       <div class="col-12">
         <div class="card mb-4">
           <!-- Modal -->
@@ -197,7 +198,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-else>
+    <div class="row" v-if="orders.length <1 && !loader">
       <div class="col-12 bg-white text-center p-4" style="border-radius:  0 0 1rem 1rem">
         <h5 class="text-center">
           سفارشی توسط این کاربر ثبت نشده است.
@@ -222,6 +223,7 @@ export default {
   {
       return {
         id: this.$route.params.id,
+        loader:false,
         user:'',
         orders:[],
         orderToDel:'',
@@ -240,6 +242,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
       await Promise.all([
         HTTP.get(`/orders/${this.id}`),
         HTTP.get(`/show_acc/${this.id}`)
@@ -254,7 +257,8 @@ export default {
           })
           .then((res)=> {
             this.orders = res[0].data
-            this.user = res[1].data
+            this.user = res[1].data;
+            this.loader = false
           });
     }
   },
@@ -289,5 +293,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

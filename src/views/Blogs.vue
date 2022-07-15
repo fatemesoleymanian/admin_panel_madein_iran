@@ -28,7 +28,8 @@
       <vsud-button color="dark" size="md" @click="$router.push('/post/new')" v-if="create">افزودن پست</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
-      <div class="table-responsive p-0">
+      <div id="loading" v-if="loader"></div>
+      <div class="table-responsive p-0" v-if="!loader">
         <table class="table align-items-center mb-0">
           <thead>
           <tr>
@@ -135,6 +136,7 @@ export default {
         currentPage: 1,
         perPage: 10
       },
+      loader:false
     }
   },
   async mounted(){
@@ -149,6 +151,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
       await HTTP.get('/blogs')
           .catch((e)=>{
             console.log(e)
@@ -160,7 +163,8 @@ export default {
             }
           })
           .then((resp)=> {
-            this.posts = resp.data
+            this.posts = resp.data;
+            this.loader = false
           });
     }
   },
@@ -202,7 +206,22 @@ export default {
   },
 }
 </script>
-
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

@@ -118,8 +118,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noEdit" >انصراف</button>
-            <button type="button" class="btn btn-dark" @click="edit">ثبت</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noEdit" v-if="!uploadImg" >انصراف</button>
+            <button type="button" class="btn btn-dark" @click="edit" v-if="!uploadImg">ثبت</button>
           </div>
         </div>
       </div>
@@ -146,7 +146,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="uploadNew" @click="uploadNewFake">
                     <input type="file" id="imgNew" name="img" accept="image/*" style="opacity: 0;" @change="loadNewFile">
                     <place-holder-card
-                        :title="{ text: 'بارگذاری آیکون', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری آیکون', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -220,8 +220,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noAdd" >انصراف</button>
-            <button type="button" class="btn btn-dark" @click="add">ثبت</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noAdd" v-if="!uploadImg" >انصراف</button>
+            <button type="button" class="btn btn-dark" @click="add" v-if="!uploadImg">ثبت</button>
           </div>
         </div>
       </div>
@@ -240,7 +240,8 @@
             <h6>دسته بندی های محصولات</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
+            <div id="loading" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader">
               <table class="table align-items-center mb-0">
                 <thead>
                 <tr>
@@ -338,7 +339,8 @@
             <h6>دسته بندیهای وبلاگ</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
+            <div id="loading2" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader" >
               <table class="table align-items-center justify-content-center mb-0">
                 <thead>
                 <tr>
@@ -457,6 +459,7 @@ export default {
         currentPage: 1,
         perPage: 10
       },
+      loader:false
     }
   },
    async mounted()
@@ -473,6 +476,7 @@ export default {
      }
      if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
      else {
+       this.loader = true
        await Promise.all([
          HTTP.get('/categories_pagi'),
          HTTP.get('/blog_categories_pagi'),
@@ -487,6 +491,7 @@ export default {
            .then((res)=> {
              this.product_cat = res[0].data;
              this.blog_cat = res[1].data;
+             this.loader = false
            });
      }
    },
@@ -761,11 +766,13 @@ export default {
     },
     async loadNewFile(event)
     {
+      this.uploadImg = true;
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/categories/product');
       const upload =  await HTTP.post('/upload',formData)
           .catch(()=>{
+            this.uploadImg = false;
             return this.$notify({
               title: "عملیات ناموفق!",
               text: 'لطفا آیکون با فرمت مناسب آپلود کنید. ',
@@ -780,6 +787,7 @@ export default {
         type: 'success',
       });
       this.uploadNew = false
+      this.uploadImg = false
     },
     paginateClickCallback1(page) {
       this.cat1.currentPage = Number(page);
@@ -810,5 +818,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading, #loading2 {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

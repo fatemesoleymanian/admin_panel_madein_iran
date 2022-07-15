@@ -121,7 +121,8 @@
       v-if="create">افزودن عضو</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
-      <div class="table-responsive p-0">
+      <div id="loading" v-if="loader"></div>
+      <div class="table-responsive p-0" v-if="!loader" >
         <table class="table align-items-center mb-0">
           <thead>
           <tr>
@@ -212,8 +213,9 @@ export default {
       roles:[],
       check:'',
       create:1,
-      remove:1
-      }
+      remove:1,
+      loader:false
+    }
   },
   async mounted(){
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
@@ -231,7 +233,8 @@ export default {
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
 
     else {
-       await HTTP.get('admins/show')
+      this.loader = true
+      await HTTP.get('admins/show')
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
@@ -241,7 +244,9 @@ export default {
             }
           })
           .then((res)=>{
-      this.members = res.data.admins});
+      this.members = res.data.admins;
+            this.loader = false
+          });
     }
   },
   async created()
@@ -385,5 +390,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

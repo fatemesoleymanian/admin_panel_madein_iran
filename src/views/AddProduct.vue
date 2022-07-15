@@ -520,6 +520,7 @@ export default {
     },
     async deleteImage()
     {
+      this.isCreating = true;
       const data = {
         imageName : this.product.image
       }
@@ -532,6 +533,7 @@ export default {
           type: 'success',
         });
         this.upload = true
+        this.isCreating = false
       }
       else {
         this.$notify({
@@ -539,6 +541,7 @@ export default {
           text: deleteUploaded.data.msg,
           type: 'error',
         });
+        this.isCreating = false
       }
     },
     uploadFake()
@@ -547,6 +550,7 @@ export default {
     },
     async loadFile(event)
     {
+      this.isCreating = true;
       this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
@@ -559,6 +563,7 @@ export default {
               type: 'error',
             });
             this.uploadImg = false
+            this.isCreating = false
           });
 
       if (upload.data.success === 1)
@@ -580,6 +585,7 @@ export default {
 
       }
       this.uploadImg = false
+      this.isCreating = false
     },
     dropTag(id)
     {

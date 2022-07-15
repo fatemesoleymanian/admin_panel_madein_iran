@@ -61,7 +61,8 @@
       </div>
     </div>
 <!--    modal for add state-->
-    <div class="row">
+    <div id="loading" v-if="loader"></div>
+    <div class="row" v-if="!loader" >
       <div class="col-12 mb-lg-0 mb-4">
         <div class="card">
           <div class="card-body p-3">
@@ -101,7 +102,7 @@
         </div>
       </div>
     </div>
-    <div class="row py-5">
+    <div class="row py-5" v-if="!loader" >
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">نام محصول :</h6>
@@ -133,7 +134,7 @@
 
       </div>
     </div>
-    <div class="row py-5 " id="states">
+    <div class="row py-5 " v-if="!loader" id="states">
       <div class="d-flex flex-row">
         <h5 class="font-weight-bolder">ظرفیت های محصول :</h5>
         <div class="me-auto d-flex justify-content-between">
@@ -178,7 +179,7 @@
       </div>
 
     </div>
-    <div class="row py-2">
+    <div class="row py-2" v-if="!loader" >
       <div class="col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">مشخصات فنی محصول :</h6>
@@ -200,7 +201,7 @@
         v-model="product.description_excerpt"></textarea>
       </div>
     </div>
-    <div class="row py-3 my-2 px-1">
+    <div class="row py-3 my-2 px-1" v-if="!loader" >
       <div class="d-flex align-items-center">
         <h4 class="mb-0 p-2 font-weight-bolder">سئو</h4>
       </div>
@@ -235,7 +236,7 @@
                maxlength="120" title="حداکثر تعداد عبارتها 10"  rows="3"/>
       </div>
     </div>
-    <div class="row pt-5">
+    <div class="row pt-5" v-if="!loader" >
       <div class="d-flex justify-content-between">
         <div class="font-weight-bold">
           <span class="text-muted" style="font-size: 14px">
@@ -249,7 +250,7 @@
         </div>
       </div>
     </div>
-    <div class="row pt-5">
+    <div class="row pt-5" v-if="!loader" >
       <div class="d-flex justify-content-between">
         <div class="font-weight-bold">
           <vsud-button
@@ -298,6 +299,7 @@ export default {
   data()
   {
     return{
+      loader:false,
       editorOption: {
         // debug: 'info',
         uploadImg:false,
@@ -353,7 +355,8 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
-       await HTTP.get(`/products/${this.id}`)
+      this.loader = true
+      await HTTP.get(`/products/${this.id}`)
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
@@ -365,6 +368,7 @@ export default {
           .then((product)=> {
             this.product = product.data
             this.category = product.data.category.id
+            this.loader = false
 
       for (let i in product.data.tag) {
         this.tag.push(product.data.tag[i].id)
@@ -559,6 +563,7 @@ export default {
     },
     async deleteImage()
     {
+      this.isCreating = true;
       const data = {
         imageName : this.product.image
       }
@@ -571,6 +576,7 @@ export default {
           type: 'success',
         });
         this.upload = true
+        this.isCreating = false
       }
       else {
         this.$notify({
@@ -578,6 +584,7 @@ export default {
           text: deleteUploaded.data.msg,
           type: 'error',
         });
+        this.isCreating = false
       }
     },
     uploadFake()
@@ -586,6 +593,7 @@ export default {
     },
     async loadFile(event)
     {
+      this.isCreating = true;
       this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
@@ -601,6 +609,7 @@ export default {
           type: 'success',
         });
         this.upload = false
+        this.isCreating = false
       }
       else {
          this.$notify({
@@ -611,6 +620,7 @@ export default {
 
       }
       this.uploadImg = false
+      this.isCreating = false
     },
     dropTag(id)
     {
@@ -693,6 +703,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+
 .example {
   display: flex;
   flex-direction: column;

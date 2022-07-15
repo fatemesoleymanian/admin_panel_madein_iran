@@ -29,7 +29,8 @@
             <h6>جدول کاربران فروشگاه</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
+            <div id="loading" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader">
               <table class="table align-items-center mb-0">
                 <thead>
                 <tr>
@@ -135,7 +136,8 @@ export default {
       remove: 1,
       img1,
       userToDel: '',
-      hide: 1
+      hide: 1,
+      loader:false
     }
   },
   components: {
@@ -152,6 +154,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
       await HTTP.get('/users')
           .catch((e) => {
             if (e.response.status === 500) {
@@ -162,7 +165,8 @@ export default {
             }
           })
           .then((users) => {
-            this.users = users.data
+            this.users = users.data;
+            this.loader = false
           });
     }
   },
@@ -207,3 +211,22 @@ export default {
 }
 </script>
 
+<style scoped>
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+</style>

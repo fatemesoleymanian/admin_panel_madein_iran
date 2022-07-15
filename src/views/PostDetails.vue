@@ -22,7 +22,8 @@
       </div>
     </div>
     <!--    modal-->
-    <div class="row">
+    <div id="loading" v-if="loader"></div>
+    <div class="row" v-if="!loader" >
       <div class="col-12 mb-lg-0 mb-4">
         <div class="card">
           <div class="card-body p-3">
@@ -62,7 +63,7 @@
         </div>
       </div>
     </div>
-    <div class="row py-5">
+    <div class="row py-5" v-if="!loader" >
       <div class="col-md-4 col-12 ">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">تیتر  :</h6>
@@ -94,7 +95,7 @@
 
       </div>
     </div>
-    <div class="row py-2">
+    <div class="row py-2" v-if="!loader" >
       <div class="col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">متن پست :</h6>
@@ -116,7 +117,7 @@
                   v-model="post.post_excerpt"></textarea>
       </div>
     </div>
-    <div class="row py-3 my-2 px-1">
+    <div class="row py-3 my-2 px-1" v-if="!loader" >
       <div class="d-flex align-items-center">
         <h4 class="mb-0 p-2 font-weight-bolder">سئو</h4>
       </div>
@@ -151,7 +152,7 @@
                    maxlength="120" title="حداکثر تعداد عبارتها 10"  rows="3"/>
       </div>
     </div>
-    <div class="row pt-5">
+    <div class="row pt-5" v-if="!loader" >
       <div class="d-flex justify-content-between">
         <div class="font-weight-bold">
           <span class="text-muted" style="font-size: 14px">
@@ -165,7 +166,7 @@
         </div>
       </div>
     </div>
-    <div class="row pt-5">
+    <div class="row pt-5" v-if="!loader" >
       <div class="d-flex justify-content-between">
         <div class="font-weight-bold">
           <vsud-button
@@ -245,7 +246,8 @@ export default {
       tag:[],
       upload:false,
       tmp:'',
-      loading:false
+      loading:false,
+      loader:false
       }
   },
   async mounted(){
@@ -259,6 +261,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
       await HTTP.get(`/blogs/${this.id}`)
           .catch((e)=>{
             if(e.response.status ===500){
@@ -271,11 +274,12 @@ export default {
           .then((product)=> {
             this.post = product.data
             this.category = product.data.category.id
+            this.loader = false
 
       for (let i in product.data.tag) {
         this.tag.push(product.data.tag[i].id)
       }
-            this.$refs.myQuillEditor.setHTML(this.post.post)
+            this.$refs.myQuillEditor.setHTML(this.post.post);
           });
     }
   },
@@ -419,6 +423,7 @@ export default {
     },
     async deleteImage()
     {
+      this.isCreating = true;
       const data = {
         imageName : this.post.featuredImage
       }
@@ -429,6 +434,7 @@ export default {
           text: deleteUploaded.data.msg,
           type: 'success',
         });
+        this.isCreating = false
       }
       else {
         this.$notify({
@@ -436,10 +442,12 @@ export default {
           text: deleteUploaded.data.msg,
           type: 'error',
         });
+        this.isCreating = false
       }
       document.getElementById('no').click();
 
       this.upload = true
+      this.isCreating = false
     },
     uploadFake()
     {
@@ -447,6 +455,7 @@ export default {
     },
     async loadFile(event)
     {
+      this.isCreating = true;
       this.uploadImg = true
       this.loading = true
       let formData = new FormData();
@@ -459,6 +468,7 @@ export default {
           type: 'error',
         });
         this.uploadImg = false
+        this.isCreating = false
       });
 
 
@@ -474,6 +484,7 @@ export default {
         this.loading=false
       }
       this.uploadImg = false
+      this.isCreating = false
     },
     dropTag(id)
     {
@@ -512,6 +523,26 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+
 .example {
   display: flex;
   flex-direction: column;

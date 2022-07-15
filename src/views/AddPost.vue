@@ -22,6 +22,7 @@
       </div>
     </div>
     <!--    modal-->
+    <div id="loading" v-if="loader"></div>
     <div class="row">
       <div class="col-12 mb-lg-0 mb-4">
         <div class="card">
@@ -396,6 +397,7 @@ export default {
     },
     async deleteImage()
     {
+      this.isCreating = true
       const data = {
         imageName : this.product.featuredImage
       }
@@ -406,6 +408,7 @@ export default {
           text: deleteUploaded.data.msg,
           type: 'error',
         });
+        this.isCreating = false
       });
       if (deleteUploaded.data.success === 1) {
         document.getElementById('no').click();
@@ -423,6 +426,7 @@ export default {
           type: 'error',
         });
       }
+      this.isCreating = false
     },
     uploadFake()
     {
@@ -430,6 +434,7 @@ export default {
     },
     async loadFile(event)
     {
+      this.isCreating = true
       this.uploadImg =true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
@@ -442,6 +447,7 @@ export default {
           type: 'error',
         });
         this.uploadImg = false
+       this.isCreating = false
       });
 
       if (upload.data.success === 1)
@@ -463,6 +469,7 @@ export default {
 
       }
       this.uploadImg = false
+      this.isCreating = false
     },
     dropTag(id)
     {

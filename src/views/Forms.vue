@@ -11,7 +11,8 @@
             <vsud-button color="dark" size="md" @click="showEmpty" v-if="flag1">نمایش جدول</vsud-button>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
+            <div id="loading" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader && emptyIdeas.length>0">
               <table class="table align-items-center mb-0">
                 <thead>
                 <tr>
@@ -65,7 +66,8 @@
                 <vsud-button color="dark" size="md" @click="showIdeas" v-if="flag2" >نمایش جدول</vsud-button>
               </div>
               <div class="card-body px-0 pt-0 pb-2">
-                <div class="table-responsive p-0">
+                <div id="loading2" v-if="loader"></div>
+                <div class="table-responsive p-0" v-if="!loader && newIdeas.length>0">
                   <table class="table align-items-center justify-content-center mb-0">
                     <thead>
                     <tr>
@@ -148,10 +150,12 @@ export default {
         currentPage: 1,
         perPage: 10
       },
+      loader:false
     }
   },
   methods: {
     async showEmpty() {
+      this.loader = true
       this.empties = await HTTP.get('/job_production_empty')
           .catch(() => {
             return this.$notify({
@@ -161,9 +165,11 @@ export default {
             });
           });
       this.emptyIdeas = this.empties.data;
-      this.flag1 = false
+      this.flag1 = false;
+      this.loader = false
     },
     async showIdeas() {
+      this.loader = true
       this.ideas = await HTTP.get('/job_production_ideas')
           .catch(() => {
             return this.$notify({
@@ -173,7 +179,8 @@ export default {
             });
           });
       this.newIdeas = this.ideas.data;
-      this.flag2 = false
+      this.flag2 = false;
+      this.loader = false
     },
     paginateClickCallbackEmpty(page) {
       this.empty.currentPage = Number(page);
@@ -215,5 +222,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading,#loading2 {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

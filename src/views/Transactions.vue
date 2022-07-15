@@ -7,6 +7,11 @@ import {HTTP} from "../http-common";
 
 export default {
   name: "Transactions",
+  data(){
+    return{
+      loader:false
+    }
+  },
   mounted() {
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
     for (let i in permissions)
@@ -47,5 +52,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

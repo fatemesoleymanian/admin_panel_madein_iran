@@ -42,7 +42,7 @@
                   <div class="mb-4 col-xl-6 col-md-12 mx-md-2 mb-xl-0" v-if="upload" @click="uploadFake">
                     <input type="file" id="img" name="img" accept="image/*" style="opacity: 0;" @change="loadFile">
                     <place-holder-card
-                        :title="{ text:uploadImg ? 'لطفا شکیبا باشد.' : 'بارگذاری آیکون', variant: 'h5' }"
+                        :title="{ text:uploadImg ? 'لطفا شکیبا باشید.' : 'بارگذاری آیکون', variant: 'h5' }"
                     />
                   </div>
                   <img v-else
@@ -85,8 +85,8 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noEdit" >انصراف</button>
-            <button type="button" class="btn btn-dark" @click="editDepa">ثبت</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noEdit" v-if="!uploadImg">انصراف</button>
+            <button type="button" class="btn btn-dark" @click="editDepa" v-if="!uploadImg">ثبت</button>
           </div>
         </div>
       </div>
@@ -154,8 +154,8 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noAdd" >انصراف</button>
-            <button type="button" class="btn btn-dark" @click="addDepa">ثبت</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noAdd" v-if="!uploadImg" >انصراف</button>
+            <button type="button" class="btn btn-dark" @click="addDepa" v-if="!uploadImg">ثبت</button>
           </div>
         </div>
       </div>
@@ -169,7 +169,8 @@
       v-if="create">افزودن دپارتمان</vsud-button>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
-      <div class="table-responsive p-0">
+      <div id="loading" v-if="loader"></div>
+      <div class="table-responsive p-0" v-if="!loader">
         <table class="table align-items-center mb-0">
           <thead>
           <tr>
@@ -273,6 +274,7 @@ export default {
       metaKeyword:'',
       upload:false,
       uploadNew:true,
+      loader:false
     }
   },
   async mounted(){
@@ -288,6 +290,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
      await HTTP.get('/departments_with_category')
           .catch((e)=>{
             if(e.response.status ===500){
@@ -298,7 +301,8 @@ export default {
             }
           })
           .then((deps)=> {
-            this.departments = deps.data
+            this.departments = deps.data;
+            this.loader = false
           });
     }
   },
@@ -511,7 +515,22 @@ export default {
   }
 }
 </script>
-
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>

@@ -113,13 +113,14 @@
       </div>
     </div>
     <!--    modal-->
-    <div class="card-header pb-0">
+    <div id="loading" v-if="loader"></div>
+    <div class="card-header pb-0" v-if="!loader">
       <h6>پرسش های متدوال و پاسخ ها</h6>
     </div>
-    <div class="col-6 text-start px-5 py-3 me-auto">
+    <div class="col-6 text-start px-5 py-3 me-auto" v-if="!loader">
       <vsud-button color="dark" size="lg" data-bs-toggle="modal" data-bs-target="#addSlide" v-if="addFlag">افزودن پرسش</vsud-button>
     </div>
-    <div class="card-body px-0 pt-0 pb-2 mb-5">
+    <div class="card-body px-0 pt-0 pb-2 mb-5" v-if="!loader">
       <div class="table-responsive p-0">
         <table class="table align-items-center mb-0">
           <thead>
@@ -190,7 +191,7 @@
       </div>
     </div>
 
-    <div class="card mb-4 my-5 mx-4 bg-light">
+    <div class="card mb-4 my-5 mx-4 bg-light" v-if="!loader">
       <div class="card-header pb-0 bg-light">
         <h6>فرم های ارسالی</h6>
       </div>
@@ -307,6 +308,7 @@ export default {
         currentPage: 1,
         perPage: 10
       },
+      loader:false
     }
   },
   async mounted()
@@ -323,6 +325,7 @@ export default {
     }
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
+      this.loader = true
       await Promise.all([
         HTTP.get('/faq'),
         HTTP.get('/products_totaly'),
@@ -340,6 +343,7 @@ export default {
             this.faqs = res[0].data;
             this.products = res[1].data;
             this.forms = res[2].data;
+            this.loader = false
           });
     }
   },
@@ -515,5 +519,21 @@ export default {
 </script>
 
 <style scoped>
-
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+#loading {
+  margin: 50px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0,0,0,.5);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>
