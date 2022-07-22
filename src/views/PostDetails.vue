@@ -106,7 +106,8 @@
                         @blur="onEditorBlur($event)"
                         :modules="modules"
                         ref="myQuillEditor"
-                        placeholder="متن پست" class="editor" theme="snow" v-model:content="post.post"/>
+                        placeholder="متن پست" class="editor" theme="snow"
+                        v-model:content="post.post" contentType="html"/>
         </div>
       </div>
       <div class="col-12 my-3 py-4 px-2">
@@ -126,22 +127,21 @@
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">عنوان صفحه (page title):</h6>
         </div>
-        <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="post.pageTitle"
-               maxlength="70" title="حداکثر تعداد کاراکتر 70"/>
+        <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="post.pageTitle"/>
       </div>
       <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">نشانک:</h6>
         </div>
         <input type="text" class="form-control " placeholder="عنوان صفحه به انگلیسی" v-model="post.slug"
-               maxlength="80" title="حداکثر تعداد کاراکتر 80"/>
+              />
       </div>
       <div class="col-md-6 col-12 py-3">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">توضیحات متا (meta description):</h6>
         </div>
         <textarea class="form-control " placeholder="توضیحات متا" v-model="post.metaDescription"
-                  maxlength="160" title="حداکثر تعداد کاراکتر 160" rows="3"/>
+                  rows="3"/>
       </div>
 
       <div class="col-md-6 col-12 py-3">
@@ -149,7 +149,7 @@
           <h6 class="mb-0 p-2">کلید واژه های متا (meta keywords):</h6>
         </div>
         <textarea  class="form-control " placeholder="کلید واژه های متا" v-model="post.metaKeyword"
-                   maxlength="120" title="حداکثر تعداد عبارتها 10"  rows="3"/>
+                     rows="3"/>
       </div>
     </div>
     <div class="row pt-5" v-if="!loader" >
@@ -211,6 +211,7 @@ export default {
   data()
   {
     return{
+      content:'',
       uploadImg:false,
       editorOption: {
         // debug: 'info',
@@ -230,7 +231,6 @@ export default {
             [{ 'color': [] }, { 'background': [] }],
             [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
             ['clean'],
-            ['table', 'column-left', 'column-right', 'row-above', 'row-below', 'row-remove', 'column-remove'],
             ['link', 'image', 'video']
           ],
         },
@@ -293,12 +293,11 @@ export default {
   },
   methods:{
     onEditorBlur(quill) {
-      this.post.post = quill.value.innerHTML
+      console.log(quill.value.innerHTML)
     },
 
     async update(){
       this.isCreating = true
-      this.post.post=this.$refs.myQuillEditor.getHTML()
 
       if(this.post.title.trim() === '') {
         this.isCreating = false

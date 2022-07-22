@@ -81,7 +81,7 @@
             <td class="align-middle text-center text-sm " width="260px">
               <router-link to="/tags">
               <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="s in u.tag" :key="s">
-                {{s.name}} - </p>
+                {{s.name.substring(0,5)}}... - </p>
               </router-link>
             </td>
             <td class="align-middle text-center">

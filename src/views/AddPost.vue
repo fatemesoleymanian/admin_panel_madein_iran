@@ -129,30 +129,26 @@
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">عنوان صفحه (page title):</h6>
         </div>
-        <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="product.pageTitle"
-               maxlength="70" title="حداکثر تعداد کاراکتر 70"/>
+        <input type="text" class="form-control " placeholder="عنوان صفحه" v-model="product.pageTitle"/>
       </div>
       <div class="col-md-6 col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">نشانک:</h6>
         </div>
-        <input type="text" class="form-control " placeholder="عنوان صفحه به انگلیسی" v-model="product.slug"
-               maxlength="80" title="حداکثر تعداد کاراکتر 80"/>
+        <input type="text" class="form-control " placeholder="عنوان صفحه به انگلیسی" v-model="product.slug"/>
       </div>
       <div class="col-md-6 col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">توضیحات متا (meta description):</h6>
         </div>
-        <textarea class="form-control " placeholder="توضیحات متا" v-model="product.metaDescription"
-                  maxlength="160" title="حداکثر تعداد کاراکتر 160" rows="3"/>
+        <textarea class="form-control " placeholder="توضیحات متا" v-model="product.metaDescription" rows="3"/>
       </div>
 
       <div class="col-md-6 col-12">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">کلید واژه های متا (meta keywords):</h6>
         </div>
-        <textarea  class="form-control " placeholder="کلید واژه های متا" v-model="product.metaKeyword"
-                   maxlength="120" title="حداکثر تعداد عبارتها 10"  rows="3"/>
+        <textarea  class="form-control " placeholder="کلید واژه های متا" v-model="product.metaKeyword" rows="3"/>
       </div>
     </div>
 

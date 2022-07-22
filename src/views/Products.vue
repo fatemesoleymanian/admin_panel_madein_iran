@@ -83,7 +83,7 @@
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="s in u.state" :key="s">
-                {{s.type}} - </p>
+                {{s.type.substring(0,4)}}... - </p>
             </td>
             <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"

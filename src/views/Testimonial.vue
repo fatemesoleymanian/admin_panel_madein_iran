@@ -50,6 +50,12 @@
               </div>
               <textarea  class="form-control"  placeholder="اطلاعات مشتری" v-model="position" />
             </div>
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2">لینک ویدئو :</h6>
+              </div>
+              <input type="url"  class="form-control"  placeholder="لینک ویدئو" v-model="video" />
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="noEdit" >انصراف</button>
@@ -88,7 +94,12 @@
               </div>
               <textarea class="form-control"  placeholder="اطلاعات مشتری" v-model="position"/>
             </div>
-
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2">لینک ویدئو :</h6>
+              </div>
+              <input type="url"  class="form-control"  placeholder="لینک ویدئو" v-model="video" />
+            </div>
 
           </div>
           <div class="modal-footer">
@@ -140,11 +151,11 @@
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{u.position}}  </p>
+                {{u.position.substring(0,18)}}...  </p>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{u.desc}} </p>
+                {{u.desc.substring(0,18)}}... </p>
             </td>
             <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
@@ -184,6 +195,7 @@ export default {
       name:'',
       desc:'',
       position:'',
+      video:'',
       id:'',
       opToDel:'',
       update:1,
@@ -225,26 +237,13 @@ export default {
   methods:{
     async addOp()
     {
-      if (this.name.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "نام مشتری الزامیست.",
-        type: 'error',
-      });
-      if (this.desc.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "متن نظر الزامیست.",
-        type: 'error',
-      });
-      if (this.position.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "اطلاعات مشتری الزامیست.",
-        type: 'error',
-      });
+
 
       const data = {
         name : this.name,
         desc : this.desc,
         position : this.position,
+        video:this.video
       }
       const add = await  HTTP.post('/testimonial',data)
       .catch(()=>{
@@ -267,26 +266,12 @@ export default {
     },
     async editOP()
     {
-      if (this.name.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "نام مشتری الزامیست.",
-        type: 'error',
-      });
-      if (this.desc.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "متن نظر الزامیست.",
-        type: 'error',
-      });
-      if (this.position.trim() === '') return this.$notify({
-        title: "خطا!",
-        text: "اطلاعات مشتری الزامیست.",
-        type: 'error',
-      });
 
       const data = {
         name : this.name,
         desc : this.desc,
         position : this.position,
+        video:this.video
       }
       const add = await  HTTP.put(`/testimonial${this.id}`,data)
           .catch(()=>{

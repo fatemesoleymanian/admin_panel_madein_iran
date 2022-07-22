@@ -217,7 +217,7 @@
             <td>
               <router-link to="/categories">
               <p class="text-xs font-weight-bold mb-0" v-for="(c,i) in u.category" :key="i">
-                {{c.name}},
+                {{c.name.substring(0,6)}}...,
               </p>
               </router-link>
             </td>

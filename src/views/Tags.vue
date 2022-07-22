@@ -143,14 +143,14 @@
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="(p,j) in u.product" :key="j">
                 <router-link :to="`/product/details${p.id}`">
-                {{p.name}},
+                {{p.name.substring(0,6)}}...,
                 </router-link>
               </p>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline;min-height: 100px;" v-for="(b,k) in u.blog" :key="k">
                 <router-link :to="`/post/details${b.id}`">
-                  {{b.title}} ,
+                  {{b.title.substring(0,6)}}... ,
                 </router-link>
               </p>
             </td>

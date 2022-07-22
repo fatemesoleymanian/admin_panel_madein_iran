@@ -22,6 +22,9 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                     شماره تلفن همراه
                   </th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                   خط تولید
+                  </th>
                   <th
                       class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                     تاریخ ارسال
@@ -35,6 +38,9 @@
                   </td>
                   <td>
                     <p class="text-xs font-weight-bold mb-0">{{ u.phone_number }}</p>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ u.product }}</p>
                   </td>
                   <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"

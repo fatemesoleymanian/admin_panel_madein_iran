@@ -293,7 +293,7 @@
                   <td>
                     <p class="text-sm font-weight-bold mb-0" v-for="(p,j) in u.product" :key="j" style="overflow-y: scroll">
                       <router-link :to="`/product/details${p.id}`">
-                        {{ p.name }} ,
+                        {{ p.name.substring(0,6)}}... ,
                       </router-link></p>
                   </td>
                   <td class="align-middle text-center">
@@ -370,7 +370,7 @@
                   <td>
                     <p class="text-sm font-weight-bold mb-0" v-for="(p,j) in idea.blog"  :key="j">
                       <router-link :to="`/post/details${p.id}`">
-                        {{p.title}}
+                        {{p.title.substring(0,6)}}...,
                       </router-link>
                     </p>
                   </td>

@@ -150,18 +150,18 @@
           <tbody>
           <tr  v-for="(u, i) in getItemsFaq" :key="i" :id="u.id" >
             <td>
-              <p class="text-xs font-weight-bold mb-0">{{u.question}}</p>
+              <p class="text-xs font-weight-bold mb-0">{{u.question.substring(0,15)}}...</p>
             </td>
             <td class="align-middle text-right text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{u.answer}}  </p>
+                {{u.answer.substring(0,15)}}...  </p>
             </td>
 
             <td class="align-middle text-center text-sm " width="260px">
               <div  v-for="(p,j) in u.product" :key="j">
               <router-link :to="`/product/details${p.id}`">
               <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{p.name}} -</p></router-link>
+                {{p.name.substring(0,4)}}... -</p></router-link>
               </div>
             </td>
             <td class="align-middle text-center">
