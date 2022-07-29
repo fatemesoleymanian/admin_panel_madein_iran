@@ -128,6 +128,74 @@
             </div>
           </div>
         </div>
+
+<!--    request for representation-->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>خروجی فرم درخواست نمایندگی خط تولید</h6>
+          </div>
+          <div class="col-6 text-start px-5 py-3 me-auto">
+            <vsud-button color="dark" size="md" @click="showRepresentation" v-if="flag3" >نمایش جدول</vsud-button>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div id="loading3" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader && representations.length>0">
+              <table class="table align-items-center justify-content-center mb-0">
+                <thead>
+                <tr>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    نام و نام خانوادگی
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  >
+                    شماره تماس
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  >
+                    ایده مدنظر یا درخواست ایده تولیدی
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2"
+                  >
+                    تاریخ ارسال
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(rep,i) in getItemsRepresentation" :key="i" >
+                  <td>
+                    <p class="text-sm font-weight-bold mb-0">{{rep.full_name}}</p>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-bold mb-0">{{rep.phone_number}}</p>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-bold">{{rep.description}}</p>
+                  </td>
+                  <td class="align-middle text-center ">
+                    <p class="text-sm font-weight-bold">{{rep.created_at}}</p>
+                  </td>
+
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="getPaginateCountRepresentation > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="representation.currentPage" :per-page="representation.perPage"
+                          :records="representations.length" @paginate="paginateClickCallbackRepresentation"
+                          :page-count="getPaginateCountRepresentation" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -143,16 +211,23 @@ export default {
     return {
       emptyIdeas: [],
       newIdeas: [],
+      representations: [],
       empties: {},
       ideas: {},
+      representing: {},
       flag1: true,
       flag2: true,
+      flag3: true,
       hide:1,
       empty:{
         currentPage: 1,
         perPage: 10
       },
       idea:{
+        currentPage: 1,
+        perPage: 10
+      },
+      representation:{
         currentPage: 1,
         perPage: 10
       },
@@ -188,11 +263,28 @@ export default {
       this.flag2 = false;
       this.loader = false
     },
+    async showRepresentation() {
+      this.loader = true
+      this.representing = await HTTP.get('pcomment/all')
+          .catch(() => {
+            return this.$notify({
+              title: "خطا!",
+              text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+              type: 'error',
+            });
+          });
+      this.representations = this.representing.data;
+      this.flag3 = false;
+      this.loader = false
+    },
     paginateClickCallbackEmpty(page) {
       this.empty.currentPage = Number(page);
     },
     paginateClickCallbackIdea(page) {
       this.idea.currentPage = Number(page);
+    },
+    paginateClickCallbackRepresentation(page) {
+      this.representation.currentPage = Number(page);
     },
   },
   mounted()
@@ -213,6 +305,9 @@ export default {
     getPaginateCountIdea() {
       return Math.ceil(this.newIdeas.length / this.idea.perPage);
     },
+    getPaginateCountRepresentation() {
+      return Math.ceil(this.representations.length / this.representation.perPage);
+    },
     getItemsEmpty() {
       let start = (this.empty.currentPage - 1) * this.empty.perPage;
       let end = this.empty.currentPage * this.empty.perPage;
@@ -223,13 +318,18 @@ export default {
       let end = this.idea.currentPage * this.idea.perPage;
       return this.newIdeas.slice(start, end);
     },
+    getItemsRepresentation() {
+      let start = (this.representation.currentPage - 1) * this.representation.perPage;
+      let end = this.representation.currentPage * this.representation.perPage;
+      return this.representations.slice(start, end);
+    },
   },
 }
 </script>
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:100);
-#loading,#loading2 {
+#loading,#loading2 ,#loading3{
   margin: 50px auto;
   width: 80px;
   height: 80px;
