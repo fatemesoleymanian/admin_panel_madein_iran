@@ -1,79 +1,158 @@
 <template>
-  <div class="card mb-4 mt-5 mx-2">
+  <div class="card mb-4 mt-5 mx-2 bg-light">
+    <div id="loading" v-if="loader"></div>
+    <div class="row my-5 ">
+      <div class="col-12">
+        <div class="card-header pb-0">
+          <h6>دیدگاه کاربران درباره محصولات</h6>
+        </div>
 
-    <div class="card-header pb-0">
-      <h6>دیدگاه کاربران درباره محصولات</h6>
-    </div>
-
-    <div class="card-body px-0 pt-0 pb-2" >
-      <div id="loading" v-if="loader"></div>
-      <div class="table-responsive p-0" v-if="!loader">
-        <table class="table align-items-center mb-0">
-          <thead>
-          <tr>
-            <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              متن دیدگاه
-            </th>
-            <th
-                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
-              کاربر
-            </th>
-            <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              محصول
-            </th>
-            <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              تاریخ ایجاد
-            </th>
-            <th
-                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-              ثبت دیدگاه
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr  v-for="(u, i) in getItems" :key="i" >
-            <td>
-              <p class="text-xs font-weight-bold mb-0">{{u.comment}}</p>
-            </td>
-            <td class="align-middle text-center text-sm " width="260px">
-              <router-link :to="`/users/details${u.user.id}`">
-              <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{u.user.name}}  </p>
-              </router-link>
-            </td>
-            <td class="align-middle text-center text-sm " width="260px">
-              <router-link :to="`/product/details${u.product.id}`">
-              <p class="text-s font-weight-bold mb-0" style="display: inline">
-                {{u.product.name}} </p>
-              </router-link>
-            </td>
-            <td class="align-middle text-center">
+        <div class="card-body px-0 pt-0 pb-2" >
+          <div class="table-responsive p-0" v-if="!loader">
+            <table class="table align-items-center mb-0 bg-white">
+              <thead>
+              <tr>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  متن دیدگاه
+                </th>
+                <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
+                  کاربر
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  محصول
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  تاریخ ایجاد
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  ثبت دیدگاه
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr  v-for="(u, i) in getItems" :key="i" >
+                <td>
+                  <p class="text-xs font-weight-bold mb-0">{{u.comment}}</p>
+                </td>
+                <td class="align-middle text-center text-sm " width="260px">
+                  <router-link :to="`/users/details${u.user.id}`">
+                    <p class="text-s font-weight-bold mb-0" style="display: inline">
+                      {{u.user.name}}  </p>
+                  </router-link>
+                </td>
+                <td class="align-middle text-center text-sm " width="260px">
+                  <router-link :to="`/product/details${u.product.id}`">
+                    <p class="text-s font-weight-bold mb-0" style="display: inline">
+                      {{u.product.name}} </p>
+                  </router-link>
+                </td>
+                <td class="align-middle text-center">
                 <span class="text-secondary text-xs font-weight-bold"
                 >{{u.created_at}}</span
                 >
-            </td>
-            <td class="align-middle text-center text-sm">
-              <div class="form-check form-switch" v-if="update">
-                <input class="form-check-input" type="checkbox" id="status"
-                       :checked="u.status === 1 ? true : false" @change="changeStatus(u.id)">
-              </div>
-            </td>
+                </td>
+                <td class="align-middle text-center text-sm">
+                  <div class="form-check form-switch" v-if="update">
+                    <input class="form-check-input" type="checkbox"
+                           :checked="u.status === 1 ? true : false" @change="changeStatus(u.id)">
+                  </div>
+                </td>
 
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
-        <pagination class="pro-pagination-style shop-pagination mt-30 "
-                    v-model="comment.currentPage" :per-page="comment.perPage"
-                    :records="comments.length" @paginate="paginateClickCallback"
-                    :page-count="getPaginateCount" />
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-if="getPaginateCount > 1 " class="px-4 py-3 d-flex float-start">
+            <pagination class="pro-pagination-style shop-pagination mt-30 "
+                        v-model="comment.currentPage" :per-page="comment.perPage"
+                        :records="comments.length" @paginate="paginateClickCallback"
+                        :page-count="getPaginateCount" />
+          </div>
+        </div>
+
       </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card-header pb-0">
+          <h6>دیدگاه کاربران درباره پست های وبلاگ</h6>
+        </div>
 
+        <div class="card-body px-0 pt-0 pb-2" >
+          <div class="table-responsive p-0" v-if="!loader">
+            <table class="table align-items-center mb-0 bg-white">
+              <thead>
+              <tr>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  متن دیدگاه
+                </th>
+                <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
+                  کاربر
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  پست
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  تاریخ ایجاد
+                </th>
+                <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  ثبت دیدگاه
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr  v-for="(u, i) in getItemsForBlogComment" :key="i" >
+                <td>
+                  <p class="text-xs font-weight-bold mb-0">{{u.comment}}</p>
+                </td>
+                <td class="align-middle text-center text-sm " width="260px">
+                  <router-link :to="`/users/details${u.user.id}`">
+                    <p class="text-s font-weight-bold mb-0" style="display: inline">
+                      {{u.user.name}}  </p>
+                  </router-link>
+                </td>
+                <td class="align-middle text-center text-sm " width="260px">
+                  <router-link :to="`/post/details${u.blog.id}`">
+                    <p class="text-s font-weight-bold mb-0" style="display: inline">
+                      {{u.blog.title}} </p>
+                  </router-link>
+                </td>
+                <td class="align-middle text-center">
+                <span class="text-secondary text-xs font-weight-bold"
+                >{{u.created_at}}</span
+                >
+                </td>
+                <td class="align-middle text-center text-sm">
+                  <div class="form-check form-switch" v-if="update">
+                    <input class="form-check-input" type="checkbox"
+                           :checked="u.status === 1 ? true : false" @change="changeStatusForBlogComment(u.id)">
+                  </div>
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-if="getPaginateCountForBlogComment > 1 " class="px-4 py-3 d-flex float-start">
+            <pagination class="pro-pagination-style shop-pagination mt-30 "
+                        v-model="blog_comment.currentPage" :per-page="blog_comment.perPage"
+                        :records="blog_comments.length" @paginate="paginateClickCallbackForBlogComment"
+                        :page-count="getPaginateCountForBlogComment" />
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -85,9 +164,14 @@ export default {
   {
     return{
       comments:[],
+      blog_comments:[],
       update:1,
       hide:1,
       comment:{
+        currentPage: 1,
+        perPage: 10
+      },
+      blog_comment:{
         currentPage: 1,
         perPage: 10
       },
@@ -106,7 +190,10 @@ export default {
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
       this.loader = true
-       await HTTP.get('pcomment/all')
+       await Promise.all([
+         HTTP.get('pcomment/all'),
+         HTTP.get('posts_comments'),
+       ])
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
@@ -116,14 +203,15 @@ export default {
             }
           })
           .then((comment)=> {
-            this.comments = comment.data;
+            this.comments = comment[0].data;
+            this.blog_comments = comment[1].data;
             this.loader = false
           });
+      this.loader = false
     }
   },
   methods:{
-    async changeStatus(id)
-    {
+    async changeStatus(id) {
       let status ;
       if (event.target.checked) status = 1
      else status = 0
@@ -136,18 +224,42 @@ export default {
       return this.$notify({title: comment.data.msg})
 
     },
+    async changeStatusForBlogComment(id) {
+      let status ;
+      if (event.target.checked) status = 1
+     else status = 0
+
+      const change = { status : status}
+      const comment = await HTTP.put(`post_set_status${id}`,change)
+      .catch(()=>{
+      return this.$notify({title: 'مشکلی در عملیات ثبت دیدگاه پیش آمد!'})
+    });
+      return this.$notify({title: comment.data.msg})
+
+    },
     paginateClickCallback(page) {
       this.comment.currentPage = Number(page);
+    },
+    paginateClickCallbackForBlogComment(page) {
+      this.blog_comment.currentPage = Number(page);
     },
   },
   computed: {
     getPaginateCount() {
       return Math.ceil(this.comments.length / this.comment.perPage);
     },
+    getPaginateCountForBlogComment() {
+      return Math.ceil(this.blog_comments.length / this.blog_comments.perPage);
+    },
     getItems() {
       let start = (this.comment.currentPage - 1) * this.comment.perPage;
       let end = this.comment.currentPage * this.comment.perPage;
       return this.comments.slice(start, end);
+    },
+    getItemsForBlogComment() {
+      let start = (this.blog_comment.currentPage - 1) * this.blog_comment.perPage;
+      let end = this.blog_comment.currentPage * this.blog_comment.perPage;
+      return this.blog_comments.slice(start, end);
     },
   },
 }
