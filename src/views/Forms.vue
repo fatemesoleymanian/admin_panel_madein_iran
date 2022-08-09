@@ -265,7 +265,7 @@ export default {
     },
     async showRepresentation() {
       this.loader = true
-      this.representing = await HTTP.get('pcomment/all')
+      this.representing = await HTTP.get('product_represent')
           .catch(() => {
             return this.$notify({
               title: "خطا!",

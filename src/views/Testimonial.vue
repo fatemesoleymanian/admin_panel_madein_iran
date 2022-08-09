@@ -54,7 +54,7 @@
               <div class="d-flex align-items-center">
                 <h6 class="mb-0 p-2">لینک ویدئو :</h6>
               </div>
-              <input type="url"  class="form-control"  placeholder="لینک ویدئو" v-model="video" />
+              <input type="text"  class="form-control"  placeholder="لینک ویدئو" v-model="video" />
             </div>
           </div>
           <div class="modal-footer">
@@ -147,14 +147,14 @@
           <tbody>
           <tr  v-for="(u, i) in opinions" :key="i" >
             <td>
-              <p class="text-xs font-weight-bold mb-0">{{u.name}}</p>
+              <p class="text-xs font-weight-bold mb-0" v-if="u.name">{{u.name}}</p>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
-              <p class="text-s font-weight-bold mb-0" style="display: inline">
+              <p class="text-s font-weight-bold mb-0" style="display: inline" v-if="u.position">
                 {{u.position.substring(0,18)}}...  </p>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
-              <p class="text-s font-weight-bold mb-0" style="display: inline">
+              <p class="text-s font-weight-bold mb-0" style="display: inline" v-if="u.desc">
                 {{u.desc.substring(0,18)}}... </p>
             </td>
             <td class="align-middle text-center">
@@ -167,7 +167,7 @@
                           data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                           @click="opToDel=u;index=i;" class="mx-3" v-if="remove">حذف </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
-                          @click="id=u.id;name=u.name;desc=u.desc;position=u.position;"
+                          @click="id=u.id;name=u.name;desc=u.desc;position=u.position;video=u.video"
                           data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                 ویرایش</vsud-badge>
             </td>
@@ -245,7 +245,7 @@ export default {
         position : this.position,
         video:this.video
       }
-      const add = await  HTTP.post('/testimonial',data)
+      const add = await HTTP.post('/testimonial',data)
       .catch(()=>{
          return this.$notify({
           title: " عملیات ناموفق!",
