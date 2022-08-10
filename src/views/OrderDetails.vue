@@ -37,7 +37,7 @@
               <div class="d-flex ">
                 <div>
                   <img
-                      :src="'https://apidemo.madein-iran.com/public'+u.product.image"
+                      :src="'https://api.madein-iran.com/public'+u.product.image"
                       class="avatar avatar-sm rounded-circle mx-2"
                       :alt="u.product.name"
                   />

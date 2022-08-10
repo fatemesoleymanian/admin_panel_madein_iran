@@ -31,6 +31,6 @@ axios.interceptors.response.use( (res) => {
 axios.defaults.headers.common[ 'Content-Type' ] = 'application/json';
 if (localStorage.getItem('vqmgp')) axios.defaults.headers.common = {'Authorization': `Bearer ${localStorage.getItem('vqmgp')}`}
 export const HTTP = axios.create({
-    baseURL : `https://apidemo.madein-iran.com/public/api`
+    baseURL : `https://api.madein-iran.com/public/api`
 
   });

@@ -49,7 +49,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'https://apidemo.madein-iran.com/public'+iconImage"
+                       :src="'https://api.madein-iran.com/public'+iconImage"
                        :alt="name"
                   />
                 </div>
@@ -120,7 +120,7 @@
                        width="500"
                        height="300"
                        class="w-100 position-relative z-index-2"
-                       :src="'https://apidemo.madein-iran.com/public'+iconImage"
+                       :src="'https://api.madein-iran.com/public'+iconImage"
                        :alt="name"
                   />
                 </div>
@@ -202,7 +202,7 @@
               <div class="d-flex  py-1">
                 <div v-if="u.iconImage">
                   <vsud-avatar
-                      :img="'https://apidemo.madein-iran.com/public'+u.iconImage"
+                      :img="'https://api.madein-iran.com/public'+u.iconImage"
                       size="sm"
                       border-radius="md"
                       class="mx-2"

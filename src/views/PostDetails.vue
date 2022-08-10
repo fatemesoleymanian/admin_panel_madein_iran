@@ -52,7 +52,7 @@
                          width="500"
                          height="300"
                          class="w-100 position-relative z-index-2"
-                         :src="'https://apidemo.madein-iran.com/public'+post.featuredImage"
+                         :src="'https://api.madein-iran.com/public'+post.featuredImage"
                          :alt="post.slug"
                     />
                   </div>

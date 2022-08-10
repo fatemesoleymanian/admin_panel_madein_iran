@@ -61,7 +61,7 @@
               <div class="d-flex  py-1">
                 <div >
                   <vsud-avatar
-                      :img="'https://apidemo.madein-iran.com/public'+u.featuredImage"
+                      :img="'https://api.madein-iran.com/public'+u.featuredImage"
                       size="sm"
                       border-radius="md"
                       class="mx-2"
