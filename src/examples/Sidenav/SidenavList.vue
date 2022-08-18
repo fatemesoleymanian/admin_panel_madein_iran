@@ -88,6 +88,11 @@ export default {
           icon:'bi bi-file-text-fill',
         },
         {
+          title:'خبرنامه',
+          route:'خبرنامه',
+          icon:'bi bi-envelope-paper-fill',
+        },
+        {
           title:'دپارتمان ها',
           route:'دپارتمان ها',
           icon:'bi bi-diagram-3-fill',

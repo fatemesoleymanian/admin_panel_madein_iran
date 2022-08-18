@@ -23,6 +23,7 @@ import PostDetails from "../views/PostDetails";
 import Admins from "../views/Admins";
 import Roles from "../views/Roles";
 import Transactions from "../views/Transactions";
+import Newsletters from "../views/Newsletters";
 
 const routes = [
   {
@@ -119,6 +120,11 @@ const routes = [
     path: "/forms",
     name: "فرم ها",
     component: Forms,
+  },
+  {
+    path: "/newsletters",
+    name: "خبرنامه",
+    component: Newsletters,
   },
   {
     path: "/orders",
