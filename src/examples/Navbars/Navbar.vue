@@ -110,23 +110,19 @@ export default {
     {
       await HTTP.post('admin/logout')
       .then((res)=>{
-        localStorage.removeItem('wugt');
-        localStorage.removeItem('vqmgp');
-        localStorage.removeItem('rgtokuukqp');
         this.$notify({
-          title: "عملیات موفق!",
           text:res.data.message,
           type: 'success',
         });
-        window.location = '/sign-in'
       })
       .catch((e)=>{
-        return this.$notify({
-          title: "عملیات ناموفق!",
-          text:e.response.data.message,
-          type: 'error',
-        });
+        console.log(e)
       });
+      localStorage.removeItem('wugt');
+      localStorage.removeItem('vqmgp');
+      localStorage.removeItem('rgtokuukqp');
+      window.location = '/sign-in'
+
     },
     async search()
     {
