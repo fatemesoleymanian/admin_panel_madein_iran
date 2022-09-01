@@ -7,6 +7,15 @@
           <div class="card-header pb-0">
             <h6>خروجی فرم تقاضای خط تولید بدون ایده شخصی</h6>
           </div>
+          <div class="px-4" v-if="!flag1">
+            <vue3-json-excel
+                :json-data="emptyIdeas"
+                :fields="empty_form_fields"
+                name="خروجی فرم تقاضای خط تولید بدون ایده شخصی"
+                class="cursor-pointer">
+              <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
+            </vue3-json-excel>
+          </div>
           <div class="col-6 text-start px-5 py-3 me-auto">
             <vsud-button color="dark" size="md" @click="showEmpty" v-if="flag1">نمایش جدول</vsud-button>
           </div>
@@ -23,7 +32,7 @@
                     شماره تلفن همراه
                   </th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                   خط تولید
+                    خط تولید
                   </th>
                   <th
                       class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -55,89 +64,107 @@
               <pagination class="pro-pagination-style shop-pagination mt-30 "
                           v-model="empty.currentPage" :per-page="empty.perPage"
                           :records="emptyIdeas.length" @paginate="paginateClickCallbackEmpty"
-                          :page-count="getPaginateCountEmpty" />
+                          :page-count="getPaginateCountEmpty"/>
             </div>
           </div>
         </div>
       </div>
     </div>
     <!--    job production form with ideas-->
-        <div class="row">
-          <div class="col-12">
-            <div class="card mb-4">
-              <div class="card-header pb-0">
-                <h6>خروجی فرم تقاضای خط تولید شامل ایده شخصی</h6>
-              </div>
-              <div class="col-6 text-start px-5 py-3 me-auto">
-                <vsud-button color="dark" size="md" @click="showIdeas" v-if="flag2" >نمایش جدول</vsud-button>
-              </div>
-              <div class="card-body px-0 pt-0 pb-2">
-                <div id="loading2" v-if="loader"></div>
-                <div class="table-responsive p-0" v-if="!loader && newIdeas.length>0">
-                  <table class="table align-items-center justify-content-center mb-0">
-                    <thead>
-                    <tr>
-                      <th
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                      >
-                        نام و نام خانوادگی
-                      </th>
-                      <th
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
-                        شماره تماس
-                      </th>
-                      <th
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
-                        ایده مدنظر یا درخواست ایده تولیدی
-                      </th>
-                      <th
-                          class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2"
-                      >
-                        تاریخ ازسال
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(idea,i) in getItemsIdea" :key="i" >
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">{{idea.full_name}}</p>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">{{idea.phone_number}}</p>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold">{{idea.description}}</p>
-                      </td>
-                      <td class="align-middle text-center ">
-                        <p class="text-sm font-weight-bold">{{idea.created_at}}</p>
-                      </td>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>خروجی فرم تقاضای خط تولید شامل ایده شخصی</h6>
+          </div>
+          <div class="px-4" v-if="!flag2">
+            <vue3-json-excel
+                :json-data="newIdeas"
+                :fields="with_ideas_form_fields"
+                name="خروجی فرم تقاضای خط تولید شامل ایده شخصی"
+                class="cursor-pointer">
+              <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
+            </vue3-json-excel>
+          </div>
+          <div class="col-6 text-start px-5 py-3 me-auto">
+            <vsud-button color="dark" size="md" @click="showIdeas" v-if="flag2">نمایش جدول</vsud-button>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div id="loading2" v-if="loader"></div>
+            <div class="table-responsive p-0" v-if="!loader && newIdeas.length>0">
+              <table class="table align-items-center justify-content-center mb-0">
+                <thead>
+                <tr>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    نام و نام خانوادگی
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  >
+                    شماره تماس
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  >
+                    ایده مدنظر یا درخواست ایده تولیدی
+                  </th>
+                  <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2"
+                  >
+                    تاریخ ازسال
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(idea,i) in getItemsIdea" :key="i">
+                  <td>
+                    <p class="text-sm font-weight-bold mb-0">{{ idea.full_name }}</p>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-bold mb-0">{{ idea.phone_number }}</p>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-bold">{{ idea.description }}</p>
+                  </td>
+                  <td class="align-middle text-center ">
+                    <p class="text-sm font-weight-bold">{{ idea.created_at }}</p>
+                  </td>
 
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div v-if="getPaginateCountIdea > 1 " class="px-4 py-3 d-flex float-start">
-                  <pagination class="pro-pagination-style shop-pagination mt-30 "
-                              v-model="idea.currentPage" :per-page="idea.perPage"
-                              :records="newIdeas.length" @paginate="paginateClickCallbackIdea"
-                              :page-count="getPaginateCountIdea" />
-                </div>
-              </div>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="getPaginateCountIdea > 1 " class="px-4 py-3 d-flex float-start">
+              <pagination class="pro-pagination-style shop-pagination mt-30 "
+                          v-model="idea.currentPage" :per-page="idea.perPage"
+                          :records="newIdeas.length" @paginate="paginateClickCallbackIdea"
+                          :page-count="getPaginateCountIdea"/>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-<!--    request for representation-->
+    <!--    request for representation-->
     <div class="row">
       <div class="col-12">
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h6>خروجی فرم درخواست نمایندگی خط تولید</h6>
           </div>
+          <div class="px-4" v-if="!flag3">
+            <vue3-json-excel
+                :json-data="representations"
+                :fields="representation_form_fields"
+                name="خروجی فرم درخواست نمایندگی خط تولید"
+                class="cursor-pointer">
+              <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
+            </vue3-json-excel>
+          </div>
           <div class="col-6 text-start px-5 py-3 me-auto">
-            <vsud-button color="dark" size="md" @click="showRepresentation" v-if="flag3" >نمایش جدول</vsud-button>
+            <vsud-button color="dark" size="md" @click="showRepresentation" v-if="flag3">نمایش جدول</vsud-button>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div id="loading3" v-if="loader"></div>
@@ -168,18 +195,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(rep,i) in getItemsRepresentation" :key="i" >
+                <tr v-for="(rep,i) in getItemsRepresentation" :key="i">
                   <td>
-                    <p class="text-sm font-weight-bold mb-0">{{rep.full_name}}</p>
+                    <p class="text-sm font-weight-bold mb-0">{{ rep.full_name }}</p>
                   </td>
                   <td>
-                    <p class="text-sm font-weight-bold mb-0">{{rep.phone_number}}</p>
+                    <p class="text-sm font-weight-bold mb-0">{{ rep.phone_number }}</p>
                   </td>
                   <td>
-                    <p class="text-sm font-weight-bold">{{rep.description}}</p>
+                    <p class="text-sm font-weight-bold">{{ rep.description }}</p>
                   </td>
                   <td class="align-middle text-center ">
-                    <p class="text-sm font-weight-bold">{{rep.created_at}}</p>
+                    <p class="text-sm font-weight-bold">{{ rep.created_at }}</p>
                   </td>
 
                 </tr>
@@ -190,7 +217,7 @@
               <pagination class="pro-pagination-style shop-pagination mt-30 "
                           v-model="representation.currentPage" :per-page="representation.perPage"
                           :records="representations.length" @paginate="paginateClickCallbackRepresentation"
-                          :page-count="getPaginateCountRepresentation" />
+                          :page-count="getPaginateCountRepresentation"/>
             </div>
           </div>
         </div>
@@ -206,7 +233,7 @@ import VsudButton from "../components/VsudButton";
 
 export default {
   name: "Forms",
-  components: { VsudButton},
+  components: {VsudButton},
   data() {
     return {
       emptyIdeas: [],
@@ -218,20 +245,50 @@ export default {
       flag1: true,
       flag2: true,
       flag3: true,
-      hide:1,
-      empty:{
+      hide: 1,
+      empty: {
         currentPage: 1,
         perPage: 10
       },
-      idea:{
+      idea: {
         currentPage: 1,
         perPage: 10
       },
-      representation:{
+      representation: {
         currentPage: 1,
         perPage: 10
       },
-      loader:false
+      loader: false,
+      empty_form_fields: {
+        "آیدی": "id",
+        "نام و نام خانوادگی": "full_name",
+        "شماره تماس": "phone_number",
+        "خط تولید مدنظر": "product",
+        "تاریخ ارسال": "created_at"
+      },
+      with_ideas_form_fields: {
+        "آیدی": "id",
+        "نام و نام خانوادگی": "full_name",
+        "شماره تماس": "phone_number",
+        "ایده مدنظر یا درخواست ایده تولیدی": "description",
+        "تاریخ ارسال": "created_at"
+      },
+      representation_form_fields: {
+        "آیدی": "id",
+        "نام و نام خانوادگی": "full_name",
+        "شماره تماس": "phone_number",
+        "سن": "age",
+        "شهر مورد درخواست": "city",
+        "رشته تحصیلی": "course",
+        "سوابق شغلی": "work_experience",
+        "شغل": "job",
+        "پکیج مدنظر": "selected_package",
+        "تحصیلات": "education",
+        "دلایل دریافت نمایندگی": "reasons",
+        "کارشناس مربوطه": "experts",
+        "خط تولید مربوطه": "product",
+        "تاریخ ارسال": "created_at"
+      },
     }
   },
   methods: {
@@ -287,12 +344,10 @@ export default {
       this.representation.currentPage = Number(page);
     },
   },
-  mounted()
-  {
+  mounted() {
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
-    for (let i in permissions)
-    {
-      if (permissions[i].module.name === 'فرم ها'){
+    for (let i in permissions) {
+      if (permissions[i].module.name === 'فرم ها') {
         if (permissions[i].read === 0) return window.location = '/'
       }
     }
@@ -329,20 +384,27 @@ export default {
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:100);
-#loading,#loading2 ,#loading3{
+
+#loading, #loading2, #loading3 {
   margin: 50px auto;
   width: 80px;
   height: 80px;
-  border: 3px solid rgba(0,0,0,.5);
+  border: 3px solid rgba(0, 0, 0, .5);
   border-radius: 50%;
   border-top-color: #000;
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
+
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
+
 @-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 </style>

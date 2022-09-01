@@ -24,6 +24,7 @@ import Notifications from '@kyvg/vue3-notification';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import Pagination from 'v-pagination-3';
+import vue3JsonExcel from "vue3-json-excel"
 
 const appInstance = createApp(App);
 appInstance.config.productionTip = false;
@@ -33,6 +34,7 @@ appInstance.config.warnHandler = function () {
     return null
 };
 appInstance.component('QuillEditor', QuillEditor);
+appInstance.use(vue3JsonExcel);
 appInstance.use(store);
 appInstance.use(router);
 appInstance.use(Notifications);

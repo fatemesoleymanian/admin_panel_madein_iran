@@ -7,6 +7,15 @@
           <div class="card-header pb-0">
             <h6>خروجی فرم ثبت نام خبر نامه</h6>
           </div>
+          <div class="px-4">
+            <vue3-json-excel
+                :json-data="subscribersForNewsletters"
+                :fields="newsletters_fields"
+                name="خروجی فرم ثبت نام خبر نامه"
+                class="cursor-pointer">
+              <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
+            </vue3-json-excel>
+          </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div id="loading" v-if="loader"></div>
             <div class="table-responsive p-0" v-if="!loader && subscribersForNewsletters.length>0">
@@ -45,7 +54,8 @@
             <div v-if="getPaginateCountForList > 1 " class="px-4 py-3 d-flex float-start">
               <pagination class="pro-pagination-style shop-pagination mt-30 "
                           v-model="paginationProperties.currentPage" :per-page="paginationProperties.perPage"
-                          :records="subscribersForNewsletters.length" @paginate="paginateClickCallbackForSubescribersList"
+                          :records="subscribersForNewsletters.length"
+                          @paginate="paginateClickCallbackForSubescribersList"
                           :page-count="getPaginateCountForList"/>
             </div>
           </div>
@@ -59,10 +69,28 @@
 import {HTTP} from "../http-common";
 
 export default {
+
   name: "Newsletters",
   data() {
     return {
       subscribersForNewsletters: [],
+      // json_fields: {
+      //   "Complete name": "name",
+      //   City: "city",
+      //   Telephone: "phone.mobile",
+      //   "Telephone 2": {
+      //     field: "phone.landline",
+      //     callback: (value) => {
+      //       return `Landline Phone - ${value}`;
+      //     },
+      //   },
+      // },
+      newsletters_fields: {
+        "آیدی": "id",
+        "نام و نام خانوادگی": "full_name",
+        "شماره تماس": "phone_number",
+        "تاریخ ارسال": "created_at"
+      },
       paginationProperties: {
         currentPage: 1,
         perPage: 15
@@ -74,7 +102,8 @@ export default {
     this.loader = true;
     await HTTP.get('show_all_receivers')
         .then((response) => {
-          this.subscribersForNewsletters = response.data
+          this.subscribersForNewsletters = response.data;
+
         })
         .catch(() => {
           return this.$notify({
@@ -83,7 +112,6 @@ export default {
             type: 'error',
           });
         });
-    console.log(this.subscribersForNewsletters)
     this.loader = false
   },
   methods: {
@@ -91,7 +119,7 @@ export default {
       this.paginationProperties.currentPage = Number(page);
     },
   },
-  computed:{
+  computed: {
     getItemsOfSubscribersList() {
       let start = (this.paginationProperties.currentPage - 1) * this.paginationProperties.perPage;
       let end = this.paginationProperties.currentPage * this.paginationProperties.perPage;

@@ -15,7 +15,7 @@
             آیا از حذف عکس پست اطمینان دارید؟
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no" >خیر</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="no">خیر</button>
             <button type="button" class="btn btn-primary" @click="deleteImage">بله</button>
           </div>
         </div>
@@ -67,7 +67,7 @@
     <div class="row py-5">
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2"> تیتر  :</h6>
+          <h6 class="mb-0 p-2"> تیتر :</h6>
         </div>
         <input type="text" class="form-control " placeholder="تیتر " v-model="product.title"
                title="تیتر"/>
@@ -75,10 +75,10 @@
       </div>
       <div class="col-md-4 col-12">
         <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">دسته بندی  :</h6>
+          <h6 class="mb-0 p-2">دسته بندی :</h6>
         </div>
         <select class="form-select text-start " aria-label="Default select example" v-model="category">
-          <option v-for="(c,i) in categories" :key="i" :value="c.id">{{c.name}}</option>
+          <option v-for="(c,i) in categories" :key="i" :value="c.id">{{ c.name }}</option>
         </select>
       </div>
       <div class="col-md-4 col-12">
@@ -87,12 +87,12 @@
         </div>
         <select class="form-select mb-3 text-start" aria-label="Default select example" v-model="tmp"
                 @change="addTag">
-          <option v-for="(c,i) in tags" :key="i" :value="c.id">{{c.name}}</option>
+          <option v-for="(c,i) in tags" :key="i" :value="c.id">{{ c.name }}</option>
         </select>
-        <div v-for="(t,i) in product.tag" :key="i"  style="display: inline" class="p-2">
+        <div v-for="(t,i) in product.tag" :key="i" style="display: inline" class="p-2">
           <vsud-badge color="dark" variant="gradient" size="lg"
                       @click="dropTag(t.id)" style="cursor: pointer;"
-                      title="برای حذف تگ روی آن کیک کنید.">{{t.name}}
+                      title="برای حذف تگ روی آن کیک کنید.">{{ t.name }}
           </vsud-badge>
         </div>
 
@@ -104,12 +104,12 @@
           <h6 class="mb-0 p-2">پست :</h6>
         </div>
         <div class="example">
-        <QuillEditor  id="post_create"
-            :options="editorOption"
-                      @blur="onEditorBlur($event)"
-                      :modules="modules"
-                      ref="myQuillEditor"
-            placeholder="متن پست" class="editor" theme="snow" v-model="product.post"/>
+          <QuillEditor id="post_create"
+                       :options="editorOption"
+                       @blur="onEditorBlur($event)"
+                       :modules="modules"
+                       ref="myQuillEditor"
+                       placeholder="متن پست" class="editor" theme="snow" v-model="product.post"/>
         </div>
       </div>
       <div class="col-12 my-3 py-4 px-2 ">
@@ -148,7 +148,7 @@
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">کلید واژه های متا (meta keywords):</h6>
         </div>
-        <textarea  class="form-control " placeholder="کلید واژه های متا" v-model="product.metaKeyword" rows="3"/>
+        <textarea class="form-control " placeholder="کلید واژه های متا" v-model="product.metaKeyword" rows="3"/>
       </div>
     </div>
 
@@ -160,7 +160,7 @@
               @click="$router.push('/posts')"
               size="lg"
               variant="outline"
-              color="dark"> <i class="bi bi-arrow-return-right"></i>
+              color="dark"><i class="bi bi-arrow-return-right"></i>
             بازگشت به وبلاگ
 
           </vsud-button>
@@ -173,7 +173,7 @@
               size="lg"
               color="success"
               :disabled="isCreating" :loading="isCreating">
-            {{isCreating ? 'در حال ثبت  ...' : 'ثبت '}}
+            {{ isCreating ? 'در حال ثبت  ...' : 'ثبت ' }}
           </vsud-button>
 
         </div>
@@ -189,13 +189,13 @@ import VsudButton from "../components/VsudButton";
 import PlaceHolderCard from "../examples/Cards/PlaceHolderCard";
 import VsudBadge from "../components/VsudBadge";
 import BlotFormatter from 'quill-blot-formatter'
+
 export default {
   name: "AddPost",
-  components: {VsudBadge, PlaceHolderCard, VsudButton },
-  data()
-  {
-    return{
-      uploadImg:false,
+  components: {VsudBadge, PlaceHolderCard, VsudButton},
+  data() {
+    return {
+      uploadImg: false,
       editorOption: {
         // debug: 'info',
         readOnly: false,
@@ -203,16 +203,16 @@ export default {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote', 'code-block'],
-            [{ 'header': 1 }, { 'header': 2 }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'indent': '-1' }, { 'indent': '+1' }],
-            [{ 'direction': 'rtl' }],
-            [{ 'size': ['small', false, 'large', 'huge'] }],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [{ 'font': [] }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+            [{'header': 1}, {'header': 2}],
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'script': 'sub'}, {'script': 'super'}],
+            [{'indent': '-1'}, {'indent': '+1'}],
+            [{'direction': 'rtl'}],
+            [{'size': ['small', false, 'large', 'huge']}],
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+            [{'font': []}],
+            [{'color': []}, {'background': []}],
+            [{align: ''}, {align: 'center'}, {align: 'right'}, {align: 'justify'}],
             ['clean'],
             ['table', 'column-left', 'column-right', 'row-above', 'row-below', 'row-remove', 'column-remove'],
             ['link', 'image', 'video']
@@ -220,26 +220,26 @@ export default {
         },
       },
       module: BlotFormatter,
-      isCreating:false,
-      id:this.$route.params.id,
-      product:{
-        title:'',
-        category_id:'',
-        tag:[],
-        featuredImage:'',
-        post:'',
-        post_excerpt:'',
-        slug:'',
-        metaKeyword:'',
-        metaDescription:'',
-        pageTitle:''
+      isCreating: false,
+      id: this.$route.params.id,
+      product: {
+        title: '',
+        category_id: '',
+        tag: [],
+        featuredImage: '',
+        post: '',
+        post_excerpt: '',
+        slug: '',
+        metaKeyword: '',
+        metaDescription: '',
+        pageTitle: ''
       },
-      categories:[],
-      tags:[],
-      category:'',
-      tag:[],
-      upload:true,
-      tmp:'',
+      categories: [],
+      tags: [],
+      category: '',
+      tag: [],
+      upload: true,
+      tmp: '',
     }
   },
 
@@ -251,47 +251,47 @@ export default {
     this.categories = cat.data
     this.tags = tag.data
   },
-  methods:{
+  methods: {
     onEditorBlur(quill) {
       this.product.post = quill.value.innerHTML
     },
 
-    async update(){
+    async update() {
       this.isCreating = true
-      this.product.post= this.$refs.myQuillEditor.getHTML()
+      this.product.post = this.$refs.myQuillEditor.getHTML()
 //
 // console.log(this.$refs.myQuillEditor.getQuill().container.outerHTML)
 // console.log(this.$refs.myQuillEditor.getHTML())
-      if(this.product.title.trim() === '') {
+      if (this.product.title.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: " تیتر الزامیست!",
           type: 'error',
         });
 
       }
-      if(this.product.featuredImage.trim() === '') {
+      if (this.product.featuredImage.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "عکس الزامیست!",
           type: 'error',
         });
 
       }
-      if(this.category === '') {
+      if (this.category === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "دسته بندی الزامیست!",
           type: 'error',
         });
 
       }
-      if(this.tag.length === 0) {
+      if (this.tag.length === 0) {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "حداقل یک تگ برای پست الزامیست!",
           type: 'error',
@@ -300,7 +300,7 @@ export default {
       }
       if (this.product.post.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "متن پست الزامیست!",
           type: 'error',
@@ -309,7 +309,7 @@ export default {
       }
       if (this.product.post_excerpt.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: " چکیده پست الزامیست!",
           type: 'error',
@@ -318,7 +318,7 @@ export default {
       }
       if (this.product.metaKeyword.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "حداقل یک کلیدواژه برای پست الزامیست!",
           type: 'error',
@@ -327,7 +327,7 @@ export default {
       }
       if (this.product.pageTitle.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "عنوان صفحه پست الزامیست!",
           type: 'error',
@@ -336,7 +336,7 @@ export default {
       }
       if (this.product.metaDescription.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "توضیحات متای پست الزامیست!",
           type: 'error',
@@ -345,7 +345,7 @@ export default {
       }
       if (this.product.slug.trim() === '') {
         this.isCreating = false
-        return  this.$notify({
+        return this.$notify({
           title: "خطا",
           text: "نشانک پست الزامیست!",
           type: 'error',
@@ -355,57 +355,55 @@ export default {
 
 
       const data = {
-        title:this.product.title,
-        featuredImage:this.product.featuredImage,
-        category_id : this.category,
-        tag_id : this.tag,
-        post:this.product.post,
-        post_excerpt:this.product.post_excerpt,
-        metaKeyword:this.product.metaKeyword,
-        pageTitle:this.product.pageTitle,
-        metaDescription:this.product.metaDescription,
-        slug:this.product.slug
+        title: this.product.title,
+        featuredImage: this.product.featuredImage,
+        category_id: this.category,
+        tag_id: this.tag,
+        post: this.product.post,
+        post_excerpt: this.product.post_excerpt,
+        metaKeyword: this.product.metaKeyword,
+        pageTitle: this.product.pageTitle,
+        metaDescription: this.product.metaDescription,
+        slug: this.product.slug
       }
 
-      const res = await HTTP.post( '/blogs', data).catch(()=>{
+      const res = await HTTP.post('/blogs', data).catch(() => {
         this.isCreating = false
         return this.$notify({
           title: "عملیات ناموفق!",
-          text:"خطا در ایجاد محصول",
+          text: "خطا در ایجاد محصول",
           type: 'error',
         });
       });
-      if(res.status===200){
+      if (res.status === 200) {
         this.$notify({
           title: "عملیات موفق!",
           text: res.data.msg,
           type: 'success',
         });
-      }
-      else {
+      } else {
         this.$notify({
           title: "عملیات ناموفق!",
-          text:"خطا در ایجاد محصول",
+          text: "خطا در ایجاد محصول",
           type: 'error',
         });
       }
       this.isCreating = false
     },
-    async deleteImage()
-    {
+    async deleteImage() {
       this.isCreating = true
       const data = {
-        imageName : this.product.featuredImage
+        imageName: this.product.featuredImage
       }
-      const deleteUploaded = await HTTP.post('/remove_upload',data)
-      .catch(()=>{
-        this.$notify({
-          title: "عملیات ناموفق!",
-          text: deleteUploaded.data.msg,
-          type: 'error',
-        });
-        this.isCreating = false
-      });
+      const deleteUploaded = await HTTP.post('/remove_upload', data)
+          .catch(() => {
+            this.$notify({
+              title: "عملیات ناموفق!",
+              text: deleteUploaded.data.msg,
+              type: 'error',
+            });
+            this.isCreating = false
+          });
       if (deleteUploaded.data.success === 1) {
         document.getElementById('no').click();
         this.$notify({
@@ -414,8 +412,7 @@ export default {
           type: 'success',
         });
         this.upload = true
-      }
-      else {
+      } else {
         this.$notify({
           title: "عملیات ناموفق!",
           text: deleteUploaded.data.msg,
@@ -424,30 +421,27 @@ export default {
       }
       this.isCreating = false
     },
-    uploadFake()
-    {
+    uploadFake() {
       document.getElementById('img').click()
     },
-    async loadFile(event)
-    {
+    async loadFile(event) {
       this.isCreating = true
-      this.uploadImg =true
+      this.uploadImg = true
       let formData = new FormData();
       formData.append("image", event.target.files[0]);
       formData.append("location", 'img/blogs/post');
-      const upload =  await HTTP.post('/upload',formData)
-      .catch(()=>{
-        this.$notify({
-          title: "عملیات ناموفق!",
-          text: 'خطایی رخ داد. ',
-          type: 'error',
-        });
-        this.uploadImg = false
-       this.isCreating = false
-      });
+      const upload = await HTTP.post('/upload', formData)
+          .catch(() => {
+            this.$notify({
+              title: "عملیات ناموفق!",
+              text: 'خطایی رخ داد. ',
+              type: 'error',
+            });
+            this.uploadImg = false
+            this.isCreating = false
+          });
 
-      if (upload.data.success === 1)
-      {
+      if (upload.data.success === 1) {
         this.product.featuredImage = upload.data.file.url
         this.$notify({
           title: "عملیات موفق!",
@@ -455,8 +449,7 @@ export default {
           type: 'success',
         });
         this.upload = false
-      }
-      else {
+      } else {
         this.$notify({
           title: "عملیات ناموفق!",
           text: upload.data.errors.message,
@@ -467,12 +460,11 @@ export default {
       this.uploadImg = false
       this.isCreating = false
     },
-    dropTag(id)
-    {
-      this.tag = this.tag.filter(function(ele){
+    dropTag(id) {
+      this.tag = this.tag.filter(function (ele) {
         return ele !== id
       });
-      this.product.tag = this.product.tag.filter(function (e){
+      this.product.tag = this.product.tag.filter(function (e) {
         return e.id !== id
       });
     },
@@ -480,30 +472,27 @@ export default {
       const tmp = this.tmp
       let flag = false
 
-      for (let i in this.product.tag)
-      {
+      for (let i in this.product.tag) {
         if (this.product.tag[i] === this.tmp) {
-          flag=true;
+          flag = true;
           break;
         }
       }
-      if (!flag)  {
+      if (!flag) {
         this.tag.push(tmp)
         const product = this.product.tag
-        this.tags.map(function (e){
+        this.tags.map(function (e) {
           if (e.id === tmp) product.push(e)
         });
       }
     },
   },
-  mounted()
-  {
+  mounted() {
     console.log('this is current quill instance object', this.editor)
 
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
-    for (let i in permissions)
-    {
-      if (permissions[i].module.name === 'وبلاگ'){
+    for (let i in permissions) {
+      if (permissions[i].module.name === 'وبلاگ') {
         if (permissions[i].create === 0) return window.location = '/'
       }
     }
