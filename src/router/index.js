@@ -24,6 +24,7 @@ import Admins from "../views/Admins";
 import Roles from "../views/Roles";
 import Transactions from "../views/Transactions";
 import Newsletters from "../views/Newsletters";
+import Customers from "../views/Customers";
 
 const routes = [
   {
@@ -85,6 +86,11 @@ const routes = [
     path: "/users",
     name: "کاربران",
     component: Users,
+  },
+  {
+    path: "/customers",
+    name: "مشتریان",
+    component: Customers,
   },
   {
     path: "/users/details:id",

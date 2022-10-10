@@ -148,7 +148,7 @@ export default {
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
       this.loader = true
-        await HTTP.get('/products_page')
+        await HTTP.get('/admin/products')
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');

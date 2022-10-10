@@ -142,14 +142,14 @@
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline" v-for="(p,j) in u.product" :key="j">
-                <router-link :to="`/product/details${p.id}`">
+                <router-link :to="`/product/details${p.pivot.product_id}`">
                 {{p.name.substring(0,6)}}...,
                 </router-link>
               </p>
             </td>
             <td class="align-middle text-center text-sm " width="260px">
               <p class="text-s font-weight-bold mb-0" style="display: inline;min-height: 100px;" v-for="(b,k) in u.blog" :key="k">
-                <router-link :to="`/post/details${b.id}`">
+                <router-link :to="`/post/details${b.pivot.blog_id}`">
                   {{b.title.substring(0,6)}}... ,
                 </router-link>
               </p>
@@ -226,7 +226,7 @@ export default {
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
       this.loader = true
-      await HTTP.get('/tags_pagi')
+      await HTTP.get('/admin/tags')
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');

@@ -53,6 +53,11 @@ export default {
           icon:'bi bi-people-fill',
         },
         {
+          title:'مشتریان',
+          route:'مشتریان',
+          icon:'bi bi-person-video3',
+        },
+        {
           title:'محصولات',
           route:'محصولات',
           icon:'bi bi-basket-fill',
