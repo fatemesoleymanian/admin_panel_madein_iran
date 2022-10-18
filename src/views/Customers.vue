@@ -35,6 +35,12 @@
           <div class="modal-body">
             <div class="mb-3">
               <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2">نام و نام خانوادگی مشتری:</h6>
+              </div>
+              <input type="text" class="form-control" placeholder=" نام و نام خانوادگی مشتری" v-model="data.name">
+            </div>
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
                 <h6 class="mb-0 p-2">نام کاربری مشتری:</h6>
               </div>
               <input type="text" class="form-control" placeholder=" نام کاربری مشتری" v-model="data.user_name">
@@ -69,6 +75,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="mb-3">
+              <div class="d-flex align-items-center">
+                <h6 class="mb-0 p-2">نام و نام خانوادگی مشتری :</h6>
+              </div>
+              <input type="text" class="form-control" placeholder="نام و نام خانوادگی مشتری" v-model="data.name">
+            </div>
             <div class="mb-3">
               <div class="d-flex align-items-center">
                 <h6 class="mb-0 p-2">نام کاربری مشتری :</h6>
@@ -109,6 +121,10 @@
           <tr>
             <th
                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+              نام و نام خانوادگی
+            </th>
+            <th
+                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
               نام کاربری
             </th>
             <th
@@ -125,6 +141,11 @@
           <tr v-for="(u, i) in customers" :key="i">
             <td class="align-middle">
                 <span class="text-secondary text-xs font-weight-bold"
+                >{{ u.name }}</span
+                >
+            </td>
+            <td class="align-middle">
+                <span class="text-secondary text-xs font-weight-bold"
                 >{{ u.user_name }}</span
                 >
             </td>
@@ -134,12 +155,9 @@
                 >
             </td>
             <td class="align-middle  text-sm">
-              <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"
-                          data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                          @click="customerToDel=u;index=i;" v-if="remove">حذف
-              </vsud-badge>
+
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
-                          @click="data.user_name=u.user_name;data.password=u.password;id=u.id"
+                          @click="data.user_name=u.user_name;data.name=u.name;data.password=u.password;id=u.id"
                           data-bs-toggle="modal" data-bs-target="#editSlide" v-if="update">
                 ویرایش
               </vsud-badge>
@@ -163,7 +181,8 @@ export default {
     return{
       data:{
         user_name:'',
-        password:''
+        password:'',
+        name:''
       },
       id:'',
       remove: 1,
@@ -248,6 +267,7 @@ export default {
         });
         this.customers[this.index].user_name = this.data.user_name
         this.customers[this.index].password = this.data.password
+        this.customers[this.index].name = this.data.name
       } else {
         this.$notify({
           title: "عملیات ناموفق!",
