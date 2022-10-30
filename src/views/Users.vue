@@ -68,6 +68,7 @@
                             class="me-3"
                             :alt="u.name"
                         />
+                        <i v-if="u.is_customer" class="bi bi-star-fill" style="font-size: 10px"></i>
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ u.name }}</h6>
