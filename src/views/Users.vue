@@ -28,6 +28,15 @@
           <div class="card-header pb-0">
             <h6>جدول کاربران فروشگاه</h6>
           </div>
+          <div class="px-4">
+            <vue3-json-excel
+                :json-data="users"
+                :fields="user_fields"
+                name="کاربران ثبت نامی ساخت ایران"
+                class="cursor-pointer">
+              <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
+            </vue3-json-excel>
+          </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div id="loading" v-if="loader"></div>
             <div class="table-responsive p-0" v-if="!loader">
@@ -68,7 +77,8 @@
                             class="me-3"
                             :alt="u.name"
                         />
-                        <i v-if="u.is_customer" class="bi bi-star-fill" style="font-size: 10px"></i>
+                        <i v-if="u.is_customer === 'بله'" class="bi bi-star-fill" style="font-size: 10px"
+                           title="این کاربر از مشتریان ساخت ایران است و از ویدئوهای آموزشی دیدن کرده است."></i>
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ u.name }}</h6>
@@ -108,7 +118,7 @@
               <pagination class="pro-pagination-style shop-pagination mt-30 "
                           v-model="user.currentPage" :per-page="user.perPage"
                           :records="users.length" @paginate="paginateClickCallback"
-                          :page-count="getPaginateCount" />
+                          :page-count="getPaginateCount"/>
             </div>
           </div>
 
@@ -128,7 +138,7 @@ export default {
   name: "users",
   data() {
     return {
-      user:{
+      user: {
         currentPage: 1,
         perPage: 10
       },
@@ -138,7 +148,20 @@ export default {
       img1,
       userToDel: '',
       hide: 1,
-      loader:false
+      user_fields: {
+        "آیدی": "id",
+        "نام و نام خانوادگی": "name",
+        "شماره تلفن همراه": "phone_number",
+        "نشانی": "address",
+        "نام شرکت": "company_name",
+        "ایمیل": "email",
+        "تلفن ثابت": "home_number",
+        "نماینده است": "is_customer",
+        "شغل": "job",
+        "کدملی": "national_id",
+        "تاریخ ساخت اکانت": "created_at"
+      },
+      loader: false
     }
   },
   components: {
@@ -167,6 +190,10 @@ export default {
           })
           .then((users) => {
             this.users = users.data;
+            for (let i in this.users)
+            {
+              this.users[i].is_customer = this.users[i].is_customer ? "بله" : "خیر"
+            }
             this.loader = false
           });
     }
@@ -214,20 +241,27 @@ export default {
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:100);
+
 #loading {
   margin: 50px auto;
   width: 80px;
   height: 80px;
-  border: 3px solid rgba(0,0,0,.5);
+  border: 3px solid rgba(0, 0, 0, .5);
   border-radius: 50%;
   border-top-color: #000;
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
+
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
+
 @-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
 }
 </style>
