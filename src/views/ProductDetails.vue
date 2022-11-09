@@ -22,34 +22,39 @@
       </div>
     </div>
     <!--    modal-->
-<!--    modal for add state-->
+    <!--    modal for add model-->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">افزودن ظرفیت محصول</h5>
+            <h5 class="modal-title" id="exampleModalLabel">افزودن حالت محصول</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
                 <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">نام ظرفیت :</h6>
+                  <h6 class="mb-0 p-2">نام حالت :</h6>
                 </div>
-                <input type="text" class="form-control"  placeholder="نام ظرفیت" v-model="newStateName">
+                <input type="text" class="form-control"  placeholder="نام حالت" v-model="newStateName">
               </div>
               <div class="mb-3">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">قیمت ظرفیت :</h6>
+
+                <div class="row py-2">
+                  <div class="col-12" >
+                    <div class="d-flex align-items-center">
+                      <h6 class="mb-0 p-2">مشخصات فنی محصول :</h6>
+                    </div>
+                    <div class="example" >
+                      <QuillEditor  id="product_create2"
+                                    :options="editorOption"
+                                    @blur="onEditorBlur($event)"
+                                    :modules="modules"
+                                    ref="myQuillEditor2"
+                                    placeholder="مشخصات فنی محصول" class="editor" theme="snow" v-model="newStateDesc"/>
+                    </div>
+                  </div>
                 </div>
-                <input type="number" class="form-control"  placeholder="قیمت ظرفیت" v-model="newStateCost" @change="doNewOff">
-              </div>
-              <div class="mb-3" v-if="product.discount !== 0">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 p-2">قیمت تخفیفی ظرفیت :</h6>
-                </div>
-                <input type="text" class="form-control"  placeholder="قیمت تخفیفی ظرفیت" v-model="newStateOff"
-                      readonly>
               </div>
             </form>
           </div>
@@ -60,7 +65,8 @@
         </div>
       </div>
     </div>
-<!--    modal for add state-->
+    <!--    modal for add model-->
+
     <div id="loading" v-if="loader"></div>
     <div class="row" v-if="!loader" >
       <div class="col-12 mb-lg-0 mb-4">
@@ -134,53 +140,47 @@
 
       </div>
     </div>
-    <div class="row py-5 " v-if="!loader" id="states">
+    <!--    has model-->
+    <hr>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="mySwitch" name="models"  @click="hasModels" :checked="product.has_models">
+      <label class="form-check-label" for="mySwitch"><b>این محصول دارای حالت های مختلف است.</b></label>
+    </div>
+    <hr>
+    <!--has models    -->
+    <div class="row py-5 " id="models" v-if="product.has_models === true">
       <div class="d-flex flex-row">
-        <h5 class="font-weight-bolder">ظرفیت های محصول :</h5>
-        <div class="me-auto d-flex justify-content-between">
-          <label for="discount" class="form-label">درصد تخفیف محصول :</label>
-          <input type="number" class="form-control form-control-sm" id="discount" placeholder="درصد تخفیف محصول"
-          v-model="product.discount" @change="doOff" style="height:40px" title="پس از وارد کردن درصد تخفیف کلید Enter یا Done را فشار دهید.">
-        </div>
+        <h5 class="font-weight-bolder">حالت های محصول :</h5>
       </div>
       <hr class="bg-dark text-dark " style="width: 100%;height: 2px">
       <div class=" d-flex justify-content-end my-4">
         <vsud-button color="dark" size="lg" variant="outline"
                      data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
-          افزودن ظرفیت
+          افزودن حالت
           <i class="bi bi-plus-lg"></i>
         </vsud-button>
       </div>
-      <div class="row"  v-for="(s,i) in product.state"  :key="i" >
+      <div class="row"  v-for="(s,i) in product.model"  :key="i" >
         <i class="bi bi-x-circle-fill d-flex justify-content-end" style="cursor: pointer;margin-bottom: -10px;font-size: 23px"
-        @click="removeState(s)"></i>
-      <div class="col-md-4 col-12  ">
-        <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">نام ظرفیت :</h6>
+           @click="removeState(s)"></i>
+        <div class="col-md-4 col-12  ">
+          <div class="d-flex align-items-center">
+            <h6 class="mb-0 p-2">نام حالت :</h6>
+          </div>
+          <input type="text" class="form-control" id="state_type" placeholder="نام حالت" v-model="s.name">
         </div>
-        <input type="text" class="form-control" id="state_type" placeholder="نام ظرفیت" v-model="s.type">
-      </div>
-      <div class="col-md-4 col-12">
-        <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">قیمت به تومان :</h6>
-        </div>
-        <input type="text" class="form-control" id="state_price" placeholder="قیمت :" v-model="s.price">
+        <div class="col-md-4 col-12">
+          <div class="d-flex align-items-center">
+            <h6 class="mb-0 p-2">مشخصات فنی  :</h6>
+          </div>
+          <textarea type="text" class="form-control" id="state_price" placeholder="مشخصات فنی :" v-model="s.description"/>
 
-      </div>
-      <div class="col-md-4 col-12 " v-if="product.discount !== 0">
-        <div class="d-flex align-items-center">
-          <h6 class="mb-0 p-2">قیمت تخفیفی :</h6>
         </div>
-        <input type="text" class="form-control" id="state_discounted_price" placeholder=" قیمت تخفیفی"
-        :value="s.discounted_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        >
-
-      </div>
       </div>
 
     </div>
     <div class="row py-2" v-if="!loader" >
-      <div class="col-12">
+      <div class="col-12" v-if="product.has_models === false">
         <div class="d-flex align-items-center">
           <h6 class="mb-0 p-2">مشخصات فنی محصول :</h6>
         </div>
@@ -330,16 +330,14 @@ export default {
       tags:[],
       category:'',
       tag:[],
-      costs:[],
-      states:[],
-      off:[],
-      ids:[],
+      names:[],
+      descriptions:[],
       upload:false,
       tmp:'',
       newStateName:'',
-      newStateCost:'',
-      newStateOff:'',
-      updatee:1
+      newStateDesc:'',
+      updatee:1,
+      has_models:false
     }
   },
   async mounted(){
@@ -366,13 +364,13 @@ export default {
           })
           .then((product)=> {
             this.product = product.data
+            this.has_models = this.product.has_models === 1 ? true : false;
+            this.product.has_models = this.has_models ;
+            console.log(this.product.has_models)
             this.category = product.data.category.id
 
           for (let i in product.data.tag) {
             this.tag.push(product.data.tag[i].id)
-          }
-          for (let i in product.data.state) {
-            this.ids.push(product.data.state[i].id)
           }
                 this.loader = false
               });
@@ -387,6 +385,10 @@ export default {
     this.tags = tag.data
   },
   methods:{
+    hasModels()
+    {
+      this.product.has_models = !this.product.has_models ;
+    },
     onEditorBlur(quill) {
 
       // this.product.description = quill.value.innerHTML
@@ -396,18 +398,11 @@ export default {
     async update(){
       this.isCreating = true
 
-      this.states = [];
-      this.costs = [];
-      this.off = [];
-      for (let i in this.product.state){
-        this.states.push(this.product.state[i].type)
-        this.costs.push(this.product.state[i].price)
-        if (this.product.discount !== 0) {
-          this.off.push(this.product.state[i].discounted_price)
-        }
-        else {
-          this.off.push((this.product.state[i].price))
-        }
+      this.names = [];
+      this.descriptions = [];
+      for (let i in this.product.model){
+        this.names.push(this.product.model[i].name)
+        this.descriptions.push(this.product.model[i].description)
       }
 
       if(this.product.name.trim() === '') {
@@ -442,43 +437,6 @@ export default {
         return  this.$notify({
           title: "خطا",
           text: "حداقل یک تگ برای محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if (this.product.discount === '') this.product.discount = 0
-      if(this.states.length === 0 || this.costs.length === 0   ) {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: "حداقل یک ظرفیت برای محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if(this.states.length !== this.costs.length  ) {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: " ظرفیت محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if (this.product.description.trim() === '') {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: "مشخصات فنی محصول الزامیست!",
-          type: 'error',
-        });
-
-      }
-      if (this.product.description_excerpt.trim() === '') {
-        this.isCreating = false
-        return  this.$notify({
-          title: "خطا",
-          text: "توضیحات محصول الزامیست!",
           type: 'error',
         });
 
@@ -519,22 +477,17 @@ export default {
         });
 
       }
-      this.ids = [];
-        for (let i in this.product.state)
-        {
-          this.ids.push(this.product.state[i].id)
-        }
+
       const updated_data = {
         discount:this.product.discount,
         name:this.product.name,
         image:this.product.image,
         category_id : this.category,
         tags : this.tag,
-        ids: this.ids,
-        states:this.states,
-        off:this.off,
-        costs:this.costs,
-        description:this.product.description,
+        names: this.product.has_models ? this.names : '',
+        descriptions:this.product.has_models ? this.descriptions : '',
+        description: this.product.has_models === true ? '' : this.product.description,
+        has_models: this.product.has_models ? 1 : 0,
         description_excerpt:this.product.description_excerpt,
         metaKeyword:this.product.metaKeyword,
         pageTitle:this.product.pageTitle,
@@ -649,51 +602,23 @@ export default {
        if (e.id === tmp) product.tag.push(e)
      });
     },
-    doOff()
-    {
-      const dis = this.product.discount
-
-      for (let i in this.product.state)
-      {
-        this.product.state[i].discounted_price = this.product.state[i].price-((this.product.state[i].price*dis)/100)
-      }
-    },
-    doNewOff()
-    {
-      if (this.product.discount === 0) return this.newStateOff = this.newStateCost
-      return this.newStateOff = this.newStateCost - ((this.newStateCost*this.product.discount)/100)
-    },
     addState()
     {
       document.getElementById('saveNewState').click();
-      if (this.newStateName.trim() === '') return this.$notify({
-        title: "عملیات ناموفق!",
-        text: "نام ظرفیت الزامیست.",
-        type: 'error',
-      });
-      if (this.newStateCost === '') return this.$notify({
-        title: "عملیات ناموفق!",
-        text: "قیمت ظرفیت الزامیست.",
-        type: 'error',
-      });
-
-      if (this.product.discount === 0)  this.newStateOff = this.newStateCost;
-
+      this.newStateDesc = this.$refs.myQuillEditor2.getHTML()
       const arr = {
-        'type': this.newStateName,
-        'price': this.newStateCost.toString(),
-        'discounted_price': this.newStateOff.toString()
+        'name': this.newStateName,
+        'description': this.newStateDesc ,
       }
-      this.product.state.push(arr)
+      this.product.model.push(arr)
       this.newStateName = '';
-      this.newStateCost = '';
-      this.newStateOff = ''
+      this.newStateDesc = '';
 
 
     },
     removeState(state)
     {
-      this.product.state = this.product.state.filter(function (e){
+      this.product.model = this.product.model.filter(function (e){
         return e.id !== state.id
       })
 
