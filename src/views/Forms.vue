@@ -162,6 +162,27 @@
                 class="cursor-pointer">
               <button class="btn btn-dark fa-pull-left" style="font-size: 0.9em">خروجی اکسل</button>
             </vue3-json-excel>
+
+            <!--            filtering-->
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <select class="form-select text-start float-start" style="direction:ltr"
+                        aria-label="Default select example" v-model="filter_by_model" @change="doFilterByModelAndState">
+                  <option value="" disabled selected hidden>فیلتر بر اساس حالت</option>
+                  <option value=""></option>
+                  <option v-for="(c,i) in product_models" :key="i" :value="c.name">{{ c.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <select class="form-select text-start float-start" aria-label="Default select example"
+                        v-model="filter_by_state" @change="doFilterByModelAndState">
+                  <option value="" disabled selected hidden>فیلتر براساس ظرفیت</option>
+                  <option value=""></option>
+                  <option v-for="(c,i) in product_states" :key="i" :value="c.type">{{ c.type }}</option>
+                </select>
+              </div>
+            </div>
+            <!--            filtering-->
           </div>
           <div class="col-6 text-start px-5 py-3 me-auto">
             <vsud-button color="dark" size="md" @click="showRepresentation" v-if="flag3">نمایش جدول</vsud-button>
@@ -283,12 +304,17 @@ export default {
         "سوابق شغلی": "work_experience",
         "شغل": "job",
         "پکیج مدنظر": "selected_package",
+        "حالت مدنظر": "selected_model",
         "تحصیلات": "education",
         "دلایل دریافت نمایندگی": "reasons",
         "کارشناس مربوطه": "experts",
         "خط تولید مربوطه": "product",
         "تاریخ ارسال": "created_at"
       },
+      filter_by_model: '',
+      filter_by_state: '',
+      product_models: [],
+      product_states: [],
     }
   },
   methods: {
@@ -332,7 +358,13 @@ export default {
           });
       this.representations = this.representing.data;
       this.flag3 = false;
-      this.loader = false
+      this.loader = false;
+      const [models,states] = await Promise.all([
+        HTTP.get(`/product_models`),
+        HTTP.get(`/product_states`)
+      ]);
+      this.product_models = models.data;
+      this.product_states = states.data;
     },
     paginateClickCallbackEmpty(page) {
       this.empty.currentPage = Number(page);
@@ -343,14 +375,32 @@ export default {
     paginateClickCallbackRepresentation(page) {
       this.representation.currentPage = Number(page);
     },
+    async doFilterByModelAndState() {
+     const data = {
+       'model':this.filter_by_model,
+       'state':this.filter_by_state,
+     }
+     await HTTP.post('catalog/filter',data)
+      .catch(()=>{
+        return this.$notify({
+          title: "خطا!",
+          text: "خطایی در نمایش اطلاعات جدول رخ داد!",
+          type: 'error',
+        });
+      })
+      .then((res)=>{
+        this.representations = res.data
+      });
+    }
   },
   mounted() {
     const permissions = JSON.parse(localStorage.getItem('rgtokuukqp'));
-    for (let i in permissions) {
-      if (permissions[i].module.name === 'فرم ها') {
-        if (permissions[i].read === 0) return window.location = '/'
+    permissions.map((permission) => {
+      if (permission.module.name === 'فرم ها') {
+        if (permission.read === 0) return window.location = '/'
       }
-    }
+    });
+
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
   },
   computed: {
