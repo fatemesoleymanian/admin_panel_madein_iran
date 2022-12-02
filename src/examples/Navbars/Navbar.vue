@@ -64,38 +64,13 @@
                 id="dropdownMenuButton"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                @click="showMenu = !showMenu"
+                @click="toggleConfigurator"
             >
               <i class="cursor-pointer fa fa-bell">
                 <span class="badge p-1 badge-dark rounded-3 text-white bg-dark">{{ unreads }}</span>
               </i>
             </a>
-            <ul
-                class="px-2 py-3 dropdown-menu dropdown-menu-start ps--scrolling-y"
-                :class="showMenu ? 'show' : ''"
-                aria-labelledby="dropdownMenuButton"
-            >
-              <li v-for="(notif,i) in notifications" :key="i" >
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="py-1 d-flex">
-<!--                    <div-->
-<!--                        class="my-auto avatar avatar-sm bg-gradient-secondary me-3"-->
-<!--                    >-->
-<!--&lt;!&ndash;                    pic&ndash;&gt;-->
-<!--                    </div>-->
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-1 text-sm font-weight-normal">
-                        {{ json_decode(notif.data).action_information.action}}
-                      </h6>
-                      <p class="mb-0 text-xs text-secondary">
-                        <i class="fa fa-clock me-1"></i>
-                       {{ notif.created_at }}
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            </ul>
+
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
             <a
@@ -142,7 +117,6 @@ export default {
       results: [],
       active: true,
       unreads: 0,
-      notifications:[]
     };
   },
   props: ["minNav", "textWhite"],
@@ -160,21 +134,9 @@ export default {
           });
         });
   },
+
   async created() {
     this.minNav;
-    await HTTP.get('/admin/notifications')
-        .then((response) => {
-          this.notifications = response.data.notifications;
-          console.log(this.notifications)
-
-        })
-        .catch(() => {
-          return this.$notify({
-            title: "خطا!",
-            text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-            type: 'error',
-          });
-        });
   },
   methods: {
     ...mapMutations(["navbarMinimize", "toggleConfigurator"]),

@@ -48,11 +48,6 @@ export default {
       permission:[],
       items:[
         {
-          title:'نوتیفیکشن ها',
-          route:'نوتیفیکشن ها',
-          icon:'bi bi-bell-fill',
-        },
-        {
           title:'کاربران',
           route:'کاربران',
           icon:'bi bi-people-fill',

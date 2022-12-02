@@ -20,13 +20,20 @@
     />
     <router-view />
     <app-footer v-show="this.$store.state.showFooter" />
-
+    <configurator
+        :toggle="toggleConfigurator"
+        :class="[
+        this.$store.state.showConfig ? 'show' : '',
+        this.$store.state.hideConfigButton ? 'd-none' : '',
+      ]"
+    />
   </main>
   <notifications />
 </template>
 <script>
 import Sidenav from "./examples/Sidenav";
 import Navbar from "@/examples/Navbars/Navbar.vue";
+import Configurator from "@/examples/Configurator.vue";
 import AppFooter from "@/examples/Footer.vue";
 import { mapActions, mapMutations } from "vuex";
 
@@ -36,6 +43,7 @@ export default {
     Sidenav,
     Navbar,
     AppFooter,
+    Configurator
   },
   methods: {
     ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
@@ -56,7 +64,7 @@ export default {
       };
     },
   },
-   beforeMount() {
+  beforeMount() {
     this.$store.state.isTransparent = "bg-white";
     this.$store.state.isRTL = true;
     document.querySelector("html").setAttribute("lang", "ar");

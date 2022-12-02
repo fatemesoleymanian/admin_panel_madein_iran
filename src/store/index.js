@@ -23,6 +23,7 @@ export default createStore({
   },
   mutations: {
     toggleConfigurator(state) {
+      console.log('hey')
       state.showConfig = !state.showConfig;
     },
     navbarMinimize(state) {

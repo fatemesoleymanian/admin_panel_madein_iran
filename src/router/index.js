@@ -25,7 +25,6 @@ import Roles from "../views/Roles";
 import Transactions from "../views/Transactions";
 import Newsletters from "../views/Newsletters";
 import Customers from "../views/Customers";
-import Notifications from "../views/Notifications";
 
 const routes = [
   {
@@ -37,11 +36,6 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
-  },
-  {
-    path: "/notifications",
-    name: "نوتیفیکشن ها",
-    component: Notifications,
   },
   {
     path: "/products",

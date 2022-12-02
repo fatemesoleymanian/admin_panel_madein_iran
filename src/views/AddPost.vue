@@ -382,6 +382,7 @@ export default {
           type: 'success',
         });
       } else {
+        this.isCreating = false
         this.$notify({
           title: "عملیات ناموفق!",
           text: "خطا در ایجاد محصول",

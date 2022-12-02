@@ -505,6 +505,7 @@ export default {
         });
       }
       else {
+        this.isCreating = false
         this.$notify({
           title: "عملیات ناموفق!",
           text:"خطا در ایجاد محصول",

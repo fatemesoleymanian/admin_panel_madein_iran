@@ -1,17 +1,7 @@
 <template>
   <div class="fixed-plugin">
-    <a
-      class="px-3 py-2 fixed-plugin-button text-dark position-fixed"
-      @click="toggle"
-    >
-      <i class="py-2 fa fa-cog"> </i>
-    </a>
     <div class="shadow-lg card blur">
-      <div class="pt-3 pb-0 bg-white card-header">
-        <div class="float-start">
-          <h5 class="mt-3 mb-0">Soft UI Configurator</h5>
-          <p>See our dashboard options.</p>
-        </div>
+      <div class="pt-3 pb-0 bg-transparent card-header">
         <div class="mt-4 float-end" @click="toggle">
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
             <i class="fa fa-close"></i>
@@ -19,153 +9,123 @@
         </div>
         <!-- End Toggle Button -->
       </div>
-      <hr class="my-1 horizontal dark" />
       <div class="pt-0 card-body pt-sm-3">
-        <!-- Sidebar Backgrounds -->
-        <div>
-          <h6 class="mb-0">Sidebar Colors</h6>
+        <!--        tabs-->
+
+        <div class="tab">
+          <button class="tablinks w-50" @click="openTab('read-button','read')" id="read-button">خوانده شده</button>
+          <button class="tablinks w-50" @click="openTab('unread-button','unread')" id="unread-button">خوانده نشده</button>
         </div>
-        <a href="#" class="switch-trigger background-color">
-          <div
-            class="my-2 badge-colors"
-            :class="this.$store.state.isRTL ? 'text-end' : ' text-start'"
-          >
-            <span
-              class="badge filter bg-gradient-primary active"
-              data-color="primary"
-              @click="sidebarColor('primary')"
-            ></span>
-            <span
-              class="badge filter bg-gradient-dark"
-              data-color="dark"
-              @click="sidebarColor('dark')"
-            ></span>
-            <span
-              class="badge filter bg-gradient-info"
-              data-color="info"
-              @click="sidebarColor('info')"
-            ></span>
-            <span
-              class="badge filter bg-gradient-success"
-              data-color="success"
-              @click="sidebarColor('success')"
-            ></span>
-            <span
-              class="badge filter bg-gradient-warning"
-              data-color="warning"
-              @click="sidebarColor('warning')"
-            ></span>
-            <span
-              class="badge filter bg-gradient-danger"
-              data-color="danger"
-              @click="sidebarColor('danger')"
-            ></span>
-          </div>
-        </a>
-        <!-- Sidenav Type -->
-        <div class="mt-3">
-          <h6 class="mb-0">Sidenav Type</h6>
-          <p class="text-sm">Choose between 2 different sidenav types.</p>
+
+        <div id="read" class="tabcontent">
+          <ul v-if="readNotifications.length">
+            <li class="mb-2" v-for="(notif,index) in readNotifications" :key="index" >
+              <a class="dropdown-item border-radius-md" href="javascript:;">
+                <div class="py-1 d-flex">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-1 text-sm font-weight-normal">
+                      {{ JSON.parse(notif.data).action }}
+                    </h6>
+                    <p class="mb-0 text-xs text-secondary">
+                      <i class="fa fa-clock me-1"></i>
+                      {{ notif.created_at}}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <div class="pt-5 " v-else><b >هیچ اعلان خوانده شده ای یافت نشد!</b></div>
         </div>
-        <div class="d-flex">
-          <button
-            id="btn-transparent"
-            class="px-3 mb-2 btn bg-gradient-success w-100"
-            :class="ifTransparent === 'bg-transparent' ? 'active' : ''"
-            @click="sidebarType('bg-transparent')"
-          >
-            Transparent
-          </button>
-          <button
-            id="btn-white"
-            class="px-3 mb-2 btn bg-gradient-success w-100 ms-2"
-            :class="ifTransparent === 'bg-white' ? 'active' : ''"
-            @click="sidebarType('bg-white')"
-          >
-            White
-          </button>
+
+        <div id="unread" class="tabcontent">
+          <ul v-if="unreadNotifications.length">
+            <li class="mb-2" v-for="(notif,index) in unreadNotifications" :key="index">
+              <a class="dropdown-item border-radius-md" href="javascript:;">
+                <div class="py-1 d-flex">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-1 text-sm font-weight-normal">
+                      {{ JSON.parse(notif.data).action }}
+                    </h6>
+                    <p class="mb-0 text-xs text-secondary">
+                      <i class="fa fa-clock me-1"></i>
+                      {{ notif.created_at}}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <div class="pt-5 " v-else><b >هیچ اعلان خوانده نشده ای ای یافت نشد!</b></div>
+
+          <vsud-button color="dark" size="lg" @click="markAsRead" v-if="unreadNotifications.length" class="mt-3 mx-3">اعلان ها خوانده شد</vsud-button>
+
         </div>
-        <p class="mt-2 text-sm d-xl-none d-block">
-          You can change the sidenav type just on desktop view.
-        </p>
-        <!-- Navbar Fixed -->
-        <div class="mt-3">
-          <h6 class="mb-0">Navbar Fixed</h6>
-        </div>
-        <div class="form-check form-switch ps-0">
-          <input
-            class="mt-1 form-check-input"
-            :class="this.$store.state.isRTL ? 'float-end  me-auto' : ' ms-auto'"
-            type="checkbox"
-            id="navbarFixed"
-            :checked="this.$store.state.isNavFixed"
-            @change="setNavbarFixed"
-            v-model="fixedKey"
-          />
-        </div>
-        <hr class="horizontal dark my-sm-4" />
-        <a
-          class="btn bg-gradient-info w-100"
-          href="https://www.creative-tim.com/product/vue-soft-ui-dashboard-pro"
-          >Buy now</a
-        >
-        <a
-          class="btn bg-gradient-dark w-100"
-          href="https://www.creative-tim.com/product/vue-soft-ui-dashboard"
-          >Free demo</a
-        >
-        <a
-          class="btn btn-outline-dark w-100"
-          href="https://www.creative-tim.com/learning-lab/vue/overview/soft-ui-dashboard/"
-          >View documentation</a
-        >
-        <div class="text-center w-100">
-          <a
-            class="github-button"
-            href="https://github.com/creativetimofficial/vue-soft-ui-dashboard"
-            data-icon="octicon-star"
-            data-size="large"
-            data-show-count="true"
-            aria-label="Star creativetimofficial/soft-ui-dashboard on GitHub"
-            >Star</a
-          >
-          <h6 class="mt-3">Thank you for sharing!</h6>
-          <a
-            href="https://twitter.com/intent/tweet?text=Check%20Vue%20Soft%20UI%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fvue-soft-ui-dashboard"
-            class="mb-0 btn btn-dark me-2"
-            target="_blank"
-          >
-            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
-          </a>
-          <a
-            href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/vue-soft-ui-dashboard"
-            class="mb-0 btn btn-dark me-2"
-            target="_blank"
-          >
-            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
-          </a>
-        </div>
+
+        <!--tabs-->
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from "vuex";
+import {mapMutations, mapActions} from "vuex";
+import {HTTP} from "../http-common";
+import VsudButton from "../components/VsudButton";
+
 export default {
   name: "configurator",
+  components: {VsudButton},
   props: ["toggle"],
   data() {
     return {
       fixedKey: "",
+      unreadNotifications: [],
+      readNotifications: [],
     };
+  },
+  async created() {
+    const [response1, response2] = await Promise.all([
+      HTTP.get('/admin/unread_notifications'),
+      HTTP.get('/admin/read_notifications'),
+    ])
+    this.unreadNotifications = response1.data.notifications;
+    this.readNotifications = response2.data.notifications;
+
+
   },
   methods: {
     ...mapMutations(["navbarMinimize", "sidebarType", "navbarFixed"]),
     ...mapActions(["toggleSidebarColor"]),
+    async markAsRead(){
+      await HTTP.post('/admin/mark_as_read_notifications')
+      .then(()=>{
+        this.unreadNotifications = [];
+      });
+      this.readNotifications = await HTTP.get('/admin/read_notifications')
+      .then((response)=>{
+        this.readNotifications = response.data.notifications;
 
+      })
+    },
+    openTab(e,cityName){
+      let i;
+      let tabcontent;
+      let tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace("active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      document.getElementById(e).className += " active";
+    },
     sidebarColor(color = "success") {
-      document.querySelector("#sidenav-main").setAttribute("data-color", 'dark');
+      document.querySelector("#sidenav-main").setAttribute("data-color", color);
       this.$store.state.mcolor = `card-background-mask-${color}`;
     },
 
@@ -200,10 +160,51 @@ export default {
     },
   },
   beforeMount() {
-    // this.$store.state.isTransparent = "bg-white";
+    this.$store.state.isTransparent = "bg-transparent";
     // Deactivate sidenav type buttons on resize and small screens
     window.addEventListener("resize", this.sidenavTypeOnResize);
     window.addEventListener("load", this.sidenavTypeOnResize);
   },
 };
 </script>
+<style>
+.tab {
+  overflow: hidden;
+  border-bottom: 1px solid #252f40;
+  background: none;
+  text-align: center;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background: #252f40;
+  color: white;
+  border-radius:10px ;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background: #252f40;
+  color: white;
+  border-radius:10px ;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+}
+
+</style>
