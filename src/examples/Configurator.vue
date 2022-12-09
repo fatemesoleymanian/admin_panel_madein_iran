@@ -1,6 +1,6 @@
 <template>
   <div class="fixed-plugin">
-    <div class="shadow-lg card blur">
+    <div class="shadow-lg card blur" style="overflow-y: scroll">
       <div class="pt-3 pb-0 bg-transparent card-header">
         <div class="mt-4 float-end" @click="toggle">
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
@@ -14,12 +14,13 @@
 
         <div class="tab">
           <button class="tablinks w-50" @click="openTab('read-button','read')" id="read-button">خوانده شده</button>
-          <button class="tablinks w-50" @click="openTab('unread-button','unread')" id="unread-button">خوانده نشده</button>
+          <button class="tablinks w-50" @click="openTab('unread-button','unread')" id="unread-button">خوانده نشده
+          </button>
         </div>
 
         <div id="read" class="tabcontent">
           <ul v-if="readNotifications.length">
-            <li class="mb-2" v-for="(notif,index) in readNotifications" :key="index" >
+            <li class="mb-2" v-for="(notif,index) in readNotifications" :key="index">
               <a class="dropdown-item border-radius-md" href="javascript:;">
                 <div class="py-1 d-flex">
                   <div class="d-flex flex-column justify-content-center">
@@ -28,14 +29,14 @@
                     </h6>
                     <p class="mb-0 text-xs text-secondary">
                       <i class="fa fa-clock me-1"></i>
-                      {{ notif.created_at}}
+                      {{ notif.created_at }}
                     </p>
                   </div>
                 </div>
               </a>
             </li>
           </ul>
-          <div class="pt-5 " v-else><b >هیچ اعلان خوانده شده ای یافت نشد!</b></div>
+          <div class="pt-5 " v-else><b>هیچ اعلان خوانده شده ای یافت نشد!</b></div>
         </div>
 
         <div id="unread" class="tabcontent">
@@ -49,16 +50,18 @@
                     </h6>
                     <p class="mb-0 text-xs text-secondary">
                       <i class="fa fa-clock me-1"></i>
-                      {{ notif.created_at}}
+                      {{ notif.created_at }}
                     </p>
                   </div>
                 </div>
               </a>
             </li>
           </ul>
-          <div class="pt-5 " v-else><b >هیچ اعلان خوانده نشده ای ای یافت نشد!</b></div>
+          <div class="pt-5 " v-else><b>هیچ اعلان خوانده نشده ای ای یافت نشد!</b></div>
 
-          <vsud-button color="dark" size="lg" @click="markAsRead" v-if="unreadNotifications.length" class="mt-3 mx-3">اعلان ها خوانده شد</vsud-button>
+          <vsud-button color="dark" size="lg" @click="markAsRead" v-if="unreadNotifications.length" class="mt-3 mx-3">
+            اعلان ها خوانده شد
+          </vsud-button>
 
         </div>
 
@@ -98,18 +101,18 @@ export default {
   methods: {
     ...mapMutations(["navbarMinimize", "sidebarType", "navbarFixed"]),
     ...mapActions(["toggleSidebarColor"]),
-    async markAsRead(){
+    async markAsRead() {
       await HTTP.post('/admin/mark_as_read_notifications')
-      .then(()=>{
-        this.unreadNotifications = [];
-      });
+          .then(() => {
+            this.unreadNotifications = [];
+          });
       this.readNotifications = await HTTP.get('/admin/read_notifications')
-      .then((response)=>{
-        this.readNotifications = response.data.notifications;
+          .then((response) => {
+            this.readNotifications = response.data.notifications;
 
-      })
+          })
     },
-    openTab(e,cityName){
+    openTab(e, cityName) {
       let i;
       let tabcontent;
       let tablinks;
@@ -190,14 +193,14 @@ export default {
 .tab button:hover {
   background: #252f40;
   color: white;
-  border-radius:10px ;
+  border-radius: 10px;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
   background: #252f40;
   color: white;
-  border-radius:10px ;
+  border-radius: 10px;
 }
 
 /* Style the tab content */

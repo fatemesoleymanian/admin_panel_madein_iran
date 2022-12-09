@@ -67,7 +67,7 @@
                 @click="toggleConfigurator"
             >
               <i class="cursor-pointer fa fa-bell">
-                <span class="badge p-1 badge-dark rounded-3 text-white bg-dark">{{ unreads }}</span>
+                <span class="badge p-1 badge-dark rounded-3 text-white bg-dark" v-if="unreads>0">{{ unreads }}</span>
               </i>
             </a>
 
@@ -126,13 +126,6 @@ export default {
           this.unreads = response.data;
 
         })
-        .catch(() => {
-          return this.$notify({
-            title: "خطا!",
-            text: "خطایی در نمایش اطلاعات جدول رخ داد!",
-            type: 'error',
-          });
-        });
   },
 
   async created() {
