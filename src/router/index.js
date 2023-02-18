@@ -25,6 +25,7 @@ import Roles from "../views/Roles";
 import Transactions from "../views/Transactions";
 import Newsletters from "../views/Newsletters";
 import Customers from "../views/Customers";
+import Campaigns from "../views/Campaigns";
 
 const routes = [
   {
@@ -156,6 +157,11 @@ const routes = [
     path: "/transactions",
     name: "تراکنش ها",
     component: Transactions,
+  },
+  {
+    path: "/campaigns",
+    name: "کمپین ها",
+    component: Campaigns,
   },
   {
     path: "/sign-in",

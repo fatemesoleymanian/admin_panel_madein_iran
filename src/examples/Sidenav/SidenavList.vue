@@ -88,6 +88,11 @@ export default {
           icon:'bi bi-chat-right-quote-fill',
         },
         {
+          title:'کمپین ها',
+          route:'کمپین ها',
+          icon:'bi bi-megaphone-fill',
+        },
+        {
           title:'فرم ها',
           route:'فرم ها',
           icon:'bi bi-file-text-fill',
