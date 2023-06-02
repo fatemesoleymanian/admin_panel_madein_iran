@@ -17,9 +17,6 @@ import Forms from "../views/Forms";
 import Departments from "../views/Departments";
 import Tags from "../views/Tags";
 import Categories from "../views/Categories";
-import Blogs from "../views/Blogs";
-import AddPost from "../views/AddPost";
-import PostDetails from "../views/PostDetails";
 import Admins from "../views/Admins";
 import Roles from "../views/Roles";
 import Transactions from "../views/Transactions";
@@ -44,11 +41,6 @@ const routes = [
     component: Products,
   },
   {
-    path: "/posts",
-    name: "پست ها",
-    component: Blogs,
-  },
-  {
     path: "/departments",
     name: "دپارتمان ها",
     component: Departments,
@@ -69,20 +61,11 @@ const routes = [
     component: AddProduct,
   },
   {
-    path: "/product/details:id",
+    path: "/product/details:slug",
     name: "مشخصات محصول",
     component: ProductDetails,
   },
-  {
-    path: "/post/new",
-    name: "افزودن پست جدید",
-    component: AddPost,
-  },
-  {
-    path: "/post/details:id",
-    name: "جزئیات پست",
-    component: PostDetails,
-  },
+
   {
     path: "/users",
     name: "کاربران",

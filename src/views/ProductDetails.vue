@@ -324,7 +324,7 @@ export default {
       },
       module: BlotFormatter,
       isCreating:false,
-      id:this.$route.params.id,
+      slug:this.$route.params.slug,
       product:<p>heyy</p>,
       categories:[],
       tags:[],
@@ -353,7 +353,7 @@ export default {
     if (!localStorage.getItem('vqmgp')) window.location = '/sign-in';
     else {
 
-      await HTTP.get(`/products/${this.id}`)
+      await HTTP.get(`/products/${this.slug}`)
           .catch((e)=>{
             if(e.response.status ===500){
               localStorage.removeItem('wugt');
@@ -499,7 +499,8 @@ export default {
       const res = await HTTP.put( `/products/${this.product.id}`, updated_data);
       if(res.status===200){
         this.$notify({
-          title: "عملیات موفق!",
+          title: "عملیات موفق!" +
+              "محصول تغییر داده شد.",
           text: res.data.msg,
           type: 'success',
         });

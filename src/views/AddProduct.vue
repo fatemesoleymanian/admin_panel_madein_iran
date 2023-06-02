@@ -467,7 +467,8 @@ export default {
       const res = await HTTP.post( '/products', data);
       if(res.status===200){
         this.$notify({
-          title: "عملیات موفق!",
+          title: "عملیات موفق! " +
+              "محصول ایجاد شد و ظرف مدت حدودا یک ساعت دیگر در سایت نمایش داده میشود.",
           text: res.data.msg,
           type: 'success',
         });

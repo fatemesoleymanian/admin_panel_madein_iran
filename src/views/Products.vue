@@ -226,7 +226,7 @@
                           @click="productToDel=u;index=i;" v-if="remove">حذف
               </vsud-badge>
               <vsud-badge color="success" variant="gradient" size="lg" style="cursor:pointer"
-                          @click="$router.push(`/product/details${u.id}`)">
+                          @click="$router.push(`/product/details${u.slug}`)">
                 جزئیات
               </vsud-badge>
               <vsud-badge color="dark" variant="gradient" size="lg" style="cursor:pointer"

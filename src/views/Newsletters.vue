@@ -102,8 +102,7 @@ export default {
     this.loader = true;
     await HTTP.get('show_all_receivers')
         .then((response) => {
-          this.subscribersForNewsletters = response.data.data;
-          console.log(response.data)
+          this.subscribersForNewsletters = response.data;
 
         })
         .catch(() => {

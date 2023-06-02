@@ -385,7 +385,7 @@ export default {
 
         this.$notify({
           title: "عملیات موفق!",
-          text: "اسلاید ویرایش شد.",
+          text: "اسلاید ویرایش شد.ظرف مدت حدودا یک ساعت دیگر در سایت نمایش داده میشود.",
           type: 'success',
         });
         this.slides[this.index].image = this.image
@@ -502,7 +502,7 @@ export default {
 
         this.$notify({
           title: "عملیات موفق!",
-          text: "اسلاید ایجاد شد.",
+          text: "اسلاید ایجاد شد.ظرف مدت حدودا یک ساعت دیگر در سایت نمایش داده میشود.",
           type: 'success',
         });
         this.slides.unshift(update.data.slider)

@@ -63,11 +63,6 @@ export default {
           icon:'bi bi-basket-fill',
         },
         {
-          title:'وبلاگ',
-          route:'پست ها',
-          icon:'bi bi-file-richtext-fill',
-        },
-        {
           title:'اسلایدر',
           route:'اسلایدر',
           icon:'bi bi-file-easel-fill',
